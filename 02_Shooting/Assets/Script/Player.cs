@@ -6,7 +6,6 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class Player : MonoBehaviour
 {
@@ -31,6 +30,8 @@ public class Player : MonoBehaviour
     public float fireInterval = 0.3f;
     //float firetimeCount = 0.0f;
 
+    Transform firePosition;
+
     IEnumerator firea;
 
     Rigidbody2D rigid;
@@ -46,6 +47,9 @@ public class Player : MonoBehaviour
         inputActions = new PlayerInputAction();
         rigid = GetComponent<Rigidbody2D>();    //한번만 찾고 저장해서 계속 쓰기 (메모리 더 쓰고 성능 아끼기)
         anim = GetComponent<Animator>();
+
+        firePosition = transform.GetChild(0);
+
         firea = fire();
     }
 
@@ -180,7 +184,7 @@ public class Player : MonoBehaviour
         //yield return new WaitForSeconds(1.0f);  // 1초후에 이어서 시작해라
         while (true)
         { 
-            Instantiate(Bullet, transform.position, Quaternion.identity);
+            Instantiate(Bullet, firePosition.position, Quaternion.identity);
             yield return new WaitForSeconds(fireInterval);
         }
     }
