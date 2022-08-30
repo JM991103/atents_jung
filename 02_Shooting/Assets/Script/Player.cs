@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
@@ -30,7 +31,9 @@ public class Player : MonoBehaviour
     public float fireInterval = 0.3f;
     //float firetimeCount = 0.0f;
 
-    Transform firePosition;
+    Transform[] firePosition;   //트랜스폼을 여러개 가지는 배열
+    Vector3[] firearry = new Vector3[3];
+ 
 
     IEnumerator firea;
 
@@ -48,7 +51,15 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();    //한번만 찾고 저장해서 계속 쓰기 (메모리 더 쓰고 성능 아끼기)
         anim = GetComponent<Animator>();
 
-        firePosition = transform.GetChild(0);
+        firePosition = new Transform[transform.childCount];
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            firePosition[i] = transform.GetChild(i);
+        }
+
+        firearry[0] = new Vector3(0, 0, 0);
+        firearry[1] = new Vector3(0, 0, 30);
+        firearry[2] = new Vector3(0, 0, -30);
 
         firea = fire();
     }
@@ -64,7 +75,7 @@ public class Player : MonoBehaviour
         inputActions.player.Fire.performed += OnFireStart;
         inputActions.player.Fire.canceled += OnFireStop;
         inputActions.player.Booster.performed += OnBooster;
-        inputActions.player.Booster.performed += OffBooster;
+        inputActions.player.Booster.canceled += OffBooster;
     }
 
     /// <summary>
@@ -73,7 +84,7 @@ public class Player : MonoBehaviour
     private void OnDisable()
     {
         inputActions.player.Booster.performed -= OffBooster;
-        inputActions.player.Booster.performed -= OnBooster;
+        inputActions.player.Booster.canceled -= OnBooster;
         inputActions.player.Fire.canceled -= OnFireStop;
         inputActions.player.Fire.performed -= OnFireStart;
         inputActions.player.Move.performed -= OnMove; //연결해 놓은 함수 해제(안전을 위해)
@@ -120,31 +131,31 @@ public class Player : MonoBehaviour
         }
     }
 
-    //(collider 와 trigger 다른 점은 통과 되는지 안되는지)
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        Debug.Log("OnCollisionEnter2D");    //collider와 부딪쳤을 때 실행 (리지드바디가 있는, 두존재 다 collider가 있어야함)
-    }
-    //private void OnCollisionStay2D(Collision2D collision)
+    ////(collider 와 trigger 다른 점은 통과 되는지 안되는지)
+    //private void OnCollisionEnter2D(Collision2D collision)
     //{
-    //    Debug.Log("OnCollisionStay2D");     // collider와 계속 접촉하면서 움직일 때(매 프레임마다 호출)
+    //    Debug.Log("OnCollisionEnter2D");    //collider와 부딪쳤을 때 실행 (리지드바디가 있는, 두존재 다 collider가 있어야함)
     //}
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        Debug.Log("OnCollisionExit2D");     // collider와 접촉이 떨어지는 순간 실행
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        Debug.Log("OnTriggerEnter2D");      // trigger에 들어갔을때 실행 
-    }
-    //private void OnTriggerStay2D(Collider2D collision)
+    ////private void OnCollisionStay2D(Collision2D collision)
+    ////{
+    ////    Debug.Log("OnCollisionStay2D");     // collider와 계속 접촉하면서 움직일 때(매 프레임마다 호출)
+    ////}
+    //private void OnCollisionExit2D(Collision2D collision)
     //{
-    //    Debug.Log("OnTriggerStay2D");       // trigger와 계속 겹쳐있으면서 움직일 때 (매 프레임마다 호출)
+    //    Debug.Log("OnCollisionExit2D");     // collider와 접촉이 떨어지는 순간 실행
     //}
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        Debug.Log("OnTriggerExit2D");       // trigger에서 나갔을 때 실행
-    }
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    Debug.Log("OnTriggerEnter2D");      // trigger에 들어갔을때 실행 
+    //}
+    ////private void OnTriggerStay2D(Collider2D collision)
+    ////{
+    ////    Debug.Log("OnTriggerStay2D");       // trigger와 계속 겹쳐있으면서 움직일 때 (매 프레임마다 호출)
+    ////}
+    //private void OnTriggerExit2D(Collider2D collision)
+    //{
+    //    Debug.Log("OnTriggerExit2D");       // trigger에서 나갔을 때 실행
+    //}
 
     private void OnMove(InputAction.CallbackContext context)
     {
@@ -183,12 +194,16 @@ public class Player : MonoBehaviour
         //yield return null;  //다음 프레임에 이어서 시작해라
         //yield return new WaitForSeconds(1.0f);  // 1초후에 이어서 시작해라
         while (true)
-        { 
-            Instantiate(Bullet, firePosition.position, Quaternion.identity);
+        {
+            for (int i = 0; i < firePosition.Length; i++)
+            {
+                GameObject obj = Instantiate(Bullet, firePosition[i].position, Quaternion.identity);
+                obj.transform.Rotate(firearry[i]);
+                
+            }
             yield return new WaitForSeconds(fireInterval);
         }
     }
-
 
     private void OnBooster(InputAction.CallbackContext context)
     {
