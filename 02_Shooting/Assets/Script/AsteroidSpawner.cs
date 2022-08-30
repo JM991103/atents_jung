@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
 
-public class AsterroidSpawner : EnemySpawner
+public class AsteroidSpawner : EnemySpawner
 { 
     private Transform destination;
 
@@ -13,7 +13,7 @@ public class AsterroidSpawner : EnemySpawner
         //      이 오브젝트안에 있는 모든 컴포넌트가 생성이 완료되었다.
         //      그리고 이 오브젝트의 자식 오브젝트들도 모두 생성이 완료되었다.
         //transform.Find("DestinationArea");      // "DestinationArea" 라는 이름을 가진 자식 찾기
-        //destination = transform.GetChild(0);    // 첫번째 자식 찾기
+        destination = transform.GetChild(0);    // 첫번째 자식 찾기
 
     }
     //private void Start()
@@ -48,10 +48,10 @@ public class AsterroidSpawner : EnemySpawner
     protected override void OnDrawGizmos()         // 개발용 정보를 항상 그리는 함수
     {
         //Gizmos.color = new Color(1, 0, 0);
-        Gizmos.color = Color.green;
+        Gizmos.color = Color.red;
         Gizmos.DrawWireCube(transform.position, new(1, Mathf.Abs(minY) + Mathf.Abs(maxY) + 2, 1));
                 
-        if (destination != null)
+        if (destination == null)
         {
             destination = transform.GetChild(0);
         }

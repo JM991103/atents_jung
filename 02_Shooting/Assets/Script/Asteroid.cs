@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Asteroid : MonoBehaviour
 {
-    public float rotateSpeed = 360.0f;
-    public float moveSpeed = 3.0f;
-    public Vector3 direction = Vector3.left;
+    public float rotateSpeed = 360.0f;  //회전 속도
+    public float moveSpeed = 1.5f;      //이동 속도
+    public Vector3 direction = Vector3.left;    //운석이 이동할 방향
     float X = -12.0f;
     float maxY = 6.0f;
     float minY = -6.0f;
@@ -25,7 +25,7 @@ public class Asteroid : MonoBehaviour
         //transform.rotation *= Quaternion.Euler(new(0, 0, rotateSpped * Time.deltaTime));        // 1초에 360도씩 회전
         transform.Rotate(rotateSpeed * Time.deltaTime * Vector3.forward);   // forward 축을 기주능로 1초에 rotateSpeed도씩 회전
 
-        transform.Translate(Time.deltaTime * moveSpeed * Vector3.left, Space.World);
+        transform.Translate(Time.deltaTime * moveSpeed * direction, Space.World);
 
         if (transform.position.x < X || transform.position.y > maxY || transform.position.y < minY)
         {
@@ -37,7 +37,6 @@ public class Asteroid : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position);
-        Gizmos.DrawLine(new(X - 1, minY, 1), new(X - 1, maxY, 1));
+        Gizmos.DrawLine(transform.position, transform.position + direction * 1.5f);
     }
 }

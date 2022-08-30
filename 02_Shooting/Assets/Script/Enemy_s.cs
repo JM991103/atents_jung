@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Enemy_s : MonoBehaviour
 {
-    float speed = 7.0f;
+    float speed = 3.0f;
     Vector3 dis = new Vector3(-10, 0, 0);
 
     // Start is called before the first frame update
