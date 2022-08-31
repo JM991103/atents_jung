@@ -20,10 +20,10 @@ public class Enemy_s : MonoBehaviour
     void Update()
     {
         transform.Translate(Time.deltaTime * speed * Vector3.left, Space.Self);
-        if (transform.position.x < dis.x)
-        {
-            Destroy(gameObject);
-        }
+        //if (transform.position.x < dis.x)
+        //{
+        //    Destroy(gameObject);
+        //}
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {

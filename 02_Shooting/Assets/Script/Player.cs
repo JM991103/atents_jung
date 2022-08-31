@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
     //float firetimeCount = 0.0f;
 
     Transform[] firePosition;   //트랜스폼을 여러개 가지는 배열
+    public GameObject flash;
     Vector3[] firearry = new Vector3[3];
  
 
@@ -51,11 +52,12 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();    //한번만 찾고 저장해서 계속 쓰기 (메모리 더 쓰고 성능 아끼기)
         anim = GetComponent<Animator>();
 
-        firePosition = new Transform[transform.childCount];
-        for (int i = 0; i < transform.childCount; i++)
+        firePosition = new Transform[transform.childCount -1];
+        for (int i = 0; i < transform.childCount-1; i++)
         {
             firePosition[i] = transform.GetChild(i);
         }
+        //flash = transform.GetChild(transform.childCount - 1).gameObject;
 
         //firearry[0] = new Vector3(0, 0, 0);
         //firearry[1] = new Vector3(0, 0, 30);
@@ -213,8 +215,16 @@ public class Player : MonoBehaviour
                 //현재 회전 값을 x,y,z축별로 몇도씩 회전 했는지 확인 가능
                 //Quaternion.Euler(10, 20, 30); //x축으로 10도, y축으로 20도, z축으로 30도 회전하는 코드
             }
+            flash.SetActive(true);
+            StartCoroutine(Flashoff());
             yield return new WaitForSeconds(fireInterval);
         }
+    }
+
+    IEnumerator Flashoff()
+    {
+        yield return new WaitForSeconds(0.1f);
+        flash.SetActive(false); 
     }
 
     private void OnBooster(InputAction.CallbackContext context)
