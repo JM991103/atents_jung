@@ -57,9 +57,9 @@ public class Player : MonoBehaviour
             firePosition[i] = transform.GetChild(i);
         }
 
-        firearry[0] = new Vector3(0, 0, 0);
-        firearry[1] = new Vector3(0, 0, 30);
-        firearry[2] = new Vector3(0, 0, -30);
+        //firearry[0] = new Vector3(0, 0, 0);
+        //firearry[1] = new Vector3(0, 0, 30);
+        //firearry[2] = new Vector3(0, 0, -30);
 
         firea = fire();
     }
@@ -197,9 +197,20 @@ public class Player : MonoBehaviour
         {
             for (int i = 0; i < firePosition.Length; i++)
             {
-                GameObject obj = Instantiate(Bullet, firePosition[i].position, Quaternion.identity);
-                obj.transform.Rotate(firearry[i]);
-                
+                //bullet이라는 프리팹을 firePosition[i]의 위치에 (0,0,0)회전으로 만들어라
+                //GameObject obj = Instantiate(Bullet, firePosition[i].position, Quaternion.identity);
+
+                //bullet이라는 프리팹을 firePosition[i]의 위치에 firePosition[i]회전으로 만들어라
+                GameObject obj = Instantiate(Bullet, firePosition[i].position, Bullet.transform.rotation);
+
+                //Instantiate(생성할 프리팹); //프리팹이 0,0,0위치에 0,0,0회전에 1,1,1 스케일로 만들어짐
+                //Instantiate(생성할 프리팹, 생성할 위치, 생성될 때의 회전)
+
+                //총알의 외전 값으로 firePosition[i]의 회전값을 그대로 사용한다
+                //obj.transform.rotation = firePosition[i].rotation;
+
+                //Vector3 angle = firePosition[i].rotation.eulerAngles;
+                //현재 회전 값을 x,y,z축별로 몇도씩 회전 했는지 확인 가능
             }
             yield return new WaitForSeconds(fireInterval);
         }
