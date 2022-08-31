@@ -11,11 +11,15 @@ public class Asteroid : MonoBehaviour
     float maxY = 6.0f;
     float minY = -6.0f;
 
+    public int hitPoint = 3;
+
+    GameObject explosion;
+
 
     // Start is called before the first frame update
     void Start()
     {
-
+        explosion = transform.GetChild(0).gameObject;
     }
 
     // Update is called once per frame
@@ -38,5 +42,20 @@ public class Asteroid : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, transform.position + direction * 1.5f);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Bullet"))
+        {
+            hitPoint--;
+            if (hitPoint <= 0)
+            { 
+            explosion.SetActive(true);
+            explosion.transform.parent = null;
+
+            Destroy(this.gameObject);
+            }
+        }
     }
 }
