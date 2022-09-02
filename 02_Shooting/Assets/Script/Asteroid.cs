@@ -130,7 +130,18 @@ public class Asteroid : MonoBehaviour
         explosion.SetActive(true);
         explosion.transform.parent = null;
 
-        splitCount = UnityEngine.Random.Range(3, 16);
+        if (UnityEngine.Random.Range(0.0f,1.0f)<0.04f)
+        {
+            //5%확률에 당첨되었다.
+            splitCount = 20;
+        }
+        else
+        {
+            //95% 확률에 당첨되었다.
+            splitCount = UnityEngine.Random.Range(3, 6);    //1/3확률로 3~5가 나온다.
+        }
+
+
         float angleGap = 360.0f / (float)splitCount;    // 작은 운석들의 진행 방향의 사이각
         float r = UnityEngine.Random.Range(0.0f, 360.0f);   //첫 운석 방향 변화용
         for (int i = 0; i < splitCount; i++)
