@@ -15,8 +15,8 @@ public class Asteroid : MonoBehaviour
     public float maxrotateSpeed = 360.0f;
 
     float lifetime;
-    public float minLifetime = 3.0f;
-    public float maxLifetime = 3.0f;
+    public float minLifetime = 4.0f;
+    public float maxLifetime = 6.0f;
 
     public GameObject small;
     [Range(1,16)]
@@ -130,6 +130,7 @@ public class Asteroid : MonoBehaviour
         explosion.SetActive(true);
         explosion.transform.parent = null;
 
+        splitCount = UnityEngine.Random.Range(3, 16);
         float angleGap = 360.0f / (float)splitCount;    // 작은 운석들의 진행 방향의 사이각
         float r = UnityEngine.Random.Range(0.0f, 360.0f);   //첫 운석 방향 변화용
         for (int i = 0; i < splitCount; i++)
