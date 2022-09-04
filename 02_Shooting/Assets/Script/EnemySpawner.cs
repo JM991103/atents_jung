@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     public GameObject spawnPrefab;
+    public GameObject ItemSpwner;
     public float SpawnTime = 5.0f;
     
     protected float minY = -4.0f;
@@ -29,8 +30,16 @@ public class EnemySpawner : MonoBehaviour
     {
         while (true)
         {
-            GameObject obj = Instantiate(spawnPrefab, transform.position, Quaternion.identity);
-            obj.transform.Translate(0.0f, Random.Range(minY, maxY), 0);
+            if (Random.Range(0.0f,1.0f) < 0.1f)
+            {
+                GameObject obj1 = Instantiate(ItemSpwner, transform.position, Quaternion.identity);
+                obj1.transform.Translate(0.0f, Random.Range(minY, maxY), 0);
+            }
+            else
+            {
+            GameObject obj2 = Instantiate(spawnPrefab, transform.position, Quaternion.identity);
+            obj2.transform.Translate(0.0f, Random.Range(minY, maxY), 0);
+            }
             yield return new WaitForSeconds(SpawnTime);
         }
     }

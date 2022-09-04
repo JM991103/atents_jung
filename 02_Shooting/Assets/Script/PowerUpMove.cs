@@ -10,7 +10,9 @@ public class PowerUpMove : MonoBehaviour
 
     private void Start()
     {
-        
+        Move = new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), 0).normalized;       
+
+        Destroy(this.gameObject, 10.0f);
     }
 
     private void Update()
