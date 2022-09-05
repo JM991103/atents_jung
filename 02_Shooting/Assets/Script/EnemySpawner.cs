@@ -30,13 +30,16 @@ public class EnemySpawner : MonoBehaviour
     {
         while (true)    // 무한 반복
         { 
-            GameObject obj1 = Instantiate(ItemSpwner, transform.position, Quaternion.identity); //기본적으로 생성하는 것
             if (Random.Range(0.0f,1.0f) < 0.1f) 
             {
-                obj1.transform.Translate(0.0f, Random.Range(minY, maxY), 0);        // 10% 이하의 확률로 ItemEnemy 적 생성
+            GameObject obj1 = Instantiate(ItemSpwner, transform.position, Quaternion.identity); //기본적으로 생성하는 것
+            obj1.transform.Translate(0.0f, Random.Range(minY, maxY), 0);        // 10% 이하의 확률로 ItemEnemy 적 생성
             }
+            else
+            {
             GameObject obj2 = Instantiate(spawnPrefab, transform.position, Quaternion.identity);
             obj2.transform.Translate(0.0f, Random.Range(minY, maxY), 0);
+            }
             yield return new WaitForSeconds(SpawnTime);
         }
     }
