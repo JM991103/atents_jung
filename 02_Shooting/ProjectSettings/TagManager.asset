@@ -7,7 +7,7 @@ TagManager:
   - Enemy
   - Bullet
   - PowerUp
-  - Boder
+  - Border
   layers:
   - Default
   - TransparentFX
@@ -17,7 +17,7 @@ TagManager:
   - UI
   - player
   - Enemy
-  - Boder
+  - Border
   - 
   - 
   - 

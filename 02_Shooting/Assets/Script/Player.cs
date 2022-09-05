@@ -169,6 +169,16 @@ public class Player : MonoBehaviour
         }
     }
 
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("PowerUp"))
+        {
+            Power++;
+            Destroy(collision.gameObject);
+        }
+    }
     ////(collider 와 trigger 다른 점은 통과 되는지 안되는지)
     //private void OnCollisionEnter2D(Collision2D collision)
     //{

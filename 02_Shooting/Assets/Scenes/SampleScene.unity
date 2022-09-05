@@ -169,6 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPrefab: {fileID: 8784693242606170062, guid: 512d66a4b5b90ba40b4998a39c7bd483, type: 3}
+  ItemSpwner: {fileID: 0}
   SpawnTime: 1
 --- !u!1 &519420028
 GameObject:
@@ -267,26 +268,13 @@ GameObject:
   - component: {fileID: 718651177}
   - component: {fileID: 718651176}
   - component: {fileID: 718651175}
-  - component: {fileID: 718651174}
   m_Layer: 8
   m_Name: Border
-  m_TagString: Boder
+  m_TagString: Border
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!114 &718651174
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 718651173}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a76e5781e59beba4e96aff4270ec581f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!61 &718651175
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -452,7 +440,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 15.66, y: -8.5}
+  m_Offset: {x: 15.66, y: -9.403527}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -463,7 +451,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 30, y: 5}
+  m_Size: {x: 30, y: 3.192945}
   m_EdgeRadius: 0
 --- !u!61 &1533502596
 BoxCollider2D:
@@ -478,7 +466,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 15.66, y: 8.5}
+  m_Offset: {x: 15.66, y: 9.403527}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -489,7 +477,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 30, y: 5}
+  m_Size: {x: 30, y: 3.192945}
   m_EdgeRadius: 0
 --- !u!61 &1533502597
 BoxCollider2D:
@@ -504,7 +492,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 31.32, y: 0}
+  m_Offset: {x: 31.32, y: 0.032268763}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -515,7 +503,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 5, y: 12}
+  m_Size: {x: 5, y: 15.678648}
   m_EdgeRadius: 0
 --- !u!61 &1533502598
 BoxCollider2D:
@@ -530,7 +518,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.06453705}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -541,7 +529,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 5, y: 12}
+  m_Size: {x: 5, y: 15.743183}
   m_EdgeRadius: 0
 --- !u!4 &1533502599
 Transform:
@@ -558,63 +546,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1611244903
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 7209734916984757244, guid: 0a5c638bf131b84418904af3baf5f5cd, type: 3}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 7209734916984757244, guid: 0a5c638bf131b84418904af3baf5f5cd, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 2.965
-      objectReference: {fileID: 0}
-    - target: {fileID: 7209734916984757244, guid: 0a5c638bf131b84418904af3baf5f5cd, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.004
-      objectReference: {fileID: 0}
-    - target: {fileID: 7209734916984757244, guid: 0a5c638bf131b84418904af3baf5f5cd, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7209734916984757244, guid: 0a5c638bf131b84418904af3baf5f5cd, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 7209734916984757244, guid: 0a5c638bf131b84418904af3baf5f5cd, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7209734916984757244, guid: 0a5c638bf131b84418904af3baf5f5cd, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7209734916984757244, guid: 0a5c638bf131b84418904af3baf5f5cd, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 7209734916984757244, guid: 0a5c638bf131b84418904af3baf5f5cd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7209734916984757244, guid: 0a5c638bf131b84418904af3baf5f5cd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7209734916984757244, guid: 0a5c638bf131b84418904af3baf5f5cd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 9096031362444482291, guid: 0a5c638bf131b84418904af3baf5f5cd, type: 3}
-      propertyPath: m_Name
-      value: PowerUp
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 0a5c638bf131b84418904af3baf5f5cd, type: 3}
 --- !u!1 &1899914972
 GameObject:
   m_ObjectHideFlags: 0
@@ -645,6 +576,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPrefab: {fileID: 94446543854717983, guid: 6ce7cd7de8c360949b487183d6fe52d1, type: 3}
+  ItemSpwner: {fileID: 8042913819666737936, guid: cf97a3db74b343e45a46214371bfd323, type: 3}
   SpawnTime: 1
 --- !u!4 &1899914974
 Transform:
@@ -797,6 +729,10 @@ PrefabInstance:
     - target: {fileID: 8628347023362905638, guid: 8d82a73ffa3c890418d8d0fc69f8017e, type: 3}
       propertyPath: m_TagString
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081105939852637007, guid: 8d82a73ffa3c890418d8d0fc69f8017e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d82a73ffa3c890418d8d0fc69f8017e, type: 3}

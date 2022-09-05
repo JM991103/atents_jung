@@ -5,35 +5,64 @@ using UnityEngine;
 public class PowerUpMove : MonoBehaviour
 {
     float speed = 4.0f;
-    float cooldown = 0.0f;
-    Vector3 Move;
+    float cooldown = 5.0f;
+    Vector2 dir;
+    WaitForSeconds waiteTime;
+    Player player;
 
     private void Start()
     {
-        Move = new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), 0).normalized;       
+        RandDir();
+        StartCoroutine(DirChange());
+        player = FindObjectOfType<Player>();
+        waiteTime = new WaitForSeconds(cooldown);
 
         Destroy(this.gameObject, 10.0f);
+
+
     }
 
     private void Update()
     {
-        cooldown += Time.deltaTime;
-        if (cooldown >= 1.0f)
-        {
-            Move = new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), 0).normalized;
-
-            cooldown = 0.0f;
-        }
-        transform.Translate(speed * Time.deltaTime * Move);
+        transform.Translate(speed * Time.deltaTime * dir);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.CompareTag("Border"))
         {
-            Move.y = -Move.y;
-            Move.x = -Move.x;
+            dir = -Vector2.Reflect(dir, collision.contacts[0].normal);
+        }
+    }
 
+    IEnumerator DirChange()
+    {
+        while(true)
+        {
+            yield return waiteTime;
+            RandDir(false);
+        }
+    }
+    void RandDir(bool allRandom = true) //allRandom = true 디폴트 파라메터, 값을 지정하지 않으면 디폴트 값이 대신 들어간다.
+    {
+        if (allRandom)
+        {
+        dir = Random.insideUnitCircle;
+        dir = dir.normalized;
+        }
+        else
+        {
+            Vector2 PlayerToPowerUp = transform.position - player.transform.position;
+            PlayerToPowerUp = PlayerToPowerUp.normalized;
+            if (Random.value < 0.6f)    // 60% 확률로 플레이어 반대 방향으로 이동
+            {
+            //playerToPowerUp 벡터를 z축으로 -90 ~ +90만큼 회전시켜서 dir에 넣기
+                dir = Quaternion.Euler(0, 0, Random.Range(-90.0f, 90.0f)) * PlayerToPowerUp;
+            }
+            else    // 40% 확률로 플레이오 방향으로 이동
+            {
+                dir = Quaternion.Euler(0, 0, Random.Range(-90.0f, 90.0f)) * -PlayerToPowerUp;
+            }
         }
     }
 }
