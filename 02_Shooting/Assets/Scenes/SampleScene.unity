@@ -1705,12 +1705,16 @@ PrefabInstance:
       value: -590097335
       objectReference: {fileID: 0}
     - target: {fileID: 8628347023362905637, guid: 8d82a73ffa3c890418d8d0fc69f8017e, type: 3}
+      propertyPath: speed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8628347023362905637, guid: 8d82a73ffa3c890418d8d0fc69f8017e, type: 3}
       propertyPath: explosion
       value: 
       objectReference: {fileID: 1969643024568159061, guid: dbc71c323ee07da4d974ae6a672ab2fd, type: 3}
     - target: {fileID: 8628347023362905637, guid: 8d82a73ffa3c890418d8d0fc69f8017e, type: 3}
       propertyPath: fireInterval
-      value: 0.1
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8628347023362905637, guid: 8d82a73ffa3c890418d8d0fc69f8017e, type: 3}
       propertyPath: explosionPrefab

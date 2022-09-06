@@ -24,14 +24,17 @@ public class Player : MonoBehaviour
     PlayerInputAction inputActions;
     // Awake -> OnEnable -> start : 대체적으로 이 순서
 
+
+    bool isDead = false; 
     public GameObject explosionPrefab;
     public GameObject Bullet;
-    public float speed = 1.0f;      // player의 이동 속도(초당 이동 속도)
     Vector3 dir;                    // 이동 방향(입력에 따라 변경됨)
+    public float speed = 1.0f;      // player의 이동 속도(초당 이동 속도)
     float boost = 1.0f;
 
     //bool isFiring = false;
-    public float fireInterval = 0.3f;
+    
+    
     //float firetimeCount = 0.0f;
 
     Transform firePositionRoot;   //트랜스폼을 여러개 가지는 배열
@@ -84,8 +87,7 @@ public class Player : MonoBehaviour
 
     Rigidbody2D rigid;
     Animator anim;
-
-
+    public float fireInterval = 0.3f;
 
     /// <summary>
     /// 이 스크립트가 들어있는 게임 오브젝트가 생성된 직후에 호출
@@ -127,13 +129,18 @@ public class Player : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        
+        inputActions.player.Disable(); //오브젝트가 사라질 때 더이상 입력을 받지 않도록 비활성화
+    }
+
+    void InputDisable()
+    {
         inputActions.player.Booster.performed -= OffBooster;
         inputActions.player.Booster.canceled -= OnBooster;
         inputActions.player.Fire.canceled -= OnFireStop;
         inputActions.player.Fire.performed -= OnFireStart;
         inputActions.player.Move.performed -= OnMove; //연결해 놓은 함수 해제(안전을 위해)
-        inputActions.player.Move.canceled -= OnMove;  
-        inputActions.player.Disable(); //오브젝트가 사라질 때 더이상 입력을 받지 않도록 비활성화
+        inputActions.player.Move.canceled -= OnMove;
     }
 
     /// <summary>
@@ -160,19 +167,27 @@ public class Player : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
-        //transform.Translate(speed * dir * Time.deltaTime);
-        //이 스크립트 파일이 들어있는 게임 오브젝트에서 Rigidbody2D 컴포넌트를 찾아 리턴. (없으면 null)
-        // 그런데 Rigidbody는 무거운 함수 => (Update나 FixedUpdate처럼 주기적 또는 자주 호출되는 함수 안에서는 안쓰는 것이 좋다.)
-        //Rigidbody2D rigid = GetComponent<Rigidbody2D>();    
-
-        //rigid.AddForce(speed * Time.fixedDeltaTime * dir); //관성이 있는 움직임을 할 때 유용함
-        rigid.MovePosition(transform.position + (boost * speed) * dir * Time.fixedDeltaTime); //관성이 없는 움직임을 처리할 때 유요함
-
-        //firetimeCount += Time.fixedDeltaTime;
-        //if(isFiring && firetimeCount > fireInterval)
+        if (!isDead)
         {
-         //   Instantiate(Bullet, transform.position, Quaternion.identity);
-         //      firetimeCount = 0.0f;
+            //transform.Translate(speed * dir * Time.deltaTime);
+            //이 스크립트 파일이 들어있는 게임 오브젝트에서 Rigidbody2D 컴포넌트를 찾아 리턴. (없으면 null)
+            // 그런데 Rigidbody는 무거운 함수 => (Update나 FixedUpdate처럼 주기적 또는 자주 호출되는 함수 안에서는 안쓰는 것이 좋다.)
+            //Rigidbody2D rigid = GetComponent<Rigidbody2D>();    
+
+            //rigid.AddForce(speed * Time.fixedDeltaTime * dir); //관성이 있는 움직임을 할 때 유용함
+            rigid.MovePosition(transform.position + (boost * speed) * dir * Time.fixedDeltaTime); //관성이 없는 움직임을 처리할 때 유요함
+
+            //firetimeCount += Time.fixedDeltaTime;
+            //if(isFiring && firetimeCount > fireInterval)
+            //{
+            //   Instantiate(Bullet, transform.position, Quaternion.identity);
+            //      firetimeCount = 0.0f;
+            //}
+        }
+        else
+        {
+            rigid.AddForce(Vector2.left * 0.1f, ForceMode2D.Impulse);   // 죽었을 때 뒤로 돌면서 튕겨 나가기
+            rigid.AddTorque(10.0f);
         }
     }
 
@@ -189,13 +204,21 @@ public class Player : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            Dead();
+
+           Dead();  //적이랑 부딪치면 죽이기
+
         }
     }
 
     void Dead()
     {
-        Instantiate(explosionPrefab, transform.position, Quaternion.identity);  
+        isDead = true;      
+        GetComponent<Collider2D>().enabled = false;     // 더 이상 충돌 안일어나게 만들기
+        Instantiate(explosionPrefab, transform.position, Quaternion.identity);  // 폭발 이펙트 생성
+        InputDisable();                  // 입력 막고
+        rigid.gravityScale = 1.0f;      // 중력으로 떨어지게 만들기
+        rigid.freezeRotation = false;    // 회전 막아 놓은것 풀기
+        StopCoroutine(firea);
     }
 
     ////(collider 와 trigger 다른 점은 통과 되는지 안되는지)
