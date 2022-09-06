@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class ItemEnemy : MonoBehaviour
 {
-    public GameObject ItemEn;   // Item
+    public GameObject ItemEn;   
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
