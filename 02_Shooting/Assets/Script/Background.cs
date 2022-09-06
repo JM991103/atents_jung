@@ -19,21 +19,33 @@ public class Background : MonoBehaviour
 
     private void Update()
     {
-        minusX();
-    }
 
-    public virtual void minusX()
-    {
         float minusX = transform.position.x - Background_Width;
-        foreach (Transform slot in bgslots)      //속도가 그냥 for보다 빠름
-        {
-            slot.Translate(scrollingSpeed * Time.deltaTime * -transform.right);
+        //    foreach (Transform slot in bgslots)      //속도가 그냥 for보다 빠름
+        //    {
+        //        slot.Translate(scrollingSpeed * Time.deltaTime * -transform.right);
 
-            if (slot.position.x < minusX)
+        //        if (slot.position.x < minusX)
+        //        {
+        //            // 오른쪽으로 Backgroung_Width의 3배(bgslot.Length에 3개가 들어있으니까)만큼 이동
+        //            slot.Translate(Background_Width * bgslots.Length * transform.right);
+        //        }
+        //    }
+        //
+        for (int i = 0; i < bgslots.Length; i++)
+        {
+            bgslots[i].Translate(scrollingSpeed * Time.deltaTime * -transform.right);
+            if (bgslots[i].position.x < minusX)
             {
-                // 오른쪽으로 Backgroung_Width의 3배(bgslot.Length에 3개가 들어있으니까)만큼 이동
-                slot.Translate(Background_Width * bgslots.Length * transform.right);
+                MoveRightEnd(i);
             }
         }
+
+
+    }
+
+    public virtual void MoveRightEnd(int index)
+    {
+        bgslots[index].Translate(Background_Width * bgslots.Length * transform.right);
     }
 }

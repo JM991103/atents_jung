@@ -8,6 +8,7 @@ using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Processors;
 
 public class Player : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class Player : MonoBehaviour
     PlayerInputAction inputActions;
     // Awake -> OnEnable -> start : 대체적으로 이 순서
 
+    public GameObject explosionPrefab;
     public GameObject Bullet;
     public float speed = 1.0f;      // player의 이동 속도(초당 이동 속도)
     Vector3 dir;                    // 이동 방향(입력에 따라 변경됨)
@@ -101,6 +103,7 @@ public class Player : MonoBehaviour
         //firearry[0] = new Vector3(0, 0, 0);
         //firearry[1] = new Vector3(0, 0, 30);
         //firearry[2] = new Vector3(0, 0, -30);
+
 
         firea = fire();
     }
@@ -183,7 +186,18 @@ public class Player : MonoBehaviour
             Power++;                        //파워 증가 시키고
             Destroy(collision.gameObject);  //파워업 아이템 삭제
         }
+
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Dead();
+        }
     }
+
+    void Dead()
+    {
+        Instantiate(explosionPrefab, transform.position, Quaternion.identity);  
+    }
+
     ////(collider 와 trigger 다른 점은 통과 되는지 안되는지)
     //private void OnCollisionEnter2D(Collision2D collision)
     //{

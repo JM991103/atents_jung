@@ -130,7 +130,7 @@ public class Asteroid : MonoBehaviour
         explosion.SetActive(true);
         explosion.transform.parent = null;
 
-        if (UnityEngine.Random.Range(0.0f,1.0f)<0.04f)
+        if (UnityEngine.Random.Range(0.0f,1.0f)<0.05f)
         {
             //5%확률에 당첨되었다.
             splitCount = 20;
