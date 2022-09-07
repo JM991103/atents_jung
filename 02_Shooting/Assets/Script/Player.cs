@@ -19,47 +19,74 @@ public class Player : MonoBehaviour
     //Func<int, float> del4;    //리턴타입이 int고 파라메터(매개변수)는 float 하나인 델리게이트 del4를 만듬
     //Action은 무조건 리턴타입이 void이고 Func는 <> 첫번째 가 리턴타입이 됨
 
+    //public 변수(필드)----------------------------------------------------------------------------------------
+    [Header("플레이어 스텟")]
+    /// <summary>
+    /// player의 이동 속도(초당 이동 속도)
+    /// </summary>
+    public float speed = 1.0f;     
 
-    SpriteRenderer spriteRenderer;
-    PlayerInputAction inputActions;
-    // Awake -> OnEnable -> start : 대체적으로 이 순서
-    Collider2D bodyCollider;
-    const float InvincibleTime = 1.0f;
-    bool isDead = false; 
-    public GameObject explosionPrefab;
-    public GameObject Bullet;
-    Vector3 dir;                    // 이동 방향(입력에 따라 변경됨)
-    public float speed = 1.0f;      // player의 이동 속도(초당 이동 속도)
-    float boost = 1.0f;
+    /// <summary>
+    /// 총알 발사 시간 간격
+    /// </summary>
+    public float fireInterval = 0.3f;
+
+    [Header("게임 기본 설정")]
+    /// <summary>
+    /// 초기 생명 개수
+    /// </summary>
     public int initaialLife = 3;
+
+    /// <summary>
+    /// 피격 시 무적 시간
+    /// </summary>
+    const float InvincibleTime = 1.0f;
+
+    [Header("각종 프리팹")]
+    /// <summary>
+    /// 총알용 프리팹
+    /// </summary>
+    public GameObject BulletPrefab;
+
+    /// <summary>
+    /// 비행기 폭팔 이펙트용 프리팹
+    /// </summary>
+    public GameObject explosionPrefab;
+
+
+
+    /// <summary>
+    /// 현재 생명 수
+    /// </summary>
     public int life;
-    bool invincibleMode = true;
-    float timeElapsed = 0.0f;
 
+    /// <summary>
+    /// 무적 상태인지 표시용(true면 무적상태, false 일반상태)
+    /// </summary>
+    private bool invincibleMode = false;
 
-    int Life
-    {
-        //get
-        //{
-        //    return life;
-        //}
-        get => life;    // 위 4줄과 같은 코드
-        set
-        {
-            if (life > value)
-            {
-                // life가 감소한 상황 (새로운 값 (value)이 옛날 값(life)보다 작다 => 감소했다.)
-                StartCoroutine(EnterinvnicibleMode());
-            }
-            life = value;
-            if (life <= 0)  // 비교범위는 가능한 크게 잡는 쪽이 안전한다.
-            {
-                Dead();     // life가 0보다 작거나 같으면 죽는다.
-            }
-        }
-        // int i = Life;    // i에다가 Life 값을 가져와서 넣어라 => Life의 get이 실행된다. i = Life; 와 같은 실행 결과가 된다.
-        // Life = 3;        // Life에 3을 넣어라 => Life의 set이 실행된다. life = 3;과 같은 실행결과
-    }
+    /// <summary>
+    /// 무적 상태에 들어간 시간(의 30배)
+    /// </summary>
+    private float timeElapsed = 0.0f;
+
+    /// <summary>
+    /// 입력된 이동 방향
+    /// </summary>
+    private  Vector3 dir;                    // 이동 방향(입력에 따라 변경됨)
+
+    /// <summary>
+    /// 이동
+    /// </summary>
+    private  float boost = 1.0f;
+
+    private SpriteRenderer spriteRenderer;
+    private PlayerInputAction inputActions;
+    private  Collider2D bodyCollider;
+    private  bool isDead = false; 
+    // Awake -> OnEnable -> start : 대체적으로 이 순서
+
+   
       
 
     //bool isFiring = false;
@@ -67,57 +94,15 @@ public class Player : MonoBehaviour
     
     //float firetimeCount = 0.0f;
 
-    Transform firePositionRoot;   //트랜스폼을 여러개 가지는 배열
-    GameObject flash;
+    private  Transform firePositionRoot;   //트랜스폼을 여러개 가지는 배열
+    private  GameObject flash;
+    private float fireAngle = 30.0f;
+    private  int power = 0;
+    private  Vector3[] firearry = new Vector3[3];
+    private  IEnumerator firea;
+    private  Rigidbody2D rigid;
+    private Animator anim;
 
-    float fireAngle = 30.0f;
-    int power = 0;
-    int Power
-    {
-        get => power;
-        set
-        {
-            power = value;  // 들어온 값으로 파워 설정
-            if (power > 3)  // 파워가 3을 벗어나면 3을 제한
-                power = 3;
-
-            // 기존에 있는 파이어 포지션 제거
-            while (firePositionRoot.childCount > 0)
-            {
-                Transform temp = firePositionRoot.GetChild(0);  // firePositionRoot의 첫번째 자식을 
-                temp.parent = null;         // 부모 제거 하고
-                Destroy(temp.gameObject);   // 삭제 시키기
-            }
-
-            //파워 등급에 맞게 새로 배치
-            for (int i = 0; i < power; i++)
-            {
-                GameObject firePos = new GameObject();  // 빈 오브젝트 생성하기
-                firePos.name = $"FirePosition{i}";      
-                firePos.transform.parent = firePositionRoot;    // firePositionRoot의 자식으로 추가
-                firePos.transform.localPosition = Vector3.zero; // 로컬 위치를 (0,0,0)으로 변경 / 아래 줄과 같은 기능
-                //firePos.transform.position = firePositionRoot.transform.position;
-
-                // 파워가 1개 일때 : 0도
-                // 파워가 2개 일때 : -15, +15도
-                // 파워가 3개 일때 : -30도, 0도, +30도
-                firePos.transform.rotation = Quaternion.Euler(0, 0, (power - 1) * (fireAngle * 0.5f) + i * -fireAngle);
-                firePos.transform.Translate(1.0f, 0.0f, 0.0f);
-
-                //시작 각도 i * (fireAngle * 0.5)
-                //계산 식 : (power - 1) * (fireAngle * 0.5) + i * -fireAngle
-            }
-        }
-    }
-
-    Vector3[] firearry = new Vector3[3];
- 
-
-    IEnumerator firea;
-
-    Rigidbody2D rigid;
-    Animator anim;
-    public float fireInterval = 0.3f;
 
     /// <summary>
     /// 이 스크립트가 들어있는 게임 오브젝트가 생성된 직후에 호출
@@ -196,7 +181,7 @@ public class Player : MonoBehaviour
         if (invincibleMode)
         {
             timeElapsed += Time.deltaTime * 30.0f;
-            float alpha = (Mathf.Cos(timeElapsed) + 10.0f) * 0.5f;  // cos의 결과를 1~0으로 변경
+            float alpha = (Mathf.Cos(timeElapsed) + 1.0f) * 0.5f;  // cos의 결과를 1~0으로 변경
             spriteRenderer.color = new Color(1, 1, 1, alpha);
         }
     }
@@ -274,6 +259,73 @@ public class Player : MonoBehaviour
         rigid.freezeRotation = false;    // 회전 막아 놓은것 풀기
         StopCoroutine(firea);
     }
+    // 프로퍼티 ------------------------------------------------------------------------------------------------
+
+    int Power
+    {
+        get => power;
+        set
+        {
+            power = value;  // 들어온 값으로 파워 설정
+            if (power > 3)  // 파워가 3을 벗어나면 3을 제한
+                power = 3;
+
+            // 기존에 있는 파이어 포지션 제거
+            while (firePositionRoot.childCount > 0)
+            {
+                Transform temp = firePositionRoot.GetChild(0);  // firePositionRoot의 첫번째 자식을 
+                temp.parent = null;         // 부모 제거 하고
+                Destroy(temp.gameObject);   // 삭제 시키기
+            }
+
+            //파워 등급에 맞게 새로 배치
+            for (int i = 0; i < power; i++)
+            {
+                GameObject firePos = new GameObject();  // 빈 오브젝트 생성하기
+                firePos.name = $"FirePosition{i}";
+                firePos.transform.parent = firePositionRoot;    // firePositionRoot의 자식으로 추가
+                firePos.transform.localPosition = Vector3.zero; // 로컬 위치를 (0,0,0)으로 변경 / 아래 줄과 같은 기능
+                //firePos.transform.position = firePositionRoot.transform.position;
+
+                // 파워가 1개 일때 : 0도
+                // 파워가 2개 일때 : -15, +15도
+                // 파워가 3개 일때 : -30도, 0도, +30도
+                firePos.transform.rotation = Quaternion.Euler(0, 0, (power - 1) * (fireAngle * 0.5f) + i * -fireAngle);
+                firePos.transform.Translate(1.0f, 0.0f, 0.0f);
+
+                //시작 각도 i * (fireAngle * 0.5)
+                //계산 식 : (power - 1) * (fireAngle * 0.5) + i * -fireAngle
+            }
+        }
+    }  
+
+    int Life    //프로퍼티
+    {
+        //get
+        //{
+        //    return life;
+        //}
+        get => life;    // 위 4줄과 같은 코드
+        set
+        {
+            // value는 지금 set하는 값
+            if (life > value)
+            {
+                // life가 감소한 상황 (새로운 값 (value)이 옛날 값(life)보다 작다 => 감소했다.)
+                StartCoroutine(EnterinvnicibleMode());
+            }
+
+            life = value;
+            if (life <= 0)  // 비교범위는 가능한 크게 잡는 쪽이 안전한다.
+            {
+                Dead();     // life가 0보다 작거나 같으면 죽는다.
+            }
+        }
+        // int i = Life;    // i에다가 Life 값을 가져와서 넣어라 => Life의 get이 실행된다. i = Life; 와 같은 실행 결과가 된다.
+        // Life = 3;        // Life에 3을 넣어라 => Life의 set이 실행된다. life = 3;과 같은 실행결과
+    }
+
+    //함수(메서드) ---------------------------------------------------------------------------------------------
 
     ////(collider 와 trigger 다른 점은 통과 되는지 안되는지)
     //private void OnCollisionEnter2D(Collision2D collision)
@@ -350,7 +402,7 @@ public class Player : MonoBehaviour
                 //GameObject obj = Instantiate(Bullet, firePosition[i].position, Quaternion.identity);
 
                 //bullet이라는 프리팹을 firePosition[i]의 위치에 firePosition[i]회전으로 만들어라
-                GameObject obj = Instantiate(Bullet, firePositionRoot.GetChild(i).position, firePositionRoot.GetChild(i).rotation);
+                GameObject obj = Instantiate(BulletPrefab, firePositionRoot.GetChild(i).position, firePositionRoot.GetChild(i).rotation);
 
                 //Instantiate(생성할 프리팹); //프리팹이 0,0,0위치에 0,0,0회전에 1,1,1 스케일로 만들어짐
                 //Instantiate(생성할 프리팹, 생성할 위치, 생성될 때의 회전)
