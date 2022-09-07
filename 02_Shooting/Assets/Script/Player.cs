@@ -18,19 +18,49 @@ public class Player : MonoBehaviour
     //Action<int> del3;         //리턴타입이 void, 파라메터(매개변수)는 int 하나만 델리게이트 del3을 만듬
     //Func<int, float> del4;    //리턴타입이 int고 파라메터(매개변수)는 float 하나인 델리게이트 del4를 만듬
     //Action은 무조건 리턴타입이 void이고 Func는 <> 첫번째 가 리턴타입이 됨
-    
 
 
+    SpriteRenderer spriteRenderer;
     PlayerInputAction inputActions;
     // Awake -> OnEnable -> start : 대체적으로 이 순서
-
-
+    Collider2D bodyCollider;
+    const float InvincibleTime = 1.0f;
     bool isDead = false; 
     public GameObject explosionPrefab;
     public GameObject Bullet;
     Vector3 dir;                    // 이동 방향(입력에 따라 변경됨)
     public float speed = 1.0f;      // player의 이동 속도(초당 이동 속도)
     float boost = 1.0f;
+    public int initaialLife = 3;
+    public int life;
+    bool invincibleMode = true;
+    float timeElapsed = 0.0f;
+
+
+    int Life
+    {
+        //get
+        //{
+        //    return life;
+        //}
+        get => life;    // 위 4줄과 같은 코드
+        set
+        {
+            if (life > value)
+            {
+                // life가 감소한 상황 (새로운 값 (value)이 옛날 값(life)보다 작다 => 감소했다.)
+                StartCoroutine(EnterinvnicibleMode());
+            }
+            life = value;
+            if (life <= 0)  // 비교범위는 가능한 크게 잡는 쪽이 안전한다.
+            {
+                Dead();     // life가 0보다 작거나 같으면 죽는다.
+            }
+        }
+        // int i = Life;    // i에다가 Life 값을 가져와서 넣어라 => Life의 get이 실행된다. i = Life; 와 같은 실행 결과가 된다.
+        // Life = 3;        // Life에 3을 넣어라 => Life의 set이 실행된다. life = 3;과 같은 실행결과
+    }
+      
 
     //bool isFiring = false;
     
@@ -97,17 +127,20 @@ public class Player : MonoBehaviour
         inputActions = new PlayerInputAction();
         rigid = GetComponent<Rigidbody2D>();    //한번만 찾고 저장해서 계속 쓰기 (메모리 더 쓰고 성능 아끼기)
         anim = GetComponent<Animator>();
+        bodyCollider = GetComponent<Collider2D>();  // CapsulCollider2D가 collider2D의 자식이라서 가능
 
         firePositionRoot = transform.GetChild(0);
         flash = transform.GetChild(1).gameObject;
         flash.SetActive(false);
-
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        
         //firearry[0] = new Vector3(0, 0, 0);
         //firearry[1] = new Vector3(0, 0, 30);
         //firearry[2] = new Vector3(0, 0, -30);
 
 
         firea = fire();
+        life = initaialLife;
     }
 
     /// <summary>
@@ -160,6 +193,12 @@ public class Player : MonoBehaviour
         //transform.position += speed * dir * Time.deltaTime;
         //transform.Translate(speed * dir * Time.deltaTime);
 
+        if (invincibleMode)
+        {
+            timeElapsed += Time.deltaTime * 30.0f;
+            float alpha = (Mathf.Cos(timeElapsed) + 10.0f) * 0.5f;  // cos의 결과를 1~0으로 변경
+            spriteRenderer.color = new Color(1, 1, 1, alpha);
+        }
     }
 
     /// <summary>
@@ -191,7 +230,7 @@ public class Player : MonoBehaviour
         }
     }
 
-
+    
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -204,10 +243,25 @@ public class Player : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Enemy"))
         {
+            // 적이랑 부딪치면 life가 1 감소한다.
+            Life--;
 
-           Dead();  //적이랑 부딪치면 죽이기
+            Debug.Log($"플레이어의 Life는 {Life}");
 
         }
+    }
+    
+    IEnumerator EnterinvnicibleMode()
+    {
+        bodyCollider.enabled = false;
+        invincibleMode = true;
+        timeElapsed = 0.0f;
+
+        yield return new WaitForSeconds(InvincibleTime);    // 무적시간 동안 대기
+
+        spriteRenderer.color = Color.white; //원래 색으로 되돌리기
+        invincibleMode = false;
+        bodyCollider.enabled = true;
     }
 
     void Dead()
