@@ -1,11 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Authentication.ExtendedProtection;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class Asteroid : MonoBehaviour
 {
+    public int score = 50;
     public float rotateSpeed = 360.0f;  //회전 속도
     public float moveSpeed = 1.5f;      //이동 속도
 
@@ -31,6 +34,8 @@ public class Asteroid : MonoBehaviour
 
     GameObject explosion;
     SpriteRenderer sprite;
+
+    Action<int> onDead;
 
     private void Awake()
     {
@@ -78,6 +83,9 @@ public class Asteroid : MonoBehaviour
         explosion = transform.GetChild(0).gameObject;
 
         StartCoroutine(selfCrush());
+
+        Player player = FindObjectOfType<Player>();
+        onDead += player.AddScore;
     }
 
     IEnumerator selfCrush()
@@ -116,6 +124,7 @@ public class Asteroid : MonoBehaviour
             hitPoint--;
             if (hitPoint <= 0)
             {
+                onDead?.Invoke(score);
                 explosion.SetActive(true);
                 explosion.transform.parent = null;
                 Destroy(this.gameObject);

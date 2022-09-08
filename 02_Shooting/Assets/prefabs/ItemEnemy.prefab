@@ -122,6 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16e147c576eecc1428b01576e402d0a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  score: 20
   amplitude: 1.5
   frequencyTime: 3
 --- !u!58 &1823649566365686792
@@ -173,6 +174,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c953fb5a550f5294893509aeb360bb66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  score: 10
+  amplitude: 1
+  frequencyTime: 1
   ItemEn: {fileID: 9096031362444482291, guid: 0a5c638bf131b84418904af3baf5f5cd, type: 3}
 --- !u!1001 &6351244601924139241
 PrefabInstance:

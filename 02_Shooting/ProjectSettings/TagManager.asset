@@ -57,3 +57,6 @@ TagManager:
   - name: Enemy
     uniqueID: 234700751
     locked: 0
+  - name: Invincible
+    uniqueID: 669944999
+    locked: 0

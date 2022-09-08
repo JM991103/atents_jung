@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -5,9 +6,11 @@ using UnityEngine;
 
 public class Enemy_s : MonoBehaviour
 {
+    public int score = 10;
     float speed = 3.0f;
     Vector3 dis = new Vector3(-10, 0, 0);
     GameObject explosion;
+    Action<int> onDead;
 
     float spawnY;       // 생성 되었을 때의 기준 높이
     float timeElapsed;  // 게임 시작부터 얼마나 시간이 지났나를 기록해 놓는 변수
@@ -22,6 +25,9 @@ public class Enemy_s : MonoBehaviour
         spawnY = transform.position.y;
         timeElapsed = 0.0f;
         //explosion.SetActive(false); //활성화 상태를 끄기(비활성화)
+
+        Player player = FindObjectOfType<Player>();
+        onDead += player.AddScore;
     }
 
     // Update is called once per frame
@@ -45,6 +51,7 @@ public class Enemy_s : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Bullet"))
         {
+            onDead?.Invoke(score);
             //GameObject obj = Instantiate(explosion,transform.position, Quaternion.identity);
             //Destroy(obj, 0.42f);
             explosion.SetActive(true);  //총알에 맞았을 때 익스폴로젼을 활성화 시키고

@@ -92,6 +92,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private PlayerInputAction inputActions;
 
+    // 공격 관련 ---------------------------------------------------------------------------------------------------
 
     /// <summary>
     /// 총알이 발사될 위치와 회전을 가지고 있는 트랜스 폼
@@ -114,6 +115,11 @@ public class Player : MonoBehaviour
     private int power = 0;
 
     /// <summary>
+    /// 플레이어가 획득한 점수
+    /// </summary>
+    public int totalScore = 0;
+
+    /// <summary>
     /// 연사용 코루틴
     /// </summary>
     private IEnumerator firea;
@@ -123,9 +129,11 @@ public class Player : MonoBehaviour
     private Animator anim;
     private  Collider2D bodyCollider;
     private SpriteRenderer spriteRenderer;
+    private AudioSource shootaudio;
 
     //델리게이트 -----------------------------------------------------------------------------------------------
     public Action<int> onLifeChange;
+    public Action<int> onScoreChange;
 
 
     //bool isFiring = false;
@@ -243,6 +251,17 @@ public class Player : MonoBehaviour
         inputActions.player.Move.canceled -= OnMove;
     }
 
+    public void AddScore(int score)
+    {
+        totalScore += score;
+
+        onScoreChange?.Invoke(totalScore);
+
+        //1. 이벤트가 발생하는 곳(델리게이트 작성) - > 신호만 보내기
+        //2. 실제 액션이 일어나는 곳(델리게이트 함수 작성) 
+    }
+
+
     /// <summary>
     /// 플레이어가 죽었을 때 실행될 일들
     /// </summary>
@@ -355,6 +374,7 @@ public class Player : MonoBehaviour
                 //현재 회전 값을 x, y, z축별로 몇도씩 회전 했는지 확인 가능
                 //Quaternion.Euler(10, 20, 30); //x축으로 10도, y축으로 20도, z축으로 30도 회전하는 코드
             }
+            shootaudio.Play();
             flash.SetActive(true);      //flash 켜고
             StartCoroutine(Flashoff()); //0.1초 후에 flash를 끄는 코루틴 실행
 
@@ -411,6 +431,7 @@ public class Player : MonoBehaviour
         flash.SetActive(false);                     //flash 비활성화
         firea = fire();
 
+        shootaudio = GetComponent<AudioSource>();
         //firearry[0] = new Vector3(0, 0, 0);
         //firearry[1] = new Vector3(0, 0, 30);
         //firearry[2] = new Vector3(0, 0, -30);
@@ -418,6 +439,7 @@ public class Player : MonoBehaviour
 
         
     }
+
 
     /// <summary>
     /// 이 스크립트가 들어있는 게임 오브젝트가 활성화 되었을 때 호출
@@ -449,6 +471,8 @@ public class Player : MonoBehaviour
     {
         Power = 1;  //시작할 때 파워를 1로 설정(발사 위치 갱신용)
         Life = initaialLife;    // 생명 숫자 초기화 
+        totalScore = 0;         // 점수 초기화
+        AddScore(0);            // UI 갱신용
     }
 
     /// <summary>
@@ -515,8 +539,6 @@ public class Player : MonoBehaviour
         {
             // 적이랑 부딪치면 life가 1 감소한다.
             Life--;
-
-            Debug.Log($"플레이어의 Life는 {Life}");
         }
     }
 }
