@@ -11,6 +11,7 @@ public class LifePanel : MonoBehaviour
         lifeText = transform.GetChild(2).GetComponent<TextMeshProUGUI>();
     }
 
+
     private void Start()
     {
         //GameObject.Find();                    // 이름으로 찾기

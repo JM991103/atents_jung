@@ -416,7 +416,7 @@ public class Player : MonoBehaviour
         //firearry[2] = new Vector3(0, 0, -30);
 
 
-        life = initaialLife;
+        
     }
 
     /// <summary>
@@ -448,7 +448,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         Power = 1;  //시작할 때 파워를 1로 설정(발사 위치 갱신용)
-
+        Life = initaialLife;    // 생명 숫자 초기화 
     }
 
     /// <summary>
