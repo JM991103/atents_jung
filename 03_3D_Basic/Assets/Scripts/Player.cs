@@ -12,10 +12,13 @@ public class Player : MonoBehaviour
     float moveDir = 0.0f;
     float rotateDir = 0.0f;
 
+    GroundChecker checker;
     PlayerInputActions inputActions;            // PlayerInputActions타입이고 inputAction 이름을 가진 변수를 선언
     Rigidbody rigid;
+    Animator anim;
     
     bool isJumping = false;
+
 
     Vector3 dir;
 
@@ -23,15 +26,22 @@ public class Player : MonoBehaviour
     {
         inputActions = new PlayerInputActions();    // 인스턴스 생성. 실제 메모리를 할당 받고 사용할 수 있도록 만드는 것
         rigid = GetComponent<Rigidbody>();
-
-        GroundChecker ground = GetComponentInChildren<GroundChecker>();
-        ground.onGrounded += OnGround;
+        anim = GetComponent<Animator>();
+        checker = GetComponentInChildren<GroundChecker>();
+        checker.onGrounded += OnGround;
     }
 
     private void FixedUpdate()
     {
         move();
         Rotate();
+        if(isJumping)
+        {
+            if (rigid.velocity.y < 0)
+            {
+                checker.gameObject.SetActive(true);
+            }
+        }
     }
 
     private void OnEnable()
@@ -44,9 +54,9 @@ public class Player : MonoBehaviour
 
     private void OnDisable()
     {
-        inputActions.Player.Move.performed -= onMove;
-        inputActions.Player.Move.canceled -= onMove;
         inputActions.Player.Jump.performed -= onJump;
+        inputActions.Player.Move.canceled -= onMove;
+        inputActions.Player.Move.performed -= onMove;
         inputActions.Player.Disable();                  //Player 액션맵에 있는 액션들을 처리하지 않겠다.
     }
 
@@ -56,6 +66,8 @@ public class Player : MonoBehaviour
 
         moveDir = input.y;      //w : +1, s : -1 전진인지 후진인지 결정
         rotateDir = input.x;    //a : -1, b : +1 좌회전인지 우회전인지 결정
+
+        anim.SetBool("isMove", !context.canceled);
     }
 
     private void onJump(InputAction.CallbackContext _)
@@ -63,11 +75,9 @@ public class Player : MonoBehaviour
         if(!isJumping)
         { 
             //플레이어의 위쪽 방향(up)으로 jumpPower만큼 즉시 힘을 추가한다.(질량 있음)
-            rigid.AddForce(transform.up * jumpPower, ForceMode.Impulse);
-            isJumping = true;
+            JumpStart(); 
         }
     }
-
 
     void move()
     {
@@ -82,6 +92,14 @@ public class Player : MonoBehaviour
 
         //Quaternion.Euler(0, rotateDir * rotateSpeed * Time.fixedDeltaTime, 0) x,z 축은 회전 없고 y축 기준으로 회전
         //Quaternion.AngleAxis(rotateDir * rotateSpeed * Time.fixedDeltaTime, transform.up); 플레이어의 Y축 기준으로 회전
+    }
+    
+    void JumpStart()
+    {
+        rigid.AddForce(transform.up * jumpPower, ForceMode.Impulse);
+        isJumping = true;
+
+        checker.gameObject.SetActive(false);
     }
 
     void OnGround()
