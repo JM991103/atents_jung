@@ -123,6 +123,42 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &667770164 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8991385260336553482, guid: fbfb4846c0165ee48b000d2639b065ce, type: 3}
+  m_PrefabInstance: {fileID: 271980081496698496}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &667770165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 667770164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84287f4a63ea6a6469d3059c64f1bb8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
+  rotateSpeed: 180
+  jumpPower: 3
+--- !u!54 &667770166
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 667770164}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -673,7 +709,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-122434
+  m_Name: pb_Mesh-1310
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -921,7 +957,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8073250155239672906, guid: cb4d33655d5549140a7baf9f60321059, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.062301
+      value: 16.2
       objectReference: {fileID: 0}
     - target: {fileID: 8073250155239672906, guid: cb4d33655d5549140a7baf9f60321059, type: 3}
       propertyPath: m_LocalPosition.y

@@ -14,6 +14,8 @@ public class Player : MonoBehaviour
 
     PlayerInputActions inputActions;            // PlayerInputActions타입이고 inputAction 이름을 가진 변수를 선언
     Rigidbody rigid;
+    
+    bool isJumping = false;
 
     Vector3 dir;
 
@@ -21,6 +23,9 @@ public class Player : MonoBehaviour
     {
         inputActions = new PlayerInputActions();    // 인스턴스 생성. 실제 메모리를 할당 받고 사용할 수 있도록 만드는 것
         rigid = GetComponent<Rigidbody>();
+
+        GroundChecker ground = GetComponentInChildren<GroundChecker>();
+        ground.onGrounded += OnGround;
     }
 
     private void FixedUpdate()
@@ -55,8 +60,12 @@ public class Player : MonoBehaviour
 
     private void onJump(InputAction.CallbackContext _)
     {
-        //플레이어의 위쪽 방향(up)으로 jumpPower만큼 즉시 힘을 추가한다.(질량 있음)
-        rigid.AddForce(transform.up * jumpPower, ForceMode.Impulse);
+        if(!isJumping)
+        { 
+            //플레이어의 위쪽 방향(up)으로 jumpPower만큼 즉시 힘을 추가한다.(질량 있음)
+            rigid.AddForce(transform.up * jumpPower, ForceMode.Impulse);
+            isJumping = true;
+        }
     }
 
 
@@ -73,5 +82,10 @@ public class Player : MonoBehaviour
 
         //Quaternion.Euler(0, rotateDir * rotateSpeed * Time.fixedDeltaTime, 0) x,z 축은 회전 없고 y축 기준으로 회전
         //Quaternion.AngleAxis(rotateDir * rotateSpeed * Time.fixedDeltaTime, transform.up); 플레이어의 Y축 기준으로 회전
+    }
+
+    void OnGround()
+    {
+        isJumping = false;
     }
 }
