@@ -3,13 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//수직 또는 수평으로만 움직일 것. 대각선은 밀리는 현상 발생
+
 public class Platfoem : MonoBehaviour
 {
     public Transform destination;
     public float moveSpeed = 3.0f;
 
-    Rigidbody rigid;
-    bool isMoving = false;
+    protected Rigidbody rigid;
+    protected bool isMoving = false;
 
     public Action<Vector3> onMove;
 
@@ -52,6 +54,7 @@ public class Platfoem : MonoBehaviour
             }
              // 위치 최종 결정
             rigid.MovePosition(newPos);
+            // 델리게이트 연결
             onMove?.Invoke(moveDelta);
         }
     }
@@ -74,5 +77,4 @@ public class Platfoem : MonoBehaviour
         }
     }
 
-    
 }

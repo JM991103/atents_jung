@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,7 +17,8 @@ public class Player : MonoBehaviour
     PlayerInputActions inputActions;            // PlayerInputActions타입이고 inputAction 이름을 가진 변수를 선언
     Rigidbody rigid;
     Animator anim;
-    
+    public Action OnObjectUse;
+
     bool isJumping = false;
 
 
@@ -49,7 +51,7 @@ public class Player : MonoBehaviour
         if(collision.gameObject.CompareTag("Platfoem"))
         {
             Platfoem platform = collision.gameObject.GetComponent<Platfoem>();
-            platform.onMove += onMovingObject;
+            platform.onMove += onMovingObject;  // 델리게이트 연결
         }    
     }
 
@@ -58,7 +60,7 @@ public class Player : MonoBehaviour
         if (collision.gameObject.CompareTag("Platfoem"))
         {
             Platfoem platform = collision.gameObject.GetComponent<Platfoem>();
-            platform.onMove -= onMovingObject;
+            platform.onMove -= onMovingObject;  // 델리게이트 해제
         }
     }
 
@@ -68,15 +70,18 @@ public class Player : MonoBehaviour
         inputActions.Player.Move.performed += onMove;   //
         inputActions.Player.Move.canceled += onMove;
         inputActions.Player.Jump.performed += onJump;
+        inputActions.Player.Use.performed += onUseInput;
     }
 
     private void OnDisable()
     {
+        inputActions.Player.Use.performed += onUseInput;
         inputActions.Player.Jump.performed -= onJump;
         inputActions.Player.Move.canceled -= onMove;
         inputActions.Player.Move.performed -= onMove;
         inputActions.Player.Disable();                  //Player 액션맵에 있는 액션들을 처리하지 않겠다.
     }
+
 
     private void onMove(InputAction.CallbackContext context)
     {
@@ -95,6 +100,12 @@ public class Player : MonoBehaviour
             //플레이어의 위쪽 방향(up)으로 jumpPower만큼 즉시 힘을 추가한다.(질량 있음)
             JumpStart(); 
         }
+    }
+
+    private void onUseInput(InputAction.CallbackContext _)
+    {
+        anim.SetTrigger("Use");
+        OnObjectUse?.Invoke();
     }
 
     void move()
@@ -127,7 +138,7 @@ public class Player : MonoBehaviour
 
     void onMovingObject(Vector3 delta)
     {
-        rigid.velocity = Vector3.zero;
-        rigid.MovePosition(rigid.position + delta);
+        rigid.velocity = Vector3.zero;              // 원래 플레이어의 벨로시티 제거
+        rigid.MovePosition(rigid.position + delta); // 플랫폼이 이동한만큼 이동시키기
     }
 }
