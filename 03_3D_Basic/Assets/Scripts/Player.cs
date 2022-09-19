@@ -44,6 +44,24 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Platfoem"))
+        {
+            Platfoem platform = collision.gameObject.GetComponent<Platfoem>();
+            platform.onMove += onMovingObject;
+        }    
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Platfoem"))
+        {
+            Platfoem platform = collision.gameObject.GetComponent<Platfoem>();
+            platform.onMove -= onMovingObject;
+        }
+    }
+
     private void OnEnable()
     {
         inputActions.Player.Enable();                   // Player 액션맵에 들어 있는 액션들을 처리 하겠다.
@@ -105,5 +123,11 @@ public class Player : MonoBehaviour
     void OnGround()
     {
         isJumping = false;
+    }
+
+    void onMovingObject(Vector3 delta)
+    {
+        rigid.velocity = Vector3.zero;
+        rigid.MovePosition(rigid.position + delta);
     }
 }
