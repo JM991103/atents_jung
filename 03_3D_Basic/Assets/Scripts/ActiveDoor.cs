@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Door : MonoBehaviour
+public class ActiveDoor : MonoBehaviour, IUseableObject
 {
-    protected Animator anim;
-
-    
+    Animator anim;
+    bool playerIn = false;
+    bool ondoor = false;
 
     private void Awake()
     {
-        anim = GetComponent<Animator>();
+        anim = GetComponent<Animator>();        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -18,18 +18,26 @@ public class Door : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             //Debug.Log("문이 열려야 한다.");
-            anim.SetBool("isOpen", true);
-
+            playerIn = true;
         }
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            
+            playerIn = false;
             //Debug.Log("문이 닫혀야 한다.");
             anim.SetBool("isOpen", false);
         }
     }
-    
+
+
+    public void Use()
+    {
+        if (playerIn)
+        {
+            ondoor = !ondoor;
+            anim.SetBool("isOpen", ondoor);
+        }
+    }
 }
