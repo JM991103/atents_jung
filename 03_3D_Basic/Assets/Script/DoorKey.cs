@@ -6,10 +6,15 @@ public class DoorKey : MonoBehaviour
 {
     public TwoWayDoor target;
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        target.Open();
-        Destroy(this.gameObject);
+        if (other.CompareTag("Player"))
+        {
+            target.Open();
+            Destroy(this.gameObject);
+        }
+
     }
+
 
 }
