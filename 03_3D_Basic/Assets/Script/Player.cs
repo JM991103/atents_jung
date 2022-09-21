@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEditor;
 
-public class Player : MonoBehaviour, IUser
+public class Player : MonoBehaviour, IFly, IDead
 {
     PlayerInputActions inputActions;            // PlayerInputActions 타입이고 inputActions 이름을 가진 변수를 선언
     Rigidbody rigid;
@@ -24,11 +24,12 @@ public class Player : MonoBehaviour, IUser
     bool isJumping = false;
 
     Vector3 dir;
-    Vector3 usePosition = Vector3.zero; // 플레이어가 오브젝트 사용을 확인하느 캡슐의 아래 지점
+    Vector3 usePosition = Vector3.zero; // 플레이어가 오브젝트 사용을 확인하는 캡슐의 아래 지점(플레이어 로컬 좌표기준)
     float useRedius = 0.5f;             // 캡슐의 반지름
     float useHeight = 2.0f;             // 캡슐의 높이
 
     public Action onObjectUse { get; set; }
+    public Action onDie { get; set; }
 
     private void Awake()
     {
@@ -38,7 +39,7 @@ public class Player : MonoBehaviour, IUser
         groundChecker.onGrounded += OnGround;
         anima = GetComponent<Animator>();
 
-        usePosition = transform.rotation * transform.forward;        // 기본적으로 플레이어의 앞
+        usePosition = Vector3.forward;       // 플레이어 로컬 좌표기준 플레이어의 앞
     }
 
     private void OnEnable()
@@ -80,7 +81,7 @@ public class Player : MonoBehaviour, IUser
     void OnDrawGizmos()
     {
         // 플레이어가 오브젝트를 사용하는 범위 표시
-        Vector3 newUsePosition = transform.rotation * usePosition;
+        Vector3 newUsePosition = transform.rotation * usePosition;  //usePosition(로컬좌표)에 회전을 곱해서 월드좌표로 변환 됨
         Gizmos.DrawWireSphere(transform.position + newUsePosition, useRedius);
         Gizmos.DrawWireSphere(transform.position + newUsePosition + transform.up * useHeight, useRedius);
     }
@@ -172,7 +173,6 @@ public class Player : MonoBehaviour, IUser
                 useable.Use();      // 사용하기
             }
         }
-
     }
 
 
@@ -183,5 +183,22 @@ public class Player : MonoBehaviour, IUser
     }
 
 
+    public void Fly(Vector3 flyVector)
+    {
+        rigid.velocity = Vector3.zero;
+        rigid.AddForce(flyVector, ForceMode.Impulse);
+    }
+
+    public void Die()
+    {
+        inputActions.Player.Disable();
+        
+        rigid.constraints = RigidbodyConstraints.None;
+        rigid.angularDrag = 0.0f;
+        rigid.AddForceAtPosition(-transform.forward, transform.position + transform.up * 5.0f, ForceMode.Impulse);
+        rigid.AddTorque(transform.up * 10.0f, ForceMode.Impulse);
+
+        anima.SetTrigger("Die");
+    }
 
 }
