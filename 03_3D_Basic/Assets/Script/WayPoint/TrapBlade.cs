@@ -2,24 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrapBlade : MonoBehaviour
+public class TrapBlade : TrapBase
 {
     public WayPoint waypoint;   // 따라다닐 웨이포인트들이 가지고 있는 클래스
     public float moveSpeed = 1.0f;  // 칼날 이동 속도
+    public float spinSpeed = 720.0f;
 
     Transform target;           //목표로하는 웨이포인트의 트랜스폼
+    Transform bladeObj;
     Rigidbody rigid;
-
 
 
     private void Awake()
     {
         rigid = GetComponent<Rigidbody>();
+        bladeObj = GetComponent<Transform>();
     }
 
     private void Start()
     {
         SetTarget(waypoint.cuurentWaypoint);    // 첫 웨이포인트 지정
+    }
+
+    private void Update()
+    {
+        bladeObj.Rotate(spinSpeed * Time.deltaTime, 0, 0);
     }
 
     private void FixedUpdate()
@@ -50,5 +57,15 @@ public class TrapBlade : MonoBehaviour
     {
         this.target = target;        //목적지 정하고
         transform.LookAt(target);    //그쪽을 바라보게 만들기
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        IDead iDead = other.GetComponent<IDead>();
+        if (iDead != null)
+        {
+            iDead.Die();
+        }
     }
 }
