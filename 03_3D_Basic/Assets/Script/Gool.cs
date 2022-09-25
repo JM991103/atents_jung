@@ -8,8 +8,15 @@ public class Gool : MonoBehaviour
     public Action<bool> start;
 
     bool gool = false;
-    
-        private void OnTriggerEnter(Collider other)
+
+    ParticleSystem ps;
+
+    private void Awake()
+    {
+        ps = transform.GetChild(0).GetComponent<ParticleSystem>();
+    }
+
+    private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
@@ -20,10 +27,12 @@ public class Gool : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        ps.Play();
         if (other.CompareTag("Player"))
         {
             gool = true;
             start?.Invoke(gool);
+            
         }
     }
 }
