@@ -8,20 +8,32 @@ public class Turret : MonoBehaviour
     // 1. 플레이어가 일정 변경안에 들어오면 해당방향으로 총구를 돌린다.
     // 2. trunSpeed 아무런 영향을 주지 않는다. (총구가 즉시 회전한다.)
 
+    public GameObject Bullet;
 
     public float turnSpeed = 2.0f;
     public float sightRadius = 5.0f;
+    public float MaxDistance = 5.0f;
+
+    float currentAngle = 0.0f;
+    float targetAngle = 0.0f;
+
+    bool targetIn = false;
+    bool targetOn = false;
+    
+    Vector3 initialForward;
+
+    RaycastHit hit;
+    IEnumerator Bulletfire;
 
     Transform target = null;
     Transform barrelBody;
 
-    float currentAngle = 0.0f;
-    float targetAngle = 0.0f;
-    Vector3 initialForward;
 
     private void Awake()
     {
         barrelBody = transform.GetChild(2);
+
+        Bulletfire = BulletFire();
     }
 
     private void Start()
@@ -80,12 +92,36 @@ public class Turret : MonoBehaviour
             Vector3 targetDir = Quaternion.Euler(0, currentAngle, 0) * initialForward;
             barrelBody.rotation = Quaternion.LookRotation(targetDir);
         }
+
+        if (targetIn)
+        {
+
+            if (Physics.Raycast(barrelBody.position, barrelBody.forward, out hit, MaxDistance))
+            {
+                if (targetOn)
+                {
+                    StartCoroutine(Bulletfire);
+                    Debug.Log("들어옴");
+                    targetOn = false;
+                }
+            }
+            else
+            {
+                if (!targetOn)
+                {
+                    StopAllCoroutines();
+                    Debug.Log("나감");
+                    targetOn = true;
+                }
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+            targetIn = true;
             target = other.transform;
         }
     }
@@ -94,7 +130,21 @@ public class Turret : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            targetIn = false;
             target = null;
+        }
+    }
+    
+    IEnumerator BulletFire()
+    {
+        while (true)
+        {
+            Vector3 dir = target.position - barrelBody.position;    // 총구에서 플레이어의 위치로 가는 방향 벡터 계산
+            dir.y = 0;
+            GameObject Obj = Instantiate(Bullet, barrelBody.position, Quaternion.LookRotation(dir));
+            Obj.transform.Translate(0,0,1.5f);
+
+            yield return new WaitForSeconds(1.5f);
         }
     }
 }

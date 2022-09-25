@@ -76,8 +76,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 893e909cf6579b445a6629307fbf4b28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Bullet: {fileID: 7258294535886550834, guid: 65be1398b9183e4409dd1457925667b2, type: 3}
   turnSpeed: 360
   sightRadius: 5
+  MaxDistance: 5
 --- !u!1 &5167930705494542612
 GameObject:
   m_ObjectHideFlags: 0
