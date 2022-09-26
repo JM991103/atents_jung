@@ -17,9 +17,10 @@ public class Score : MonoBehaviour
     {
         textMesh = GetComponent<TextMeshProUGUI>();
     }
+
     private void Start()
     {
-        Gool gool = FindObjectOfType<Gool>();
+        Goal gool = FindObjectOfType<Goal>();
         gool.start += Finish;
     }
 
@@ -37,9 +38,9 @@ public class Score : MonoBehaviour
 
     }
 
-    void Finish(bool gool)
+    void Finish(bool goal)
     {
-        stopScore = !gool;
+        stopScore = !goal;
     }
 
 }

@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gool : MonoBehaviour
+public class Goal : MonoBehaviour
 {
     public Action<bool> start;
 
-    bool gool = false;
+    bool goal = false;
 
     ParticleSystem ps;
 
@@ -20,19 +20,18 @@ public class Gool : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            gool = false;
-            start?.Invoke(gool);
+            goal = false;
+            start?.Invoke(goal);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        ps.Play();
         if (other.CompareTag("Player"))
         {
-            gool = true;
-            start?.Invoke(gool);
-            
+            ps.Play();
+            goal = true;
+            start?.Invoke(goal);
         }
     }
 }

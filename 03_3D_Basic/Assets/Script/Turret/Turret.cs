@@ -21,6 +21,7 @@ public class Turret : MonoBehaviour
     bool targetOn = false;
     
     Vector3 initialForward;
+    Vector3 dir;
 
     RaycastHit hit;
     IEnumerator Bulletfire;
@@ -57,42 +58,13 @@ public class Turret : MonoBehaviour
 
     private void Update()
     {
-        if (target != null)
-        {
-            // 보간을 사용한 경우 (감속하며 회전)
-            //// 총구를 플레어쪽으로 돌려야 함
-            //Vector3 dir = target.position - barrelBody.position;    // 총구를 플레이어쪽으로 돌리기 위해 총구에서 플레이어의 위치로 가는 방향벡터를 계산
-            //dir.y = 0;      // 방향 벡터에서 y축의 영향을 제거 => x, z 평면상의 방향만 남음
+        LookTarget();
 
-            ////trunSpeed초에 걸쳐서 0 -> 1로 변경된다. (시작점에서 도착점까지 걸리는 시간이 trunSpeed초)
-            //dir = Vector3.Lerp(barrelBody.forward, dir, turnSpeed * Time.deltaTime);    
+        Fire();
+    }
 
-            //barrelBody.rotation = Quaternion.LookRotation(dir);     // 최종적인 방향을 바라보는 회전을 만들어서 총몸에 적용 
-
-            ////barrelBody.LookAt(target);  // 타켓을 바라봄 (target의 피봇을 바라봄)
-
-
-            // 각도를 사용하는 경우
-            Vector3 dir = target.position - barrelBody.position;    // 총구에서 플레이어의 위치로 가는 방향 벡터 계산
-            dir.y = 0;
-
-            targetAngle = Vector3.SignedAngle(initialForward, dir, barrelBody.up);
-
-            if (currentAngle < targetAngle)
-            {
-                currentAngle += (turnSpeed * Time.deltaTime);
-                currentAngle = Mathf.Min(currentAngle, targetAngle);
-            }
-            else if(currentAngle > targetAngle)
-            {
-                currentAngle -= (turnSpeed * Time.deltaTime);
-                currentAngle = Mathf.Max(currentAngle, targetAngle);
-            }
-
-            Vector3 targetDir = Quaternion.Euler(0, currentAngle, 0) * initialForward;
-            barrelBody.rotation = Quaternion.LookRotation(targetDir);
-        }
-
+    private void Fire()
+    {
         if (targetIn)
         {
 
@@ -109,11 +81,50 @@ public class Turret : MonoBehaviour
             {
                 if (!targetOn)
                 {
-                    StopAllCoroutines();
+                    StopCoroutine(Bulletfire);
                     Debug.Log("나감");
                     targetOn = true;
                 }
             }
+        }
+    }
+
+    void LookTarget()
+    {
+        if (target != null)
+        {
+            // 보간을 사용한 경우 (감속하며 회전)
+            //// 총구를 플레어쪽으로 돌려야 함
+            //Vector3 dir = target.position - barrelBody.position;    // 총구를 플레이어쪽으로 돌리기 위해 총구에서 플레이어의 위치로 가는 방향벡터를 계산
+            //dir.y = 0;      // 방향 벡터에서 y축의 영향을 제거 => x, z 평면상의 방향만 남음
+
+            ////trunSpeed초에 걸쳐서 0 -> 1로 변경된다. (시작점에서 도착점까지 걸리는 시간이 trunSpeed초)
+            //dir = Vector3.Lerp(barrelBody.forward, dir, turnSpeed * Time.deltaTime);    
+
+            //barrelBody.rotation = Quaternion.LookRotation(dir);     // 최종적인 방향을 바라보는 회전을 만들어서 총몸에 적용 
+
+            ////barrelBody.LookAt(target);  // 타켓을 바라봄 (target의 피봇을 바라봄)
+
+
+            // 각도를 사용하는 경우
+            dir = target.position - barrelBody.position;    // 총구에서 플레이어의 위치로 가는 방향 벡터 계산
+            dir.y = 0;
+
+            targetAngle = Vector3.SignedAngle(initialForward, dir, barrelBody.up);
+
+            if (currentAngle < targetAngle)
+            {
+                currentAngle += (turnSpeed * Time.deltaTime);
+                currentAngle = Mathf.Min(currentAngle, targetAngle);
+            }
+            else if (currentAngle > targetAngle)
+            {
+                currentAngle -= (turnSpeed * Time.deltaTime);
+                currentAngle = Mathf.Max(currentAngle, targetAngle);
+            }
+
+            Vector3 targetDir = Quaternion.Euler(0, currentAngle, 0) * initialForward;
+            barrelBody.rotation = Quaternion.LookRotation(targetDir);
         }
     }
 
@@ -139,8 +150,6 @@ public class Turret : MonoBehaviour
     {
         while (true)
         {
-            Vector3 dir = target.position - barrelBody.position;    // 총구에서 플레이어의 위치로 가는 방향 벡터 계산
-            dir.y = 0;
             GameObject Obj = Instantiate(Bullet, barrelBody.position, Quaternion.LookRotation(dir));
             Obj.transform.Translate(0,0,1.5f);
 
