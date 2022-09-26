@@ -7,7 +7,7 @@ using static UnityEngine.GraphicsBuffer;
 public class Bullet : MonoBehaviour
 {
     public float speed = 6.0f;
-    float killtime = 5.0f;
+    float killtime = 3.0f;
 
     Rigidbody rigid;
 
@@ -18,12 +18,8 @@ public class Bullet : MonoBehaviour
 
     private void Start()
     {
-        Destroy(this.gameObject, killtime);
-    }
-
-    private void FixedUpdate()
-    {
-        rigid.MovePosition(transform.position + speed * Time.fixedDeltaTime * transform.forward);
+        rigid.velocity = transform.forward * speed;
+        
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -36,5 +32,6 @@ public class Bullet : MonoBehaviour
                 deadtarget.Die();   // 죽이는 함수 호출
             }
         }
+        Destroy(this.gameObject, killtime);
     }
 }

@@ -13,13 +13,15 @@ public class Turret : MonoBehaviour
     public float turnSpeed = 2.0f;
     public float sightRadius = 5.0f;
     public float MaxDistance = 5.0f;
+    public float fireAngle = 10.0f;
 
     float currentAngle = 0.0f;
     float targetAngle = 0.0f;
 
     bool targetIn = false;
     bool targetOn = false;
-    
+    bool isFiring = false;
+
     Vector3 initialForward;
     Vector3 dir;
 
@@ -28,11 +30,12 @@ public class Turret : MonoBehaviour
 
     Transform target = null;
     Transform barrelBody;
-
+    Transform fireTransform;
 
     private void Awake()
     {
         barrelBody = transform.GetChild(2);
+        fireTransform = barrelBody.GetChild(2);
 
         Bulletfire = BulletFire();
     }
@@ -40,6 +43,7 @@ public class Turret : MonoBehaviour
     private void Start()
     {
         initialForward = transform.forward;
+
         SphereCollider coll = GetComponent<SphereCollider>();
         coll.radius = sightRadius;
     }
@@ -60,34 +64,44 @@ public class Turret : MonoBehaviour
     {
         LookTarget();
 
-        Fire();
     }
 
-    private void Fire()
+    bool IsFireAngle()
     {
-        if (targetIn)
-        {
+        //target;
+        //transform.position;
+        //fireAngle;
 
-            if (Physics.Raycast(barrelBody.position, barrelBody.forward, out hit, MaxDistance))
-            {
-                if (targetOn)
-                {
-                    StartCoroutine(Bulletfire);
-                    Debug.Log("들어옴");
-                    targetOn = false;
-                }
-            }
-            else
-            {
-                if (!targetOn)
-                {
-                    StopCoroutine(Bulletfire);
-                    Debug.Log("나감");
-                    targetOn = true;
-                }
-            }
-        }
+        Vector3 dir = target.position - barrelBody.forward;
+
+        return Vector3.Angle(barrelBody.forward, dir) < fireAngle;
     }
+
+    //private void Fire()
+    //{
+    //    if (targetIn)
+    //    {
+
+    //        if (Physics.Raycast(barrelBody.position, barrelBody.forward, out hit, MaxDistance))
+    //        {
+    //            if (targetOn)
+    //            {
+    //                StartCoroutine(Bulletfire);
+    //                Debug.Log("들어옴");
+    //                targetOn = false;
+    //            }
+    //        }
+    //        else
+    //        {
+    //            if (!targetOn)
+    //            {
+    //                StopCoroutine(Bulletfire);
+    //                Debug.Log("나감");
+    //                targetOn = true;
+    //            }
+    //        }
+    //    }
+    //}
 
     void LookTarget()
     {
@@ -125,6 +139,16 @@ public class Turret : MonoBehaviour
 
             Vector3 targetDir = Quaternion.Euler(0, currentAngle, 0) * initialForward;
             barrelBody.rotation = Quaternion.LookRotation(targetDir);
+
+            if (!isFiring && IsFireAngle())
+            {
+                FireStart();
+            }
+            if (isFiring && !IsFireAngle())
+            {
+                FireStop();
+            }
+
         }
     }
 
@@ -150,10 +174,39 @@ public class Turret : MonoBehaviour
     {
         while (true)
         {
-            GameObject Obj = Instantiate(Bullet, barrelBody.position, Quaternion.LookRotation(dir));
-            Obj.transform.Translate(0,0,1.5f);
+            Fire();
 
             yield return new WaitForSeconds(1.5f);
         }
+
     }
+
+    void Fire()
+    {
+        Instantiate(Bullet, fireTransform.position, fireTransform.rotation);
+    }
+
+    //IEnumerator BulletFire()
+    //{
+    //    while (true)
+    //    {
+    //        GameObject Obj = Instantiate(Bullet, barrelBody.position, Quaternion.LookRotation(dir));
+    //        Obj.transform.Translate(0,0,1.5f);
+
+    //        yield return new WaitForSeconds(1.5f);
+    //    }
+    //}
+
+    void FireStart()
+    {
+        StartCoroutine(Bulletfire);
+        isFiring = true;
+    }
+
+    void FireStop()
+    {
+        StopCoroutine(Bulletfire);
+        isFiring = false;
+    }
+
 }
