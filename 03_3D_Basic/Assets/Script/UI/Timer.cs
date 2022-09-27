@@ -21,26 +21,33 @@ public class Timer : MonoBehaviour
         set
         {
             currentTime = value;
-            timetext.text = $"{CurrentTime: f2} 초";
+            timetext.text = $"{currentTime:f2} 초";
         }
     }
 
     private void Awake()
     {
         timetext = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-        //SceneManager.sceneLoaded += OnSceneLoaded;
+        
     }
 
     private void Start()
     {
         Goal2 goal = FindObjectOfType<Goal2>();
         goal.onGoalIn += StopTimer;
-        StartTimer();
+        currentTime = 0.0f;
+
+        GameManager.Inst.onGameStart += StartTimer;
+        //StartTimer();
     }
 
     private void Update()
     {
-        CurrentTime += Time.deltaTime;
+        if (isStart)
+        {
+
+            CurrentTime += Time.deltaTime;
+        }
     }
 
 
