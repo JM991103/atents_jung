@@ -16,14 +16,14 @@ public class Turret : MonoBehaviour
     public float fireAngle = 10.0f;
 
     float currentAngle = 0.0f;
-    float targetAngle = 0.0f;
+    //float targetAngle = 0.0f;
 
     bool targetIn = false;
     bool targetOn = false;
     bool isFiring = false;
 
     Vector3 initialForward;
-    Vector3 dir;
+    Vector3 barrelToPlayerDir;
 
     RaycastHit hit;
     IEnumerator Bulletfire;
@@ -72,8 +72,8 @@ public class Turret : MonoBehaviour
         //transform.position;
         //fireAngle;
 
-        Vector3 dir = target.position - barrelBody.forward;
-
+        Vector3 dir = target.position - barrelBody.position;
+        dir.y = 0.0f;
         return Vector3.Angle(barrelBody.forward, dir) < fireAngle;
     }
 
@@ -120,25 +120,36 @@ public class Turret : MonoBehaviour
             ////barrelBody.LookAt(target);  // 타켓을 바라봄 (target의 피봇을 바라봄)
 
 
-            // 각도를 사용하는 경우
-            dir = target.position - barrelBody.position;    // 총구에서 플레이어의 위치로 가는 방향 벡터 계산
-            dir.y = 0;
+            // 각도를 사용하는 경우(등속도로 회전)
+            barrelToPlayerDir = target.position - barrelBody.position;    // 총구에서 플레이어의 위치로 가는 방향 벡터 계산
+            barrelToPlayerDir.y = 0;
 
-            targetAngle = Vector3.SignedAngle(initialForward, dir, barrelBody.up);
+            // 정방향일 때 0 ~ 180도, 역방향 일때 0~-180
+            float betweenAngle = Vector3.SignedAngle(barrelBody.forward, barrelToPlayerDir, barrelBody.up);
 
-            if (currentAngle < targetAngle)
+            Vector3 resultDir;
+
+            if (Mathf.Abs(betweenAngle) < 1.0f )    // 사이각이 일정 각도 이하인지 체크
             {
-                currentAngle += (turnSpeed * Time.deltaTime);
-                currentAngle = Mathf.Min(currentAngle, targetAngle);
+                float rotateDirection = 1.0f;   //일단 +방향(시계방향)으로 설정
+                if (betweenAngle < 0)
+                {
+                    rotateDirection = -1.0f;    // betweeAngle이 -면 rotateDirection도 -1로
+                }
+
+                //초당 turnSpeed만큼 회전하는데 rotateDirection로 시계방향으로 회전할지 반시계 방향으로 회전할지 결정
+                currentAngle += (rotateDirection * turnSpeed * Time.deltaTime);
+
+                resultDir = Quaternion.Euler(0, currentAngle, 0) * initialForward;
+
             }
-            else if (currentAngle > targetAngle)
+            else
             {
-                currentAngle -= (turnSpeed * Time.deltaTime);
-                currentAngle = Mathf.Max(currentAngle, targetAngle);
+                // 사이각이 0에 가까울 경우
+                resultDir = barrelToPlayerDir;
             }
 
-            Vector3 targetDir = Quaternion.Euler(0, currentAngle, 0) * initialForward;
-            barrelBody.rotation = Quaternion.LookRotation(targetDir);
+            barrelBody.rotation = Quaternion.LookRotation(resultDir);
 
             if (!isFiring && IsFireAngle())
             {
@@ -167,6 +178,7 @@ public class Turret : MonoBehaviour
         {
             targetIn = false;
             target = null;
+            FireStop();
         }
     }
     
