@@ -49,8 +49,8 @@ public class GameManager : Singleton<GameManager>
     {
         if (resultPanel != null)
         {
-            resultPanel.ClearTime = timer.ResultTime;
             resultPanel?.gameObject.SetActive(true);
+            resultPanel.ClearTime = timer.ResultTime;
         }
     }
 }

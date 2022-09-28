@@ -8,11 +8,11 @@ using UnityEngine.SceneManagement;
 
 public class ResulPanel : MonoBehaviour
 {
-    TextMeshProUGUI clearText;
-    Button button;
-    Goal2 goal;
+    TextMeshProUGUI clearText;      // 결과가 출력될 text
+    Button button;                  // 다음 스테이지로 넘어가기 위한 버튼
+    Goal2 goal;                     
 
-    float clearTime = 0.0f;
+    float clearTime = 0.0f;         // 클리어 하는데 걸린 시간(timer에서 받아온다.)
     public float ClearTime 
     {
         get => clearTime;
@@ -34,7 +34,7 @@ public class ResulPanel : MonoBehaviour
     private void Start()
     {
         goal = FindObjectOfType<Goal2>();
-        button.onClick.AddListener(goal.GoNextStage);
+        button.onClick.AddListener(goal.GoNextStage);       // 버튼에 함수 연결
     }
 
 

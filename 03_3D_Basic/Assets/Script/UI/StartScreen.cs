@@ -11,6 +11,7 @@ public class StartScreen : MonoBehaviour, IPointerClickHandler
 {
     public void OnPointerClick(PointerEventData eventData)
     {
+        Close();
         GameManager.Inst.GameStart();
     }
 

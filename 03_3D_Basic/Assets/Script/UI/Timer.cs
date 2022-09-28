@@ -37,9 +37,10 @@ public class Timer : MonoBehaviour
     {
         Goal2 goal = FindObjectOfType<Goal2>();
         goal.onGoalIn += StopTimer;
-        currentTime = 0.0f;
 
+        currentTime = 0.0f;
         GameManager.Inst.onGameStart += StartTimer;
+
         //StartTimer();
     }
 

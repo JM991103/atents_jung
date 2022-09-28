@@ -22,9 +22,8 @@ public class Goal2 : MonoBehaviour
         if (other.CompareTag("Player"))     // 트리거 안에 플레이어가 들어왔을 때
         {
             PlayGoalInEffect();             // 골인 이펙트 터트리기
-
-            StartCoroutine(Wait1Second());
-            onGoalIn?.Invoke();
+            StartCoroutine(Wait1Second());  // 1초 이후에 결과창 열기
+            onGoalIn?.Invoke();             // 골인했을 때 실행되는 함수들 실행
         }
     }
 
@@ -42,11 +41,11 @@ public class Goal2 : MonoBehaviour
     IEnumerator Wait1Second()
     {
         yield return new WaitForSeconds(1.0f);
-        GameManager.Inst.ShowResultPanel();
+        GameManager.Inst.ShowResultPanel();     // 결과창 열기
     }
 
     public void GoNextStage()
     {
-        SceneManager.LoadScene(nextSceanName);
+        SceneManager.LoadScene(nextSceanName);  // 지정된 씬으로 변경
     }
 }
