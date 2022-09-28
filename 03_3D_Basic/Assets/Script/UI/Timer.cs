@@ -10,12 +10,11 @@ public class Timer : MonoBehaviour
 {
     TextMeshProUGUI timetext;
 
-    float time = 0.0f;
     bool isStart = false;
     float currentTime = 0.0f;
 
 
-    float CurrentTime
+    public float CurrentTime
     {
         get => currentTime;
         set
@@ -24,6 +23,9 @@ public class Timer : MonoBehaviour
             timetext.text = $"{currentTime:f2} 초";
         }
     }
+
+    public float ResultTime { get => currentTime; }
+
 
     private void Awake()
     {
@@ -48,6 +50,7 @@ public class Timer : MonoBehaviour
 
             CurrentTime += Time.deltaTime;
         }
+         
     }
 
 

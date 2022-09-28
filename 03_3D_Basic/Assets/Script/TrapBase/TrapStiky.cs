@@ -55,4 +55,7 @@ public class TrapStiky : TrapBase
         originalSpeed = 0.0f;
         player = null;
     }
+
+    
+
 }

@@ -106,7 +106,7 @@ public class Player : MonoBehaviour, IFly, IDead
 
     private void OnMove(InputAction.CallbackContext context)
     {
-        GameManager.Inst.GameStart();
+        
 
         dir = context.ReadValue<Vector2>();     // 입력된 값을 읽어오기
 
@@ -119,7 +119,7 @@ public class Player : MonoBehaviour, IFly, IDead
 
     private void OnJump(InputAction.CallbackContext _)
     {
-        GameManager.Inst.GameStart();
+        
 
         if (!isJumping)     // 점프 중이 아닐 때만 점프
         {

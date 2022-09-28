@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Goal2 : MonoBehaviour
 {
     ParticleSystem[] ps;
 
     public Action onGoalIn;
+    public string nextSceanName;
 
     private void Awake()
     {
@@ -20,6 +22,8 @@ public class Goal2 : MonoBehaviour
         if (other.CompareTag("Player"))     // 트리거 안에 플레이어가 들어왔을 때
         {
             PlayGoalInEffect();             // 골인 이펙트 터트리기
+
+            StartCoroutine(Wait1Second());
             onGoalIn?.Invoke();
         }
     }
@@ -33,5 +37,16 @@ public class Goal2 : MonoBehaviour
         {
             effect.Play();
         }
+    }
+
+    IEnumerator Wait1Second()
+    {
+        yield return new WaitForSeconds(1.0f);
+        GameManager.Inst.ShowResultPanel();
+    }
+
+    public void GoNextStage()
+    {
+        SceneManager.LoadScene(nextSceanName);
     }
 }
