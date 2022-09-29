@@ -104,11 +104,11 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Flappy_0
+      name: Background_Day
       rect:
         serializedVersion: 2
         x: 0
-        y: 256
+        y: 255
         width: 144
         height: 256
       alignment: 0
@@ -125,7 +125,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_1
+      name: background_Night
       rect:
         serializedVersion: 2
         x: 146
@@ -146,7 +146,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_2
+      name: Background_Ground
       rect:
         serializedVersion: 2
         x: 292
@@ -1675,9 +1675,8 @@ TextureImporter:
       Flappy_16: -1043048148
       Flappy_73: 514997971
       Flappy_17: 636284405
-      Flappy_2: 998394199
-      Flappy_40: -198201361
       Flappy_22: 874520625
+      Flappy_40: -198201361
       Flappy_6: -1295713312
       Flappy_56: 2063420983
       Flappy_79: -937173662
@@ -1690,8 +1689,10 @@ TextureImporter:
       Flappy_61: 635941117
       Flappy_62: 2024346376
       Flappy_65: 1095787721
+      Background_Ground: 998394199
       Flappy_15: -1754593892
       Flappy_70: -1832616582
+      Background_Day: -716224001
       Flappy_57: 2021368894
       Flappy_47: 742101428
       Flappy_14: 1727373028
@@ -1724,7 +1725,6 @@ TextureImporter:
       Flappy_18: 1680148937
       Flappy_36: 2070078476
       Flappy_10: 1469600144
-      Flappy_1: 537487547
       Flappy_71: -1999809091
       Bird_1: -1504628535
       Flappy_8: -1424737935
@@ -1741,13 +1741,13 @@ TextureImporter:
       Flappy_35: -104852689
       GameOver Text: 1536749180
       Flappy_49: 700347506
-      Flappy_0: -716224001
       Flappy_3: 923948033
-      Flappy_27: 1780427236
       Flappy_19: 445152290
+      Flappy_27: 1780427236
+      Flappy_54: 1292242557
       Flappy_28: 1963694625
       Flappy_45: -633952561
-      Flappy_54: 1292242557
+      background_Night: 537487547
       Flappy_72: 109927267
   spritePackingTag: 
   pSDRemoveMatte: 0
