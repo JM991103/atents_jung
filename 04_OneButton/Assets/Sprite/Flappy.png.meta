@@ -1070,7 +1070,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_53
+      name: Pipe_Top
       rect:
         serializedVersion: 2
         x: 56
@@ -1091,7 +1091,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_54
+      name: Pipe_Bottom
       rect:
         serializedVersion: 2
         x: 84
@@ -1696,7 +1696,6 @@ TextureImporter:
       Flappy_57: 2021368894
       Flappy_47: 742101428
       Flappy_14: 1727373028
-      Flappy_53: -542853428
       Flappy_7: -522569517
       Flappy_50: 1793708317
       Flappy_30: -614360682
@@ -1722,6 +1721,7 @@ TextureImporter:
       Flappy_39: 1693361500
       Flappy_26: 800800659
       GetReady Text: -1706970020
+      Pipe_Bottom: 1292242557
       Flappy_18: 1680148937
       Flappy_36: 2070078476
       Flappy_10: 1469600144
@@ -1744,10 +1744,10 @@ TextureImporter:
       Flappy_3: 923948033
       Flappy_19: 445152290
       Flappy_27: 1780427236
-      Flappy_54: 1292242557
+      background_Night: 537487547
       Flappy_28: 1963694625
       Flappy_45: -633952561
-      background_Night: 537487547
+      Pipe_Top: -542853428
       Flappy_72: 109927267
   spritePackingTag: 
   pSDRemoveMatte: 0
