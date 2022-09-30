@@ -27,11 +27,13 @@ public class ImageNumber : MonoBehaviour
         {
             number = value;
 
-            // (123 / 1) % 10 = 3
-            // (123 / 10) % 10 = 2
-            // (123 / 100) % 10 = 1
+            
             int mod = number % 10;
+         
             digits[0].sprite = numberImages[mod];
+
+
+            
         }
     }
 }
