@@ -135,7 +135,11 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
+<<<<<<< Updated upstream
   m_Offset: {x: 0, y: 0.0056428015}
+=======
+  m_Offset: {x: 0, y: 0.0032826662}
+>>>>>>> Stashed changes
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -146,7 +150,11 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
+<<<<<<< Updated upstream
   m_Size: {x: 1, y: 1.9849732}
+=======
+  m_Size: {x: 1, y: 1.8373673}
+>>>>>>> Stashed changes
   m_EdgeRadius: 0
 --- !u!61 &628558220076542698
 BoxCollider2D:
@@ -161,7 +169,11 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
+<<<<<<< Updated upstream
   m_Offset: {x: 0, y: 5.432346}
+=======
+  m_Offset: {x: 0, y: 5.413145}
+>>>>>>> Stashed changes
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -172,7 +184,11 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
+<<<<<<< Updated upstream
   m_Size: {x: 1.2, y: 8.735309}
+=======
+  m_Size: {x: 1.2, y: 8.77371}
+>>>>>>> Stashed changes
   m_EdgeRadius: 0
 --- !u!61 &628558220076542699
 BoxCollider2D:
@@ -187,7 +203,11 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
+<<<<<<< Updated upstream
   m_Offset: {x: 0, y: -5.4246864}
+=======
+  m_Offset: {x: 0, y: -5.413145}
+>>>>>>> Stashed changes
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -198,7 +218,11 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
+<<<<<<< Updated upstream
   m_Size: {x: 1.2, y: 8.7506275}
+=======
+  m_Size: {x: 1.2, y: 8.77371}
+>>>>>>> Stashed changes
   m_EdgeRadius: 0
 --- !u!50 &628558220076542676
 Rigidbody2D:
