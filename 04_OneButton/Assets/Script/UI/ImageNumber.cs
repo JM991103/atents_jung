@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,9 +11,9 @@ public class ImageNumber : MonoBehaviour
 
     public int inputNumber;
 
-    public float scoreUpSpeed = 100.0f;     // Á¡¼ö°¡ ¿Ã¶ó°¡´Â ½Ã°£
-    float targetScore = 0.0f;               // ¸ñÇ¥ °ª
-    float currentScore = 0.0f;              // ÇöÀç °ª
+    public float scoreUpSpeed = 100.0f;     // ì ìˆ˜ê°€ ì˜¬ë¼ê°€ëŠ” ì‹œê°„
+    float targetScore = 0.0f;               // ëª©í‘œ ê°’
+    float currentScore = 0.0f;              // í˜„ì¬ ê°’
 
     Image[] digits;
 
@@ -42,13 +43,18 @@ public class ImageNumber : MonoBehaviour
          
             digits[0].sprite = numberImages[mod];
 
-
-            
         }
     }
 
     private void Update()
     {
-        
+        if (currentScore < targetScore)
+        {
+            currentScore += Time.deltaTime * scoreUpSpeed;
+
+            currentScore = Mathf.Min(currentScore, targetScore);
+        }
     }
+
+
 }
