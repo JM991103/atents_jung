@@ -3,15 +3,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using TMPro;
 public class TestScore : MonoBehaviour
 {
     public ImageNumber imageNumber;
     BirdInput inputaction;
+    public TMP_InputField inputField;
 
     private void Awake()
     {
         inputaction = new BirdInput();
+    }
+
+    private void Start()
+    {
+        inputField.onValueChanged.AddListener(OnInputChanged);
+    }
+
+    private void OnInputChanged(string text)
+    {
+        if (text != "")
+        {
+            imageNumber.Number = int.Parse(text);
+        }
+        else
+        {
+            imageNumber.Number = 0;
+        }
     }
 
     private void OnEnable()
@@ -46,52 +64,52 @@ public class TestScore : MonoBehaviour
 
     private void TestInput9(InputAction.CallbackContext _)
     {
-        imageNumber.Number = 9;
+        //imageNumber.Number = 9;
     }
 
     private void TestInput8(InputAction.CallbackContext _)
     {
-        imageNumber.Number = 8;
+        //imageNumber.Number = 8;
     }
 
     private void TestInput7(InputAction.CallbackContext _)
     {
-        imageNumber.Number = 7;
+        //imageNumber.Number = 7;
     }
 
     private void TestInput6(InputAction.CallbackContext _)
     {
-        imageNumber.Number = 6;
+        //imageNumber.Number = 6;
     }
 
     private void TestInput5(InputAction.CallbackContext _)
     {
-        imageNumber.Number = 5;
+        //imageNumber.Number = 5;
     }
 
     private void TestInput4(InputAction.CallbackContext _)
     {
-        imageNumber.Number = 4;
+        //imageNumber.Number = 4;
     }
 
     private void TestInput3(InputAction.CallbackContext _)
     {
-        imageNumber.Number = 3;
+        //imageNumber.Number = 1234;
     }
 
     private void TestInput2(InputAction.CallbackContext _)
     {
-        imageNumber.Number = 2;
+        //imageNumber.Number = 123;
     }
 
     private void TestInput1(InputAction.CallbackContext _)
     {
-        imageNumber.Number = 1;
+        //imageNumber.Number = 12;
     }
 
     private void TestInput0(InputAction.CallbackContext _)
     {
-        imageNumber.Number = 0;
+        //imageNumber.Number = 0;
     }
 
 
