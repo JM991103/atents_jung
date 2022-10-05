@@ -1,18 +1,57 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ResultPanel : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public Sprite[] medalSprits;
+
+    ImageNumber score;
+    ImageNumber bestScore;
+    Image newmark;
+    Image medalImage;
+
+    private void Awake()
     {
-        
+        score = transform.GetChild(0).GetComponent<ImageNumber>();
+        bestScore = transform.GetChild(1).GetComponent<ImageNumber>();
+        newmark = transform.GetChild(2).GetComponent<Image>();
+        medalImage = transform.GetChild(3).GetComponent<Image>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void RefreshScore()
     {
-        
+        int playerScore = GameManager.Inst.Score;
+        score.Number = playerScore;
+
+        // 100점 이상이면 브론즈 메달
+        // 200점 이상이면 실버 메달
+        // 300점 이상이면 골드 메달
+        // 400점 이상이면 플래티넘 메달
+        if (playerScore >= 400)
+        {
+            medalImage.sprite = medalSprits[0];
+            medalImage.color = Color.white;
+        }
+        else if(playerScore >= 300)
+        {
+            medalImage.sprite = medalSprits[1];
+            medalImage.color = Color.white;
+        }
+        else if (playerScore >= 200)
+        {
+            medalImage.sprite = medalSprits[2];
+            medalImage.color = Color.white;
+        }
+        else if(playerScore >= 100)
+        {
+            medalImage.sprite = medalSprits[3];
+            medalImage.color = Color.white;
+        }
+        else
+        {
+            medalImage.color = Color.clear;
+        }
     }
 }
