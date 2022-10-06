@@ -39,6 +39,10 @@ public class GameManager : Singleton<GameManager>
         Score += point;
     }
 
+    void SaveGameData()
+    {
+
+    }
 
     public void TestSetScore(int newScore)
     {

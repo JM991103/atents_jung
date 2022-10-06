@@ -58,7 +58,7 @@ public class Pipe : MonoBehaviour
     /// <param name="collision"></param>
     private void OnTriggerExit2D(Collider2D collision)
     {
-        // 플레이어가 동과 했다면
+        // 플레이어가 통과 했다면
         if(collision.CompareTag("Player"))
         {
             Bird bird = collision.GetComponent<Bird>();
