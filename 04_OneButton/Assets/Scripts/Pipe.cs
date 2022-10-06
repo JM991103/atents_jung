@@ -62,7 +62,7 @@ public class Pipe : MonoBehaviour
         if(collision.CompareTag("Player"))
         {
             Bird bird = collision.GetComponent<Bird>();
-            if (bird != null && !bird.IsDead)       //
+            if (bird != null && !bird.IsDead)       // 새가 살아있을 때만 증가
             {
                 onScored?.Invoke(point); // 델리게이트 실행으로 알리기
             }

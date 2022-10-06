@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.IO;
+using System.IO;
+using System;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -10,7 +13,15 @@ public class GameManager : Singleton<GameManager>
     Bird player;
     PipeRotator pipeRotator;
 
+    public Action onMark;       // 최고 점수 갱신 했을 때 
+    public Action OnRankChange;
+
     int score = 0;
+    int bestScore = 0;
+
+    const int RankCount = 5;
+    int[] highScores = new int[RankCount];              // 0번째가 1등. 4번째가 꼴등
+    string[] highScorerName = new string[RankCount];   
 
     // public Bird Player {get => player;} 아래와 같은 코드
     public Bird Player => player;
@@ -25,13 +36,28 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    public int BestScore
+    {
+        get => bestScore;
+        private set => bestScore = value;
+    }
+
+    public int[] HighScores => highScores;
+    public string[] HighScorer => highScorerName;
+
     protected override void Initialize()
     {
         player = FindObjectOfType<Bird>();
+        Player.onDead += BestScoreUpdate;       // 새가 죽을 때 최고점수 갱신 시도
+        player.onDead += RankUpdate;            // 새가 죽을 때 랭크 갱신
+
         pipeRotator = FindObjectOfType<PipeRotator>();
         pipeRotator?.AddPipeSoredDelegate(AddScore);
 
         scoreUI = GameObject.FindGameObjectWithTag("Score").GetComponent<ImageNumber>();
+
+        
+        LoadGameData();
     }
 
     void AddScore(int point)
@@ -39,13 +65,84 @@ public class GameManager : Singleton<GameManager>
         Score += point;
     }
 
+    /// <summary>
+    /// 최고 점수와 득점자 이름 추가
+    /// </summary>
     void SaveGameData()
     {
+        // Serializable로 되어 있는 클래스 만들기
+        SaveData saveData = new();      // 해당 클래스의 인스턴스 만들기
+        saveData.bestScore = BestScore;       // 인스턴스에 데이터 기록
+        saveData.name = "임시 이름";
 
+        string json = JsonUtility.ToJson(saveData); // 해당 클래스를 json형식의 문자열로 변경
+
+        string path = $"{Application.dataPath}/Save/";  // 파일을 저장할 폴더를 지정, 해당 경로에 Save 파일을 추가로 만든 위치를 path에 저장
+        if (!Directory.Exists(path))    // 해당 폴더가 없으면
+        {
+            Directory.CreateDirectory(path);    // 해당 폴더를 새로 만든다.
+        }
+
+        string fullPath = $"{path}Save.json";   // 폴더이름과 파일이름을 합쳐서
+        File.WriteAllText(fullPath, json);      // 파일에 json형식의 문자열로 변경한 내용을 저장
+
+        Debug.Log("세이브 완료");
+    }
+
+    /// <summary>
+    /// 최고 점수와 득점자 이름 불러오기
+    /// </summary>
+    void LoadGameData()
+    {
+        string path = $"{Application.dataPath}/save/";      // 경로 확인용
+        string fullPath = $"{path}save.json";               // 전체 경로 확인용
+
+        bestScore = 0;  // 기본 값 설정
+        if(Directory.Exists(path) && File.Exists(fullPath))  //해당 폴더가 있고 파일도 있으면
+        {
+            string json = File.ReadAllText(fullPath);        // Json형식의 데이터 읽기
+            SaveData loadData = JsonUtility.FromJson<SaveData>(json);   
+            Debug.Log($"Load : {loadData.name}, {loadData.bestScore}"); 
+            BestScore = loadData.bestScore;     //읽어온 데이터로 BestScore 변경
+        }
+
+    }
+
+    public void BestScoreUpdate()
+    {
+        if(BestScore < Score)
+        {
+            BestScore = Score;      // 점수 갱신
+            onMark?.Invoke();       // 점수가 갱신되면 델리게이트에 연결된 함수들 실행
+            SaveGameData();         // 갱신한 점수로 저장
+        }
+    }
+
+    public void RankUpdate()
+    {
+        for (int i = 0; i < RankCount; i++)
+        {
+            if (highScores[i] < Score)      // 한 단계씩 비교해서 Score가 더 크면
+            {
+                for(int j = RankCount - 1; j > i; j--)  // 그 아래 단계는 하나씩 뒤로 밀고
+                {
+                    highScores[j] = highScores[j - 1];
+                    highScorerName[j] = highScorerName[j - 1];
+                }
+                highScores[i] = score;      // 새 Score 넣기
+                highScorerName[i] = "";
+
+                OnRankChange?.Invoke();
+                break;
+            }
+        }
+        //highScores[0] ~ highScores[4];
+        //highScorerName;
     }
 
     public void TestSetScore(int newScore)
     {
         Score = newScore;
     }
+
 }
