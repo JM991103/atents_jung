@@ -68,11 +68,6 @@ public class Singleton<T> : MonoBehaviour where T : Component
         }
     }
 
-    private void OnDestroy()
-    {
-        isShutDown = true;
-    }
-
     private void OnApplicationQuit()
     {
         isShutDown = false;
