@@ -3,20 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class GameOverPanel : MonoBehaviour
 {
     ResultPanel resultPanel;
-    Button nextButton;
-    Button RankButton;
+    RankPanel rankPanel;
+    UnityEngine.UI.Button nextButton;
+    UnityEngine.UI.Button RankButton;
     CanvasGroup canvasGroup;
 
     private void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
+
         resultPanel = GetComponentInChildren<ResultPanel>();
-        nextButton = transform.GetChild(2).GetComponent<Button>();
-        RankButton = transform.GetChild(3).GetComponent<Button>();
+        rankPanel = GetComponentInChildren<RankPanel>();
+        nextButton = transform.GetChild(2).GetComponent<UnityEngine.UI.Button>();
+        RankButton = transform.GetChild(3).GetComponent<UnityEngine.UI.Button>();
 
         nextButton.onClick.AddListener(OnClick_Next);
         RankButton.onClick.AddListener(OnClick_Rank);
@@ -31,12 +35,20 @@ public class GameOverPanel : MonoBehaviour
 
     void OnClick_Next()
     {
+        if (!rankPanel.InputNumberCompleted)
+        {
+            GameManager temp = GameManager.Inst;
+            if(temp != null)
+            {
+                temp.SetHighScoreName(rankPanel.Rank, $"이름 없음{UnityEngine.Random.Range(0, 1000)}");
+            }
+        }
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);   // 현재 열린 씬을 새로 열기
     }
 
     void OnClick_Rank()
     {
-
+        rankPanel.Open();
     }
 
     public void Open()

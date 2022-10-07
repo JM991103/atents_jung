@@ -13,12 +13,12 @@ public class GameManager : Singleton<GameManager>
     Bird player;
     PipeRotator pipeRotator;
 
-    public Action onMark;       // 최고 점수 갱신 했을 때 
-    public Action onRankRefresh;
-    public Action onRankUpdate;
+    public Action onMark;           // 최고 점수 갱신 했을 때 
+    public Action onRankRefresh;    // 랭크 화면 갱신 요청
+    public Action<int> onRankUpdate;     // 새 기록 추가 알림
 
     int score = 0;
-    int bestScore = 0;
+    
 
     const int RankCount = 5;
     int[] highScores = new int[RankCount];              // 0번째가 1등. 4번째가 꼴등
@@ -47,11 +47,12 @@ public class GameManager : Singleton<GameManager>
         player.onDead += RankUpdate;            // 새가 죽을 때 랭크 갱신
 
         pipeRotator = FindObjectOfType<PipeRotator>();
-        pipeRotator?.AddPipeSoredDelegate(AddScore);
+        pipeRotator?.AddPipeScoredDelegate(AddScore);
 
         scoreUI = GameObject.FindGameObjectWithTag("Score").GetComponent<ImageNumber>();
 
-        
+        Score = 0;
+
         LoadGameData();
     }
 
@@ -110,6 +111,7 @@ public class GameManager : Singleton<GameManager>
 
     public void RankUpdate()
     {
+        
         // 뉴마크 표시할지 안할지 결정
         if (BestScore < Score)
         {
@@ -125,17 +127,24 @@ public class GameManager : Singleton<GameManager>
                     highScorerName[j] = highScorerName[j - 1];
                 }
                 highScores[i] = score;      // 새 Score 넣기
-                highScorerName[i] = $"이름{ System.DateTime.Now.ToString("HH:mm:ss")}";
+                //highScorerName[i] = $"이름{ System.DateTime.Now.ToString("HH:mm:ss")}";
+                onRankUpdate?.Invoke(i);
 
 
-
-                SaveGameData();             // 갱신한 점수로 저장
                 break;
             }
         }
-        onRankRefresh?.Invoke();
+        onRankRefresh?.Invoke();        // UI 표시 갱신
         //highScores[0] ~ highScores[4];
         //highScorerName;
+    }
+
+    public void SetHighScoreName(int rank, string name)
+    {
+        
+        highScorerName[rank] = name;    // 실제 데이터 변경
+        onRankRefresh?.Invoke();        // UI 표시 갱신
+        SaveGameData();                 // 갱신한 점수로 저장
     }
 
     public void TestSetScore(int newScore)
