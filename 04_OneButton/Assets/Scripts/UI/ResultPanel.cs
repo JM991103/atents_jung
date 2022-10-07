@@ -37,7 +37,7 @@ public class ResultPanel : MonoBehaviour
         GameManager temp = GameManager.Inst;
         if (temp != null)
         {
-            temp.OnRankChange -= OnMark;
+            temp.onRankRefresh -= OnMark;
         }
     }
 
