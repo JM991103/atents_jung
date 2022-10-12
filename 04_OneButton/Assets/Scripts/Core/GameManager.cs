@@ -16,6 +16,7 @@ public class GameManager : Singleton<GameManager>
     public Action onMark;           // 최고 점수 갱신 했을 때 
     public Action onRankRefresh;    // 랭크 화면 갱신 요청
     public Action<int> onRankUpdate;     // 새 기록 추가 알림
+    public Action OnGameStart;
 
     int score = 0;
     
@@ -43,6 +44,8 @@ public class GameManager : Singleton<GameManager>
 
     protected override void Initialize()
     {
+        OnGameStart = null;
+
         player = FindObjectOfType<Bird>();
         player.onDead += RankUpdate;            // 새가 죽을 때 랭크 갱신
 
@@ -145,6 +148,13 @@ public class GameManager : Singleton<GameManager>
         highScorerName[rank] = name;    // 실제 데이터 변경
         onRankRefresh?.Invoke();        // UI 표시 갱신
         SaveGameData();                 // 갱신한 점수로 저장
+    }
+
+    public void GameStart()
+    {
+        OnGameStart?.Invoke();        // 게임이 시작되었음을 알림
+        //player.OnGameStart();       // 플레이어와 파이프로테이터에게 게임이 시작되었을 때 실행할 코드를 실행시킴
+        //pipeRotator.OnGameStart();  
     }
 
     public void TestSetScore(int newScore)

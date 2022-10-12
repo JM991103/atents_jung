@@ -6,9 +6,14 @@ using UnityEngine;
 public class PipeRotator : MonoBehaviour
 {
     /// <summary>
-    /// 파이프가 움직이는 속도
+    /// 파이프가 움직여야 할 속도
     /// </summary>
     public float pipeMoveSpeed = 5.0f;
+
+    /// <summary>
+    /// 실제 파이프가 움직이는 속도
+    /// </summary>
+    float currentPipeMoveSpeed = 0.0f;
     
     /// <summary>
     /// 움직일 파이프들
@@ -32,11 +37,17 @@ public class PipeRotator : MonoBehaviour
         endPointX = transform.Find("EndPoint").position.x;      // endPointX 구하기
     }
 
+    private void Start()
+    {
+        GameManager.Inst.OnGameStart += OnGameStart;    // 게임이 시작될 때 실행될 함수 등록
+        currentPipeMoveSpeed = 0.0f;                    // 일단 파이프가 안움직이도록 속도를 0으로 설정
+    }
+
     private void FixedUpdate()
     {        
         foreach(var pipe in pipes)  // pipes에 있는 모든 pipe를 하나씩 처리하기
         {            
-            pipe.MoveLeft(pipeMoveSpeed * Time.fixedDeltaTime); // 파이프를 초당 pipeMoveSpeed만큼의 속도로 계속 왼쪽으로 이동 시키기
+            pipe.MoveLeft(currentPipeMoveSpeed * Time.fixedDeltaTime); // 파이프를 초당 pipeMoveSpeed만큼의 속도로 계속 왼쪽으로 이동 시키기
                         
             if ( endPointX > pipe.transform.position.x)         // 파이프의 위치가 endPointX보다 왼쪽인지 체크
             {
@@ -47,11 +58,23 @@ public class PipeRotator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 파이프 별로 득점했을 때 점수를 올려주는 함수등록
+    /// </summary>
+    /// <param name="del">파이프가 득점 상황에서 실행될 함수 또는 델리게이트</param>
     public void AddPipeScoredDelegate(Action<int> del)
     {
         foreach(Pipe pipe in pipes)
         {
             pipe.onScored += del;
         }
+    }
+    
+    /// <summary>
+    /// 게임이 시작될 때 실행될 함수
+    /// </summary>
+    public void OnGameStart()
+    {
+        currentPipeMoveSpeed = pipeMoveSpeed;       // 실제 움직여야 할 속도로 설정
     }
 }

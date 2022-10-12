@@ -398,7 +398,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_17
+      name: Flappy_
       rect:
         serializedVersion: 2
         x: 351
@@ -566,7 +566,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_28
+      name: Flappy
       rect:
         serializedVersion: 2
         x: 292
@@ -1695,7 +1695,6 @@ TextureImporter:
       Number_Big_0: 1175474335
       Flappy_16: -1534092479
       Number_Big_6: -1576135604
-      Flappy_17: 131252737
       Flappy_22: -1375529439
       Number_Middle_0: 163599278
       Number_Small_4: 1538116965
@@ -1726,6 +1725,7 @@ TextureImporter:
       Number_Small_1: -2137192204
       Mark_New: -1998624088
       Medal_Gold: -483445479
+      Flappy: -361988215
       Number_Middle_2: -832938655
       Number_Small_2: 1405822378
       Flappy_13: 707524986
@@ -1742,6 +1742,7 @@ TextureImporter:
       Flappy_32: 1994032701
       Number_Small_9: 1195265427
       Number_Middle_9: -562077448
+      Flappy_: 131252737
       Number_Big_2: -1857076621
       Number_Big_8: -1807281847
       Flappy_26: -944884186
@@ -1768,9 +1769,8 @@ TextureImporter:
       Flappy_27: 1944515081
       Pipe_Top: 931611700
       Number_Small_6: 1808844411
-      Flappy_28: -361988215
-      Bird1_3: 810418618
       Number_Middle_3: -1992317205
+      Bird1_3: 810418618
       Flappy_0: -1714047015
   spritePackingTag: 
   pSDRemoveMatte: 0
