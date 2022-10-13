@@ -6,7 +6,7 @@
             "id": "3571dae8-9321-4476-b8ff-65383fe5783e",
             "actions": [
                 {
-                    "name": "Player",
+                    "name": "Move",
                     "type": "Value",
                     "id": "37214962-dc89-4c3b-aa55-cbfd2cffa292",
                     "expectedControlType": "Vector2",
@@ -17,57 +17,57 @@
             ],
             "bindings": [
                 {
-                    "name": "2D Vector",
+                    "name": "Move",
                     "id": "2d6ef4c0-ef70-4214-b3d2-04740be9e9b7",
                     "path": "2DVector",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Player",
+                    "action": "Move",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "up",
                     "id": "b053a401-6aa4-43cd-b7d7-dd4ccdae813d",
-                    "path": "",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Player",
+                    "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
                     "name": "down",
                     "id": "48867858-9897-4f5e-823d-d0df46aa2084",
-                    "path": "",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Player",
+                    "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
                     "name": "left",
                     "id": "884ae275-0504-4d00-ab07-ef27e3f808b5",
-                    "path": "",
+                    "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Player",
+                    "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
                     "name": "right",
                     "id": "11967acf-959a-4e78-999c-b2bea78e83d0",
-                    "path": "",
+                    "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Player",
+                    "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }
