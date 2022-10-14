@@ -35,6 +35,15 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Shift"",
+                    ""type"": ""Button"",
+                    ""id"": ""14817325-cabd-4fb5-95f3-6d9f2e191999"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -92,6 +101,17 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2e309701-05b2-4d10-99db-e93fd4f1831c"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Shift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -118,6 +138,7 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
         // PlayerInput
         m_PlayerInput = asset.FindActionMap("PlayerInput", throwIfNotFound: true);
         m_PlayerInput_Move = m_PlayerInput.FindAction("Move", throwIfNotFound: true);
+        m_PlayerInput_Shift = m_PlayerInput.FindAction("Shift", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -178,11 +199,13 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_PlayerInput;
     private IPlayerInputActions m_PlayerInputActionsCallbackInterface;
     private readonly InputAction m_PlayerInput_Move;
+    private readonly InputAction m_PlayerInput_Shift;
     public struct PlayerInputActions
     {
         private @PlayerInputAction m_Wrapper;
         public PlayerInputActions(@PlayerInputAction wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_PlayerInput_Move;
+        public InputAction @Shift => m_Wrapper.m_PlayerInput_Shift;
         public InputActionMap Get() { return m_Wrapper.m_PlayerInput; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -195,6 +218,9 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
                 @Move.started -= m_Wrapper.m_PlayerInputActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_PlayerInputActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_PlayerInputActionsCallbackInterface.OnMove;
+                @Shift.started -= m_Wrapper.m_PlayerInputActionsCallbackInterface.OnShift;
+                @Shift.performed -= m_Wrapper.m_PlayerInputActionsCallbackInterface.OnShift;
+                @Shift.canceled -= m_Wrapper.m_PlayerInputActionsCallbackInterface.OnShift;
             }
             m_Wrapper.m_PlayerInputActionsCallbackInterface = instance;
             if (instance != null)
@@ -202,6 +228,9 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @Shift.started += instance.OnShift;
+                @Shift.performed += instance.OnShift;
+                @Shift.canceled += instance.OnShift;
             }
         }
     }
@@ -218,5 +247,6 @@ public partial class @PlayerInputAction : IInputActionCollection2, IDisposable
     public interface IPlayerInputActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnShift(InputAction.CallbackContext context);
     }
 }
