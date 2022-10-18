@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+#if UNITY_EDITOR
+using UnityEditor;  //UNITY_EDITOR 라는 전처리기가 설정되어 있을 때만 실행버전에 넣어라
+#endif
+
 [RequireComponent(typeof(Rigidbody))]       // 필수적으로 필요한 컴포넌트가 있을 때 자동으로 넣어주는 속성(Attribute)
 [RequireComponent(typeof(Animator))]
 public class Enemy : MonoBehaviour
@@ -27,6 +31,11 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public float moveSpeed = 3.0f;
 
+    // --------------------------------------------------------------------------------------------
+
+    // 추적 관련 함수-------------------------------------------------------------------------------
+    public float sightRange = 5.0f;
+    public float sightHalfAngle = 50.0f;
     // --------------------------------------------------------------------------------------------
 
     // 상태 관련 변수 ------------------------------------------------------------------------------
@@ -196,6 +205,67 @@ public class Enemy : MonoBehaviour
     void Update_Wait()
     {
         WaitTimer -= Time.fixedDeltaTime;   // 시간 지속적으로 감소
+        
     }
 
+    bool SearchPlayer()
+    {
+        bool result = false;
+
+        Collider[] colliders = Physics.OverlapSphere(transform.position, sightRange, LayerMask.GetMask("Player"));
+
+        //LayerMask.GetMask("Player", "Water", UI);        // 리턴 2^6 + 2^5 + 2^4 = 64+32+16 = 112 (여러개 가능)
+        //LayerMask.NameToLayer("Player");    // 리턴 6
+
+        if (colliders.Length > 0)
+        {
+            // Player가 sightRange 안에 있다.
+            Debug.Log("Player가 시야 범위 안에 들어왔다.");
+
+            // 특정 시야각 안에 있는지 확인
+            Vector3 playerPos = colliders[0].transform.position;
+            float angle = Vector3.Angle(transform.forward, playerPos - transform.position);
+            if (sightHalfAngle > angle)
+            {
+                // 적의 시야범위 안에 player가 있다.
+                Debug.Log("Player가 시야각 안에 들어왔다.");
+                result = true;
+            }
+
+
+            result = true;
+        }
+
+        return result;
+    }
+
+    public void Test()
+    {
+        SearchPlayer();
+    }
+
+    private void OnDrawGizmos()
+    {
+#if UNITY_EDITOR
+        if (SearchPlayer())     // 플레이어가 보이는지 여부에 따라 색상 지정
+        {
+            Handles.color = Color.red;      // 보이면 빨간색
+        }
+        else
+        {
+            Handles.color = Color.green;    // 안보이면 초록색
+        }
+        Handles.DrawWireDisc(transform.position, transform.up, sightRange); // 시야 반경 만큼 원 그리기
+
+        Vector3 forward = transform.forward * sightRange;                   // 앞쪽 방향으로 시야 범위 만큼 가는 벡터
+
+        Handles.DrawDottedLine(transform.position, transform.position + forward, 2.0f); // 중심 선 그리기
+
+        Quaternion p1 = Quaternion.AngleAxis(-sightHalfAngle, transform.up);            // UP벡터를 축으로 반 시계방향으로 sightHalfAngle만큼 회전
+        Quaternion p2 = Quaternion.AngleAxis(sightHalfAngle, transform.up);             // UP벡터를 축으로 시계방향으로 sightHalfAngle만큼 회전
+
+        Handles.DrawLine(transform.position, transform.position + p1 * forward);        // 중심선을 반시계방향으로 회전 시켜서 그리기
+        Handles.DrawLine(transform.position, transform.position + p2 * forward);        // 중심선을 시계방향으로 회전 시켜서 그리기
+#endif
+    }
 }
