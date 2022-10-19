@@ -5,10 +5,10 @@ using UnityEngine;
 using UnityEngine.AI;
 
 #if UNITY_EDITOR
-using UnityEditor;  //UNITY_EDITOR 라는 전처리기가 설정되어 있을 때만 실행버전에 넣어라
+using UnityEditor;  // UNITY_EDITOR라는 전처리기가 설정되어있을 때만 실행버전에 넣어라
 #endif
 
-[RequireComponent(typeof(Rigidbody))]       // 필수적으로 필요한 컴포넌트가 있을 때 자동으로 넣어주는 속성(Attribute)
+[RequireComponent(typeof(Rigidbody))]   // 필수적으로 필요한 컴포넌트가 있을 때 자동으로 넣어주는 유니티 속성(Attribute)
 [RequireComponent(typeof(Animator))]
 public class Enemy : MonoBehaviour
 {
@@ -16,10 +16,10 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// 적이 순찰할 웨이포인트들
     /// </summary>
-    public WayPoint waypoints;
-
+    public Waypoints waypoints;     
+    
     /// <summary>
-    /// 지금 적이 이동할 목표 지점의 (웨이포인트) 트랜스폼
+    /// 지금 적이 이동할 목표 지점(웨이포인트)의 트랜스폼
     /// </summary>
     Transform waypointTarget;
 
@@ -33,11 +33,11 @@ public class Enemy : MonoBehaviour
 
     // --------------------------------------------------------------------------------------------
 
-    // 추적 관련 함수-------------------------------------------------------------------------------
+    // 추적 관련 변수 ------------------------------------------------------------------------------
     /// <summary>
     /// 시야 범위
     /// </summary>
-    public float sightRange = 5.0f;
+    public float sightRange = 10.0f;
 
     /// <summary>
     /// 시야각의 절반
@@ -51,7 +51,7 @@ public class Enemy : MonoBehaviour
     // --------------------------------------------------------------------------------------------
 
     // 상태 관련 변수 ------------------------------------------------------------------------------
-    EnemyState state = EnemyState.Patrol;               // 현재 적의 상태(대기 상태냐 순찰 상태냐)
+    EnemyState state = EnemyState.Patrol; // 현재 적의 상태(대기 상태냐 순찰 상태냐)
     public float waitTime = 1.0f;   // 목적지에 도착했을 때 기다리는 시간
     float waitTimer;                // 남아있는 기다려야 하는 시간
     // --------------------------------------------------------------------------------------------
@@ -68,14 +68,14 @@ public class Enemy : MonoBehaviour
     /// </summary>
     protected enum EnemyState
     {
-        Wait = 0,    // 대기 상태
-        Patrol,      // 순찰 상태
-        chase        // 추적 상태
+        Wait = 0,   // 대기 상태
+        Patrol,     // 순찰 상태
+        Chase       // 추적 상태            
     }
     // --------------------------------------------------------------------------------------------
 
     // 델리게이트 ----------------------------------------------------------------------------------
-
+    
     /// <summary>
     /// 상태별 업데이터 함수를 가질 델리게이트
     /// </summary>
@@ -85,16 +85,15 @@ public class Enemy : MonoBehaviour
     // 프로퍼티 -----------------------------------------------------------------------------------
 
     /// <summary>
-    /// 이동할 목적지를 나타내는 프로퍼티
+    /// 이동할 목적지(웨이포인트)를 나타내는 프로퍼티
     /// </summary>
-    protected Transform WayPointTarget
+    protected Transform WaypointTarget
     {
         get => waypointTarget;
         set
         {
             waypointTarget = value;
             //lookDir = (moveTarget.position - transform.position).normalized;    // lookDir도 함께 갱신
-            //agent.SetDestination(moveTarget.position);
         }
     }
 
@@ -106,17 +105,17 @@ public class Enemy : MonoBehaviour
         get => state;
         set
         {
-            if(state != value)
-            { 
-            //switch (state)  // 이전 상태(상태를 나가면서 해야 할 일 처리)
-            //{
-            //    case EnemyState.Wait:
-            //        break;
-            //    case EnemyState.Patrol:
-            //        break;
-            //    default:
-            //        break;
-            //}
+            if (state != value)
+            {
+                //switch (state)  // 이전 상태(상태를 나가면서 해야 할 일 처리)
+                //{
+                //    case EnemyState.Wait:
+                //        break;
+                //    case EnemyState.Patrol:
+                //        break;
+                //    default:
+                //        break;
+                //}
                 state = value;  // 새로운 상태로 변경
                 switch (state)  // 새로운 상태(새로운 상태로 들어가면서 해야 할 일 처리)
                 {
@@ -128,14 +127,14 @@ public class Enemy : MonoBehaviour
                         break;
                     case EnemyState.Patrol:
                         agent.isStopped = false;
-                        agent.SetDestination(waypointTarget.position);
+                        agent.SetDestination(WaypointTarget.position);
                         anim.SetTrigger("Move");    // 이동하는 애니메이션 재생
                         stateUpdate = Update_Patrol;// FixedUpdate에서 실행될 델리게이트 변경
                         break;
-                    case EnemyState.chase:
+                    case EnemyState.Chase:
                         agent.isStopped = false;
-                        anim.SetTrigger("Move");
-                        stateUpdate = Update_Chase;
+                        anim.SetTrigger("Move");    // 이동하는 애니메이션 재생
+                        stateUpdate = Update_Chase; // FixedUpdate에서 실행될 델리게이트 변경
                         break;
                     default:
                         break;
@@ -153,8 +152,8 @@ public class Enemy : MonoBehaviour
         set
         {
             waitTimer = value;
-            if (waitTimer < 0.0f)  // 남은 시간이 다 되면
-            {
+            if( waitTimer < 0.0f )  // 남은 시간이 다 되면
+            {   
                 State = EnemyState.Patrol;  // Patrol 상태로 전환
             }
         }
@@ -175,11 +174,11 @@ public class Enemy : MonoBehaviour
         // waypoints가 없을 때를 대비한 코드
         if (waypoints != null)
         {
-            WayPointTarget = waypoints.Current;
+            WaypointTarget = waypoints.Current;
         }
         else
         {
-            WayPointTarget = transform;
+            WaypointTarget = transform;
         }
 
         // 값 초기화 작업      
@@ -190,10 +189,11 @@ public class Enemy : MonoBehaviour
     private void FixedUpdate()
     {
         // 매번 추적대상을 찾기
-        if (SearchPlayer())
+        if(SearchPlayer())
         {
-            State = EnemyState.chase;   // 추적 대상이 있으면 추적 상태로 변경
+            State = EnemyState.Chase;   // 추적 대상이 있으면 추적 상태로 변경
         }
+
         stateUpdate();
     }
 
@@ -202,27 +202,15 @@ public class Enemy : MonoBehaviour
     /// </summary>
     void Update_Patrol()
     {
-        //// 이동 처리
-        //rigid.MovePosition(transform.position + moveSpeedPerSecond * lookDir);  // 위치변경
-        //rigid.rotation = Quaternion.Slerp(rigid.rotation, Quaternion.LookRotation(lookDir), 0.2f);  // 이동하는 방향 바라보기
-
-        //// 도착 확인
-        //if ((transform.position - moveTarget.position).sqrMagnitude < 0.01f)
-        //{
-        //    transform.position = moveTarget.position;   // 정확한 웨이포인트 지점에 이동 시키기 위해 강제 이동
-        //    MoveTarget = waypoints.MoveNext();          // 다음 웨이포인트 지점을 MoveTarget으로 설정
-        //    State = EnemyState.Wait;                    // 대기 상태로 변경
-        //}
         // 도착 확인
-        // agent.pathPending : 경로 계산이 진행중인지 확인, true면 아직 경로 계산 중
+        // agent.pathPending : 경로 계산이 진행중인지 확인. true면 아직 경로 계산 중 
         // agent.remainingDistance : 도착지점까지 남아있는 거리
         // agent.stoppingDistance : 도착지점에 도착했다고 인정되는 거리
-        if ( !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance )  // 경로 계산이 완료됐고 아직 도착지점으로 인정되는 거리까지 도착하지 않았다.
+        if ( !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance )  // 경로 계산이 완료됬고 아직 도착지점으로 인정되는 거리까지 이동하지 않았다.
         {
-            WayPointTarget = waypoints.MoveNext();          // 다음 웨이포인트 지점을 MoveTarget으로 설정
+            WaypointTarget = waypoints.MoveNext();          // 다음 웨이포인트 지점을 MoveTarget으로 설정
             State = EnemyState.Wait;                    // 대기 상태로 변경
         }
-
     }
 
     /// <summary>
@@ -231,7 +219,6 @@ public class Enemy : MonoBehaviour
     void Update_Wait()
     {
         WaitTimer -= Time.fixedDeltaTime;   // 시간 지속적으로 감소
-        
     }
 
     /// <summary>
@@ -242,59 +229,62 @@ public class Enemy : MonoBehaviour
         // 추적 대상이 있는지 확인
         if (chaseTarget != null)
         {
-            agent.SetDestination(chaseTarget.position);     // 추적 대상이 있으면 추적 대상의 위치로 이동
+            agent.SetDestination(chaseTarget.position); // 추적대상이 있으면 추적 대상의 위치로 이동
         }
         else
         {
-            State = EnemyState.Wait;                        // 추적 대상이 없으면 잠시 대기
+            State = EnemyState.Wait;    // 추적 대상이 없으면 잠시 대기
         }
     }
 
+    /// <summary>
+    /// 플레이어를 감지하는 함수
+    /// </summary>
+    /// <returns>적이 플레이어를 감지하면 true. 아니면 false</returns>
     bool SearchPlayer()
     {
         bool result = false;
         chaseTarget = null;
+
         // 특정 범위안에 존재하는지 확인
         Collider[] colliders = Physics.OverlapSphere(transform.position, sightRange, LayerMask.GetMask("Player"));
-
-        if (colliders.Length > 0)
+        if( colliders.Length > 0 )
         {
             // Player가 sightRange 안에 있다.
-            //Debug.Log("Player가 시야 범위 안에 들어왔다.");
-
-            // 특정 시야각 안에 있는지 확인
+            //Debug.Log("Player가 시야범위안에 들어왔다.");
 
             Vector3 playerPos = colliders[0].transform.position;    // 플레이어의 위치
             Vector3 toPlayerDir = playerPos - transform.position;   // 플레이어로 가는 방향
             
             // 시야각 안에 플레이어가 있는지 확인
-            if (IsInsightAngle(toPlayerDir))
+            if(IsInSightAngle(toPlayerDir))
             {
-                // 적의 시야범위 안에 player가 있다.
-                //Debug.Log("Player가 시야각 안에 들어왔다.");
+                // 시야각 안에 player가 있다.
 
                 // 시야가 다른 물체로 인해 막혔는지 확인
                 if(!IsSightBlocked(toPlayerDir))
                 {
-                    // 시야가 다른 물체로 인해 막히지 않았다.
+                    // 시야가 다른 몰체로 인해 막히지 않았다.
+
                     chaseTarget = colliders[0].transform;   // 추적할 플레이어 저장
                     result = true;
-                }
+                }                
             }
         }
-        //LayerMask.GetMask("Player", "Water", UI);        // 리턴 2^6 + 2^5 + 2^4 = 64+32+16 = 112 (여러개 가능)
-        //LayerMask.NameToLayer("Player");    // 리턴 6
+        //LayerMask.GetMask("Player","Water","UI"); // 리턴 2^6+2^4+2^5 = 64+16+32 = 112
+        //LayerMask.NameToLayer("Player");          // 리턴 6
+        
         return result;
     }
 
     /// <summary>
-    /// 대상이 시야각에 들어와 있는지 확인하는 함수
+    /// 대상이 시야각안에 들어와 있는지 확인하는 함수
     /// </summary>
     /// <param name="toTargetDir">대상으로 가는 방향 벡터</param>
-    /// <returns>true면 대상이 시야각 안에 있다. false면 없다.</returns>
-    bool IsInsightAngle(Vector3 toTargetDir)
-    {
-        float angle = Vector3.Angle(transform.forward, toTargetDir); // forward 벡터와 플레이어로 가는 방향 벡터의 사이각 구하기
+    /// <returns>true면 대상이 시야각안에 있다. false면 없다.</returns>
+    bool IsInSightAngle(Vector3 toTargetDir)
+    {        
+        float angle = Vector3.Angle(transform.forward, toTargetDir);    // forward 벡터와 플레어어로 가는 방향 벡터의 사이각 구하기
         return (sightHalfAngle > angle);
     }
 
@@ -323,31 +313,32 @@ public class Enemy : MonoBehaviour
     public void Test()
     {
         SearchPlayer();
+        //Debug.Log(this.gameObject.layer);
+        //this.gameObject.layer = 0b_0000_0000_0000_0000_0000_0000_0000_1101;
     }
 
     private void OnDrawGizmos()
     {
-        // OnDrawGizmosSelected 선택하여 볼수 있음
 #if UNITY_EDITOR
-        Handles.color = Color.green;    // 기본적으로 초록색
+        Handles.color = Color.green;        // 기본적으로 녹색
+        Handles.DrawWireDisc(transform.position, transform.up, sightRange);     // 시야 반경만큼 원 그리기
 
-        Handles.DrawWireDisc(transform.position, transform.up, sightRange); // 시야 반경 만큼 원 그리기
-
-        if (SearchPlayer())     // 플레이어가 보이는지 여부에 따라 색상 지정
+        if (SearchPlayer()) // 플레이어가 보이는지 여부에 따라 색상 지정
         {
             Handles.color = Color.red;      // 보이면 빨간색
         }
 
-        Vector3 forward = transform.forward * sightRange;                   // 앞쪽 방향으로 시야 범위 만큼 가는 벡터
-        Handles.DrawDottedLine(transform.position, transform.position + forward, 2.0f); // 중심 선 그리기
+        Vector3 forward = transform.forward * sightRange;                               // 앞쪽 방향으로 시야 범위만큼 가는 벡터
+        Handles.DrawDottedLine(transform.position, transform.position + forward, 2.0f); // 중심선 그리기
 
-        Quaternion p1 = Quaternion.AngleAxis(-sightHalfAngle, transform.up);            // UP벡터를 축으로 반 시계방향으로 sightHalfAngle만큼 회전
-        Quaternion p2 = Quaternion.AngleAxis(sightHalfAngle, transform.up);             // UP벡터를 축으로 시계방향으로 sightHalfAngle만큼 회전
+        Quaternion q1 = Quaternion.AngleAxis(-sightHalfAngle, transform.up);// up벡터를 축으로 반시계방향으로 sightHalfAngle만큼 회전
+        Quaternion q2 = Quaternion.AngleAxis(sightHalfAngle, transform.up); // up벡터를 축으로 시계방향으로 sightHalfAngle만큼 회전
 
-        Handles.DrawLine(transform.position, transform.position + p1 * forward);        // 중심선을 반시계방향으로 회전 시켜서 그리기
-        Handles.DrawLine(transform.position, transform.position + p2 * forward);        // 중심선을 시계방향으로 회전 시켜서 그리기
+        Handles.DrawLine(transform.position, transform.position + q1 * forward);    // 중심선을 반시계방향으로 회전시켜서 그리기
+        Handles.DrawLine(transform.position, transform.position + q2 * forward);    // 중심선을 시계방향으로 회전시켜서 그리기
 
-        Handles.DrawWireArc(transform.position, transform.up, p1 * forward, sightHalfAngle * 2, sightRange, 5.0f);  // 호 그리기
+        Handles.DrawWireArc(transform.position, transform.up, q1 * forward, sightHalfAngle * 2, sightRange, 5.0f);  // 호 그리기
 #endif
     }
+
 }

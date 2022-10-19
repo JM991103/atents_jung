@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
-{
+{   
     /// <summary>
     /// 걷는 이동 속도
     /// </summary>
@@ -14,22 +14,17 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 달리는 이동 속도
     /// </summary>
-    public float RunSpeed = 5.0f;
+    public float runSpeed = 5.0f;
 
     /// <summary>
-    /// 회전 속도
+    /// 현재 이동속도
     /// </summary>
-    public float turnSpeed = 10.0f;
-
-    /// <summary>
-    /// 현재 이동 속도
-    /// </summary>
-    float currentSpeed = 10.0f;
+    float currentSpeed = 3.0f;
 
     /// <summary>
     /// 이동 상태를 나타내는 enum
     /// </summary>
-    enum MoveMode 
+    enum MoveMode
     {
         Walk = 0,
         Run
@@ -41,20 +36,25 @@ public class PlayerController : MonoBehaviour
     MoveMode moveMode = MoveMode.Walk;
 
     /// <summary>
+    /// 회전 속도
+    /// </summary>
+    public float turnSpeed = 10.0f;
+
+    /// <summary>
     /// 입력으로 지정된 바라보는 방향
     /// </summary>
     Vector3 inputDir = Vector3.zero;
 
     /// <summary>
-    /// 최종 회전 목표
+    /// 최종 회전 목표 
     /// </summary>
     Quaternion targetRotation = Quaternion.identity;
 
     /// <summary>
     /// 인풋 액션 인스턴스
     /// </summary>
-    PlayerInputAction inputAction;
-    
+    PlayerInputActions inputActions;
+
     /// <summary>
     /// 애니메이터 컴포넌트 캐싱용
     /// </summary>
@@ -62,53 +62,47 @@ public class PlayerController : MonoBehaviour
 
     CharacterController cc;
 
-
+    
 
     private void Awake()
     {
         // 컴포넌트 만들어졌을 때 인풋 액션 인스턴스 생성
-        inputAction = new PlayerInputAction();
+        inputActions = new PlayerInputActions();
 
         // 컴포넌트 찾아오기
         anim = GetComponent<Animator>();
         cc = GetComponent<CharacterController>();
     }
 
-    private void Update()
-    {
-        // inputDir 방향으로 초당 moveSpeed의 속도로 이동. 월드 스페이스 기준으로 이동
-        //transform.Translate(currentSpeed * Time.deltaTime * inputDir, Space.World);
-
-        // inputDir 방향으로 초당 moveSpeed의 속도로 이동
-        cc.Move(currentSpeed * Time.deltaTime * inputDir);
-        //cc.SimpleMove(currentSpeed * inputDir);
-
-        // transform.rotation에서 targetRotation으로 초당 1/turnSpeed씩 보간
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
-    }
-
     private void OnEnable()
     {
         // 인풋 액션에서 액션맵 활성화
-        inputAction.PlayerInput.Enable();
+        inputActions.Player.Enable();
         // 액션과 함수 연결
-        inputAction.PlayerInput.Move.performed += OnMove;
-        inputAction.PlayerInput.Move.canceled += OnMove;
-        inputAction.PlayerInput.Shift.performed += OnMovemodChange;
-        inputAction.PlayerInput.Shift.canceled += OnMovemodChange;
-        inputAction.PlayerInput.Attack.performed += OnAttack;
+        inputActions.Player.Move.performed += OnMove;
+        inputActions.Player.Move.canceled += OnMove;
+        inputActions.Player.MoveModeChange.performed += OnMoveModeChange;
+        inputActions.Player.Attack.performed += OnAttack;
     }
 
     private void OnDisable()
     {
         // 액션과 함수 연결 해제
-        inputAction.PlayerInput.Attack.performed -= OnAttack;
-        inputAction.PlayerInput.Shift.performed -= OnMovemodChange;
-        inputAction.PlayerInput.Shift.canceled -= OnMovemodChange;
-        inputAction.PlayerInput.Move.performed -= OnMove;
-        inputAction.PlayerInput.Move.canceled -= OnMove;
+        inputActions.Player.Attack.performed -= OnAttack;
+        inputActions.Player.MoveModeChange.performed -= OnMoveModeChange;
+        inputActions.Player.Move.canceled -= OnMove;
+        inputActions.Player.Move.performed -= OnMove;
         // 액션맵 비활성화
-        inputAction.PlayerInput.Disable();
+        inputActions.Player.Disable();
+    }
+
+    private void Update()
+    {
+        // inputDir방향으로 초당 moveSpeed의 속도로 이동.
+        cc.Move(currentSpeed * Time.deltaTime * inputDir);
+
+        // transform.rotation에서 targetRotation으로 초당 1/turnSpeed씩 보간.
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
     }
 
     /// <summary>
@@ -117,21 +111,20 @@ public class PlayerController : MonoBehaviour
     /// <param name="context"></param>
     private void OnMove(InputAction.CallbackContext context)
     {
-        // WASD 입력을 받아옴(+X : D, -X : A, +Y : W, -Y : S)
-        Vector2 input = context.ReadValue<Vector2>();
-
-        inputDir.x = input.x;   // 입력받은 것을 3D XZ평면상의 방향으로 변경
+        // WASD 입력을 받아옴(+x:D, -x:A, +y:W, -y:s)
+        Vector2 input = context.ReadValue<Vector2>();   
+        //Debug.Log(input);
+        inputDir.x = input.x;   // 입력받은 것을 3D xz 평면상의 방향으로 변경
         inputDir.y = 0.0f;
         inputDir.z = input.y;
-
+                
         if (!context.canceled)
         {
             // 입력이 들어왔을 때만 실행되는 코드
 
-
-            Quaternion cameraYRotation = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0);  // 카메라의 Y축 회전만 분리
-            // 카메라의 Y축 회전을 inputDir에 곱한다. => inputDir과 카메라가 XZ평면상에서 바라보는 방향을 일치시킴
-            inputDir = cameraYRotation * inputDir;
+            Quaternion cameraYRotation = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0); // 카메라의 y축 회전만 분리
+            // 카메라의 y축 회전을 inputDir에 곱한다. => inputDir과 카메라가 xz평면상에서 바라보는 방향을 일치시킴
+            inputDir = cameraYRotation * inputDir;  
 
             targetRotation = Quaternion.LookRotation(inputDir); // inputDir 방향으로 바라보는 회전 만들기
 
@@ -148,53 +141,48 @@ public class PlayerController : MonoBehaviour
         {
             anim.SetFloat("Speed", 0.0f);       // 입력이 안들어 왔으면 대기 애니메이션
         }
+
     }
 
     /// <summary>
     /// 쉬프트 키를 눌렀을 때 실행
     /// </summary>
     /// <param name="_"></param>
-    private void OnMovemodChange(InputAction.CallbackContext _)
+    private void OnMoveModeChange(InputAction.CallbackContext _)
     {
-        if (moveMode == MoveMode.Walk)
+        if( moveMode == MoveMode.Walk )
         {
-            // walk 모드면 RunMode로 전환
+            // Walk모드면 Run모드로 전환
             moveMode = MoveMode.Run;
-            currentSpeed = RunSpeed;        // 이동 속도도 달리는 속도로 변경
+            currentSpeed = runSpeed;            // 이동 속도도 달리는 속도로 변경
             if (inputDir != Vector3.zero)
             {
-                anim.SetFloat("Speed", 1.0f);   // 움직이는 중일 때만 재생하는 애니메이션도 변경
+                anim.SetFloat("Speed", 1.0f);   // 움직이는 중일 때만 재생하는 애니메이션 변경
             }
         }
         else
         {
             // Run모드면 Walk모드로 전환
             moveMode = MoveMode.Walk;
-            currentSpeed = walkSpeed;       // 이동 속도를 걷는 속도로 변경
+            currentSpeed = walkSpeed;           // 이동 속도를 걷는 속도로 변경
             if (inputDir != Vector3.zero)
             {
-                anim.SetFloat("Speed", 0.3f);   // 움직이는 중일 때만  재생하는 애니메이션도 변경
+                anim.SetFloat("Speed", 0.3f);   // 움직이는 중일 때만 재생하는 애니메이션 변경
             }
         }
     }
 
     /// <summary>
-    /// 스페이스 키나 마우스 왼클릭 때 실행
+    /// 스페이스 키나 마우스 왼클릭 했을 때 실행
     /// </summary>
     /// <param name="_"></param>
     private void OnAttack(InputAction.CallbackContext _)
     {
-        //Debug.Log(anim.GetCurrentAnimatorStateInfo(0).normalizedTime);  // 현재 진행중인 애니메이션의 진행 상태를 알려줌(0~1)
-
-        int comboState = anim.GetInteger("ComboState");     // ComboState를 애니메이터에서 읽어와서
-        comboState++;   // 1 증가 시키기
-        //if (comboState > 3) 
-        //{
-        //    comboState = 0; 
-        //}
+        //Debug.Log(anim.GetCurrentAnimatorStateInfo(0).normalizedTime); // 현재 재생중인 애니메이션의 진행 상태를 알려줌(0~1)
         
-        anim.SetInteger("ComboState", comboState);  // 애니메이터에 증가된 콤보 상태 설정
-        anim.SetTrigger("Attack");                  // Attack 트리거 발동
+        int comboState = anim.GetInteger("ComboState"); // ComboState를 애니메이터에서 읽어와서 
+        comboState++;   // 콤보 상태 1 증가 시키기        
+        anim.SetInteger("ComboState", comboState);      // 애니메이터에 증가된 콤보 상태 설정
+        anim.SetTrigger("Attack");                      // Attack 트리거 발동
     }
-
 }
