@@ -60,6 +60,10 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     Animator anim;
 
+    CharacterController cc;
+
+
+
     private void Awake()
     {
         // 컴포넌트 만들어졌을 때 인풋 액션 인스턴스 생성
@@ -67,12 +71,17 @@ public class PlayerController : MonoBehaviour
 
         // 컴포넌트 찾아오기
         anim = GetComponent<Animator>();
+        cc = GetComponent<CharacterController>();
     }
 
     private void Update()
     {
         // inputDir 방향으로 초당 moveSpeed의 속도로 이동. 월드 스페이스 기준으로 이동
-        transform.Translate(currentSpeed * Time.deltaTime * inputDir, Space.World);
+        //transform.Translate(currentSpeed * Time.deltaTime * inputDir, Space.World);
+
+        // inputDir 방향으로 초당 moveSpeed의 속도로 이동
+        cc.Move(currentSpeed * Time.deltaTime * inputDir);
+        //cc.SimpleMove(currentSpeed * inputDir);
 
         // transform.rotation에서 targetRotation으로 초당 1/turnSpeed씩 보간
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
@@ -87,11 +96,13 @@ public class PlayerController : MonoBehaviour
         inputAction.PlayerInput.Move.canceled += OnMove;
         inputAction.PlayerInput.Shift.performed += OnMovemodChange;
         inputAction.PlayerInput.Shift.canceled += OnMovemodChange;
+        inputAction.PlayerInput.Attack.performed += OnAttack;
     }
 
     private void OnDisable()
     {
         // 액션과 함수 연결 해제
+        inputAction.PlayerInput.Attack.performed -= OnAttack;
         inputAction.PlayerInput.Shift.performed -= OnMovemodChange;
         inputAction.PlayerInput.Shift.canceled -= OnMovemodChange;
         inputAction.PlayerInput.Move.performed -= OnMove;
@@ -166,4 +177,24 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// 스페이스 키나 마우스 왼클릭 때 실행
+    /// </summary>
+    /// <param name="_"></param>
+    private void OnAttack(InputAction.CallbackContext _)
+    {
+        //Debug.Log(anim.GetCurrentAnimatorStateInfo(0).normalizedTime);  // 현재 진행중인 애니메이션의 진행 상태를 알려줌(0~1)
+
+        int comboState = anim.GetInteger("ComboState");     // ComboState를 애니메이터에서 읽어와서
+        comboState++;   // 1 증가 시키기
+        //if (comboState > 3) 
+        //{
+        //    comboState = 0; 
+        //}
+        
+        anim.SetInteger("ComboState", comboState);  // 애니메이터에 증가된 콤보 상태 설정
+        anim.SetTrigger("Attack");                  // Attack 트리거 발동
+    }
+
 }
