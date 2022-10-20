@@ -38,18 +38,20 @@ public class Player : MonoBehaviour, IHealth, IBattle
             if (hp != value)
             {
                 hp = value;
-                onHealthChange?.Invoke();
 
                 if (hp < 0)
                 {
                     Die();
                 }
+                hp = Mathf.Clamp(hp, 0.0f, maxHP);
+
+                onHealthChange?.Invoke(hp/maxHP);
             }
         }
     }
     public float MaxHP => maxHP;
 
-    public Action onHealthChange { get; set; }
+    public Action<float> onHealthChange { get; set; }
     public Action onDie { get; set; }
 
     // ---------------------------------------------------------------------------------------------------------------------------
@@ -58,6 +60,7 @@ public class Player : MonoBehaviour, IHealth, IBattle
     {
         // 장비교체가 일어날 수 
         weapon_r = GetComponentInChildren<WeaponPosition>().transform;      // 무기가 붙는 위치를 컴포넌트로 찾기
+
         weaponPs = weapon_r.GetComponentInChildren<ParticleSystem>();       // 무기에 붙어있는 파티클 시스템 가져오기
         weaponBlade = weapon_r.GetComponentInChildren<Collider>();          // 무기가 붙는 위치를 컴포넌트로 찾기
 

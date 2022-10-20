@@ -157,12 +157,14 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
             if (hp != value)
             {
                 hp = value;
-                onHealthChange?.Invoke();
 
                 if (hp < 0)
                 {
                     Die();
                 }
+                hp = Mathf.Clamp(hp, 0.0f, maxHP);
+
+                onHealthChange?.Invoke(hp/maxHP);
             }
 
         }
@@ -191,7 +193,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
     float hp = 100.0f;              // 현재 HP
 
     // 델리 게이트 --------------------------------------------------------------------------------------
-    public Action onHealthChange { get; set; }
+    public Action<float> onHealthChange { get; set; }
     public Action onDie { get; set; }
 
 
@@ -373,7 +375,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
         //this.gameObject.layer = 0b_0000_0000_0000_0000_0000_0000_0000_1101;
     }
 
-    void Test_HP_Change()
+    void Test_HP_Change(float ratio)
     {
         Debug.Log($"{gameObject.name}의 HP가 {HP}로 변경되었습니다.");
     }
