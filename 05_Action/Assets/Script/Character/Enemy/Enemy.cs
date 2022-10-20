@@ -10,7 +10,7 @@ using UnityEditor;  // UNITY_EDITOR라는 전처리기가 설정되어있을 때
 
 [RequireComponent(typeof(Rigidbody))]   // 필수적으로 필요한 컴포넌트가 있을 때 자동으로 넣어주는 유니티 속성(Attribute)
 [RequireComponent(typeof(Animator))]
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IHealth, IBattle
 {
     // 웨이포인트 관련 변수 -------------------------------------------------------------------------   
     /// <summary>
@@ -143,6 +143,31 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public float AttackPower => attackPower;
+
+    public float DefencePower => defencePower;
+
+    public float MaxHP => maxHP;
+
+    public float HP
+    {
+        get => hp;
+        set
+        {
+            if (hp != value)
+            {
+                hp = value;
+                onHealthChange?.Invoke();
+
+                if (hp < 0)
+                {
+                    Die();
+                }
+            }
+
+        }
+    }
+
     /// <summary>
     /// 남은 대기 시간을 나타내는 프로퍼티
     /// </summary>
@@ -152,13 +177,25 @@ public class Enemy : MonoBehaviour
         set
         {
             waitTimer = value;
-            if( waitTimer < 0.0f )  // 남은 시간이 다 되면
+            if(waypoints != null && waitTimer < 0.0f )  // 남은 시간이 다 되면
             {   
                 State = EnemyState.Patrol;  // Patrol 상태로 전환
             }
         }
     }
-    // --------------------------------------------------------------------------------------------
+    // 전투용 데이터 ------------------------------------------------------------------------------------
+
+    public float attackPower = 10.0f;      // 공격력
+    public float defencePower = 3.0f;      // 방어력
+    public float maxHP = 100.0f;    // 최대 HP
+    float hp = 100.0f;              // 현재 HP
+
+    // 델리 게이트 --------------------------------------------------------------------------------------
+    public Action onHealthChange { get; set; }
+    public Action onDie { get; set; }
+
+
+    // -------------------------------------------------------------------------------------------------
 
     private void Awake()
     {
@@ -184,6 +221,11 @@ public class Enemy : MonoBehaviour
         // 값 초기화 작업      
         State = EnemyState.Wait;    // 기본 상태 설정(wait)
         anim.ResetTrigger("Stop");  // 트리거가 쌓이는 현상을 방지
+
+
+        //테스트 코드
+        onHealthChange += Test_HP_Change;
+        onDie += Test_Die;
     }
 
     private void FixedUpdate()
@@ -310,11 +352,34 @@ public class Enemy : MonoBehaviour
         return result;
     }
 
+    public void Attack(IBattle target)
+    {
+        target?.Defence(AttackPower);
+    }
+
+    public void Defence(float damage)
+    {
+        HP -= (damage - DefencePower);
+    }
+    public void Die()
+    {
+        onDie?.Invoke();
+    }
+
     public void Test()
     {
         SearchPlayer();
         //Debug.Log(this.gameObject.layer);
         //this.gameObject.layer = 0b_0000_0000_0000_0000_0000_0000_0000_1101;
+    }
+
+    void Test_HP_Change()
+    {
+        Debug.Log($"{gameObject.name}의 HP가 {HP}로 변경되었습니다.");
+    }
+    void Test_Die()
+    {
+        Debug.Log($"{gameObject.name}가 죽었습니다.");
     }
 
     private void OnDrawGizmos()
