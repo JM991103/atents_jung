@@ -54,6 +54,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
     EnemyState state = EnemyState.Patrol; // 현재 적의 상태(대기 상태냐 순찰 상태냐)
     public float waitTime = 1.0f;   // 목적지에 도착했을 때 기다리는 시간
     float waitTimer;                // 남아있는 기다려야 하는 시간
+    bool isAlive = true;
     // --------------------------------------------------------------------------------------------
 
     // 컴포넌트 캐싱용 변수 -------------------------------------------------------------------------
@@ -158,7 +159,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
             {
                 hp = value;
 
-                if (hp < 0)
+                if (isAlive && hp < 0)
                 {
                     Die();
                 }
@@ -223,7 +224,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
         // 값 초기화 작업      
         State = EnemyState.Wait;    // 기본 상태 설정(wait)
         anim.ResetTrigger("Stop");  // 트리거가 쌓이는 현상을 방지
-
+        isAlive = true;
 
         //테스트 코드
         onHealthChange += Test_HP_Change;
@@ -361,10 +362,20 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
 
     public void Defence(float damage)
     {
-        HP -= (damage - DefencePower);
+        // 기본 공식 : 실제 입는 데미지 = 적 공격 데미지 - 방어력
+        if (isAlive)
+        {
+            anim.SetTrigger("Hit");
+
+            HP -= (damage - DefencePower);
+        }
+        
     }
     public void Die()
     {
+        isAlive = false;
+        anim.SetTrigger("Die");
+        Destroy(this.gameObject, 3.0f); ;
         onDie?.Invoke();
     }
 
