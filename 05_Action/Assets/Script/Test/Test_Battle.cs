@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class Test_Battle : TestBase
 {
     Player player;
+
     private void Start()
     {
         player = GameManager.Inst.Player;
@@ -13,7 +14,7 @@ public class Test_Battle : TestBase
 
     protected override void Test1(InputAction.CallbackContext _)
     {
-        player.Defence(10);
+        player.Defence(60);
     }
 
     protected override void Test2(InputAction.CallbackContext _)

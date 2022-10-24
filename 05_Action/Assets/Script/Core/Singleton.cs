@@ -56,9 +56,9 @@ public class Singleton<T> : MonoBehaviour where T : Component
             // 처음 만들어진 싱글톤 게임 오브젝트
             _instance = this as T;              // _instance에 이 스크립트의 객체 저장
             DontDestroyOnLoad(this.gameObject); // 씬이 사라지더라도 게임 오브젝트를 삭제하지 않게 하는 코드
-
+            
             Initialize();                       // 새로 만들어지면 초기화 함수 따로 실행
-
+            
             SceneManager.sceneLoaded += OnSceneLoaded;  // 씬 로드가 완료되면 Initialize 함수 실행
         }
         else
@@ -82,7 +82,9 @@ public class Singleton<T> : MonoBehaviour where T : Component
         Initialize();
     }
 
-    // 게임 매니저가 새로 만들어지거나 씬이 로드 되었을 때 실행될 초기화 함수
+    /// <summary>
+    /// 게임 메니저가 새로 만들어지거나 씬이 로드 되었을 때 실행될 초기화 함수
+    /// </summary>
     protected virtual void Initialize()
     {
 

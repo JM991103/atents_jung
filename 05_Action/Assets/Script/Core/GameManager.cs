@@ -15,7 +15,7 @@ public class GameManager : Singleton<GameManager>
     public Player Player => player;
 
     /// <summary>
-    /// 게임 매니저가 새로 만들어지거나 씬이 로드 되었을 때 실행될 초기화 함수
+    /// 게임 메니저가 새로 만들어지거나 씬이 로드 되었을 때 실행될 초기화 함수
     /// </summary>
     protected override void Initialize()
     {
