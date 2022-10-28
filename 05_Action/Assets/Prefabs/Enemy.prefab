@@ -668,6 +668,10 @@ MonoBehaviour:
   sightRange: 10
   sightHalfAngle: 50
   waitTime: 1
+  dropItemPrefabs:
+  - {fileID: 2034249779284782040, guid: 8cdaf445d8ba1164199ae88695ca2cc5, type: 3}
+  - {fileID: 2034249779284782040, guid: 9b39c225044b68f48860a6c93bb6e49d, type: 3}
+  - {fileID: 2034249779284782040, guid: 36434009bdbe2b4479e3b37622e68ebd, type: 3}
   attackPower: 10
   defencePower: 3
   maxHP: 100

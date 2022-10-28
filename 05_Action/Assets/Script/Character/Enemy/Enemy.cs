@@ -53,6 +53,9 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
     public float waitTime = 1.0f;   // 목적지에 도착했을 때 기다리는 시간
     float waitTimer;                // 남아있는 기다려야 하는 시간    
 
+    // 드랍 아이템 관련 변수 ------------------------------------------------------------------------
+    public GameObject[] dropItemPrefabs;
+
 
     // 컴포넌트 캐싱용 변수 -------------------------------------------------------------------------
     Animator anim;
@@ -403,6 +406,32 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
     {
         State = EnemyState.Dead;
         onDie?.Invoke();
+
+        MakeDropItem();
+    }
+
+    void MakeDropItem()
+    {
+        float percentage = UnityEngine.Random.Range(0.0f, 1.0f);
+        int index;
+        if (percentage < 0.6f)
+        {
+            // 60% 확률로 들어옴
+            index = 0;
+        }
+        else if (percentage < 0.9f)
+        {
+            // 30% 확률로 들어옴
+            index = 1;
+        }
+        else
+        {
+            // 10% 확률로 들어옴
+            index = 2;
+        }
+
+        // 인덱스 값의 프리펩을 자신의 위치에 자신의 회전값을 가지고 소환
+        Instantiate(dropItemPrefabs[index], transform.position, transform.rotation);
     }
 
     /// <summary>
