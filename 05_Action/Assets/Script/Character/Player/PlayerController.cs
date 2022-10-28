@@ -92,11 +92,13 @@ public class PlayerController : MonoBehaviour
         inputActions.Player.Move.canceled += OnMove;
         inputActions.Player.MoveModeChange.performed += OnMoveModeChange;
         inputActions.Player.Attack.performed += OnAttack;
+        inputActions.Player.Pickup.performed += OnPickup;
     }
 
     private void OnDisable()
     {
         // 액션과 함수 연결 해제
+        inputActions.Player.Pickup.performed -= OnPickup;
         inputActions.Player.Attack.performed -= OnAttack;
         inputActions.Player.MoveModeChange.performed -= OnMoveModeChange;
         inputActions.Player.Move.canceled -= OnMove;
@@ -203,4 +205,16 @@ public class PlayerController : MonoBehaviour
             anim.SetTrigger("Attack");                      // Attack 트리거 발동
         }
     }
+
+
+    /// <summary>
+    /// 아이템 획득 버튼 눌렀을 때 실행
+    /// </summary>
+    /// <param name="_"></param>
+    private void OnPickup(InputAction.CallbackContext _)
+    {
+        player.ItemPickup();
+    }
+
+    
 }
