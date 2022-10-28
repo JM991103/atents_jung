@@ -413,7 +413,7 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
     void MakeDropItem()
     {
         float percentage = UnityEngine.Random.Range(0.0f, 1.0f);
-        int index;
+        uint index;
         if (percentage < 0.6f)
         {
             // 60% 확률로 들어옴
@@ -431,7 +431,10 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
         }
 
         // 인덱스 값의 프리펩을 자신의 위치에 자신의 회전값을 가지고 소환
-        Instantiate(dropItemPrefabs[index], transform.position, transform.rotation);
+        //Instantiate(dropItemPrefabs[index], transform.position, transform.rotation);
+        GameObject obj = ItemFactory.MakeItem(index);
+        obj.transform.position = transform.position;
+        obj.transform.rotation = transform.rotation;
     }
 
     /// <summary>

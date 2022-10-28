@@ -6,7 +6,7 @@ using UnityEngine;
 public class itemData : ScriptableObject
 {
     public uint id = 0;                     // 아이템 ID
-    public string itemName = "아이템";     // 아이템의 이름
+    public string itemName = "아이템";       // 아이템의 이름
     public GameObject modelprefab;          // 아이템의 외형을 표시할 프리펩
-    public uint value;                      // 
+    public uint value;                      // 아이템의 가격
 }
