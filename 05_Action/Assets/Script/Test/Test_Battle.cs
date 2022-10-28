@@ -21,4 +21,6 @@ public class Test_Battle : TestBase
     {
         player.HP = 100;
     }
+
+
 }
