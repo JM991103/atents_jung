@@ -23,6 +23,13 @@ public class Test_Inventory : TestBase
 
     protected override void Test2(InputAction.CallbackContext _)
     {
+        inven.PrintInventory();
+    }
 
+    protected override void Test3(InputAction.CallbackContext _)
+    {
+        inven.ClearItem(1);
+        inven.ClearItem(3);
+        inven.ClearItem(15);
     }
 }

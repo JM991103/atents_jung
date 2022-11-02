@@ -8,7 +8,7 @@ public class Inventory
     /// <summary>
     /// 기본 인벤토리 칸 수 
     /// </summary>
-    public const int Default_Inventory_Size = 6;
+    public const int Default_Inventory_Size = 10;
 
     /// <summary>
     /// 이 인벤토리가 가지고 있는 아이템 슬롯의 배열
@@ -22,7 +22,6 @@ public class Inventory
 
     public int SlotCount => slots.Length;
 
-
     public Inventory(int size = Default_Inventory_Size)
     {
         Debug.Log($"{size}칸짜리 인벤토리 생성");
@@ -35,33 +34,109 @@ public class Inventory
         dataManager = GameManager.Inst.ItemData;
     }
 
-
+    /// <summary>
+    /// 아이템을 인벤토리에 1개 추가하는 함수
+    /// </summary>
+    /// <param name="code">추가될 아이템의 코드</param>
+    /// <returns>성공여부(true면 성공, false면 실패)</returns>
     public bool AddItem(ItemIDCode code)
     {
         return AddItem(dataManager[code]);
     }
 
+    /// <summary>
+    /// 아이템을 인벤토리에 1개 추가하는 함수
+    /// </summary>
+    /// <param name="data">추가될 아이템 데이터</param>
+    /// <returns>성공여부(true면 성공, false면 실패)</returns>
     public bool AddItem(itemData data)
     {
         bool result = false;
 
-        ItemSlot emptySlot = FindEmptySlot();
-        if (emptySlot != null)
+        // 같은 종류의 아이템이 있는가?
+        // 있으면 -> 갯수 증가
+        // 없으면 -> 새 슬롯에 아이템 넣기
+
+        ItemSlot targetSlot = FindSameItem(data);
+        
+        if (targetSlot != null)
         {
-            // 비어있는 슬롯을 찾았다.
-            emptySlot.AssignSlotItem(data);
+            // 같은 종류의 아이템이 있다.
+            targetSlot.IncreaseSlotItem();
             result = true;
-            Debug.Log($"인벤토리 {emptySlot.Index}번 슬롯에 \"{data.itemName}\" 아이템 추가");
         }
         else
         {
-            // 인벤토리가 가득 찼다.
-            Debug.Log($"인벤토리가 가득 찼습니다.");
+            // 인벤토리에 같은 종류의 아이템이 없다.
+            ItemSlot emptySlot = FindEmptySlot();
+            if (emptySlot != null)
+            {
+                // 비어있는 슬롯을 찾았다.
+                emptySlot.AssignSlotItem(data);
+                result = true;
+
+            }
+            else
+            {
+                // 인벤토리가 가득 찼다.
+                Debug.Log($"인벤토리가 가득 찼습니다.");
+            }
         }
 
         return result;
     }
 
+    public bool RemoveItem(uint slotIndex, uint decreaseCount = 1)
+    {
+        bool result = false;
+        if (IsValidSlotIndex(slotIndex))
+        {
+            ItemSlot slot = slots[slotIndex];
+            slot.DecreaseSlotItem(decreaseCount);
+            result = true;
+        }
+        else
+        {
+            Debug.Log($"실패 : {slotIndex}는 잘못된 인덱스 입니다.");
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// 특정 슬롯에서 아이템을 제거하는 함수
+    /// </summary>
+    /// <param name="slotIndex">아이템을 제거할 함수</param>
+    /// <returns>true면 성공, false면 실패</returns>
+    public bool ClearItem(uint slotIndex)
+    {
+        bool result = false;
+        if (IsValidSlotIndex(slotIndex))
+        {
+            ItemSlot slot = slots[slotIndex];
+            slot.ClearSlotItem();
+            return true;
+        }
+        else
+        {
+            Debug.Log($"실패 : {slotIndex}는 잘못된 인덱스입니다.");
+        }
+
+
+        return result;
+    }
+
+    /// <summary>
+    /// 파라메터로 받은 인덱스가 적절한 인덱스인지 판단하는 함수
+    /// </summary>
+    /// <param name="index">확인할 인덱스</param>
+    /// <returns>true면 사용 가능한 인덱스, false면 사용 불가능한 인덱스</returns>
+    private bool IsValidSlotIndex(uint index) => (index < SlotCount);
+    
+    /// <summary>
+    /// 비어있는 슬롯을 찾는 함수
+    /// </summary>
+    /// <returns>비어있는 함수를 찾으면 null이 아니고 비어있는 함수가 없으면 null</returns>
     private ItemSlot FindEmptySlot()
     {
         ItemSlot result = null;
@@ -74,6 +149,27 @@ public class Inventory
             }
         }
         return result;
+    }
+
+    /// <summary>
+    /// 인벤토리에 파라메터와 같은 종류의 아이템이 있는지 찾아보는 함수
+    /// </summary>
+    /// <param name="itemData">찾을 아이템</param>
+    /// <returns>찾았으면 null이 아닌값(찾는 아이템이 들어있는 슬롯), 찾지 못했으면 null</returns>
+    private ItemSlot FindSameItem(itemData itemData)
+    {
+        ItemSlot findSlot = null;
+
+        foreach(var slot in slots)
+        {
+            if (slot.ItemData == itemData)
+            {
+                findSlot = slot;
+                break;
+            }
+        }
+
+        return findSlot;
     }
 
     public void PrintInventory()
