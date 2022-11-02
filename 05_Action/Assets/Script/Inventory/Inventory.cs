@@ -84,7 +84,7 @@ public class Inventory
         // ItemSlot을 마지막 슬롯을 빼고 전부 확인해서 이름과 갯수를 printText에 추가
         for (int i = 0; i < SlotCount -1; i++)
         {
-            if (slots[i].IsEmpty)
+            if (!slots[i].IsEmpty)
             {
                 printText += $"{slots[i].ItemData.itemName}({slots[i].ItemCount})";
 
@@ -93,7 +93,7 @@ public class Inventory
             {
                 printText += "(빈칸)";
             }
-            printText += ", ";
+            printText += ", "; 
         }
 
         // 마지막 슬롯만 따로 처리
