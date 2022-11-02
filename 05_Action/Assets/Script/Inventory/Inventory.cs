@@ -20,6 +20,8 @@ public class Inventory
     /// </summary>
     ItemDataManager dataManager;
 
+    public int SlotCount => slots.Length;
+
 
     public Inventory(int size = Default_Inventory_Size)
     {
@@ -73,4 +75,41 @@ public class Inventory
         }
         return result;
     }
+
+    public void PrintInventory()
+    {
+        // 출력 예시 : [ 루비(1), 사파이어(1), 에메랄드(2), (빈칸), (빈칸), (빈칸) ]
+        string printText = "[";
+
+        // ItemSlot을 마지막 슬롯을 빼고 전부 확인해서 이름과 갯수를 printText에 추가
+        for (int i = 0; i < SlotCount -1; i++)
+        {
+            if (slots[i].IsEmpty)
+            {
+                printText += $"{slots[i].ItemData.itemName}({slots[i].ItemCount})";
+
+            }
+            else
+            {
+                printText += "(빈칸)";
+            }
+            printText += ", ";
+        }
+
+        // 마지막 슬롯만 따로 처리
+        ItemSlot lastslot = slots[SlotCount - 1];
+        if (!lastslot.IsEmpty)
+        {
+            printText += $"{lastslot.ItemData.itemName}({lastslot.ItemCount})]";
+        }
+        else
+        {
+            printText += "(빈칸)";
+        }
+
+        printText += "]";
+
+        Debug.Log(printText);
+    }
+
 }
