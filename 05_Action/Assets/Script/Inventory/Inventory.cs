@@ -5,22 +5,35 @@ using UnityEngine;
 // 인벤토리의 정보만 가지는 클래스 
 public class Inventory
 {
+    // 상수 --------------------------------------------------------------------------------------------
+
     /// <summary>
     /// 기본 인벤토리 칸 수 
     /// </summary>
     public const int Default_Inventory_Size = 10;
+    public const uint TempSlotIndex = 99999;            // 어떤 숫자든 상관이 없다. slots의 인덱스가 될 수 있는 값만 아니면 된다.
+
+    // 변수 --------------------------------------------------------------------------------------------
 
     /// <summary>
     /// 이 인벤토리가 가지고 있는 아이템 슬롯의 배열
     /// </summary>
     ItemSlot[] slots = null;
 
+    ItemSlot tempSlot = null;
+
     /// <summary>
     /// 게임 매니저가 가지는 아이템 데이터 매니저 캐싱용
     /// </summary>
     ItemDataManager dataManager;
 
+    // 프로퍼티 ----------------------------------------------------------------------------------------
+
     public int SlotCount => slots.Length;
+
+    public ItemSlot TempSlot => tempSlot;
+
+    // 함수들 ------------------------------------------------------------------------------------------
 
     public Inventory(int size = Default_Inventory_Size)
     {
@@ -30,6 +43,7 @@ public class Inventory
         {
             slots[i] = new ItemSlot((uint)i);
         }
+        tempSlot = new ItemSlot(TempSlotIndex);
 
         dataManager = GameManager.Inst.ItemData;
     }
@@ -79,21 +93,66 @@ public class Inventory
             else
             {
                 // 인벤토리가 가득 찼다.
-                Debug.Log($"인벤토리가 가득 찼습니다.");
+                Debug.Log($"실패 : 인벤토리가 가득 찼습니다.");
+                
             }
         }
 
         return result;
     }
 
+    /// <summary>
+    /// 아이템을 인벤토리 특정 슬롯에 1개 추가하는 함수
+    /// </summary>
+    /// <param name="code">추가할 아이템 코드</param>
+    /// <param name="index">아이템이 추가될 슬롯의 인덱스</param>
+    /// <returns>true면 성공, false면 실패</returns>
     public bool AddItem(ItemIDCode code, uint index)
     {
         return AddItem(dataManager[code], index);
     }
 
+    /// <summary>
+    /// 아이템을 인벤토리 특정 슬롯에 1개 추가하는 함수
+    /// </summary>
+    /// <param name="data">추가할 아이템 데이터</param>
+    /// <param name="index">아이템이 추가될 슬롯의 인덱스</param>
+    /// <returns>true면 성공, false면 실패</returns>
     public bool AddItem(itemData data, uint index)
     {
         bool result = false;
+
+        if (IsValidSlotIndex(index))        // 인덱스가 적절한가?
+        {
+            ItemSlot slot = slots[index];   // 해당 인덱스의 슬롯 가져오기
+
+            if (slot.IsEmpty)               // 해당 슬롯에 아이템이 있는가?
+            {
+                // 비어있으면 그냥 아이템을 넣는다.
+                slot.AssignSlotItem(data);
+                result = true;
+            }
+            else
+            {
+                // 슬롯이 비어있지 않다.
+                if (slot.ItemData == data)  // 같은 종류의 아이템이 있는가?
+                {
+                    // 같은 종류의 아이템이 들어있으면 갯수만 추가
+                    slot.IncreaseSlotItem();
+                    result = true;
+                }
+                else
+                {
+                    // 다른 종류의 아이템이 들어있으면 그냥 실패 
+                    Debug.Log($"실패 : 인벤토리 {index}번 슬롯에 다른 아이템이 들어있습니다.");
+                }
+            }
+
+        }
+        else
+        {
+            Debug.Log($"실패 : {index}는 잘못된 인덱스 입니다.");
+        }
 
         return result;
     }
@@ -145,12 +204,46 @@ public class Inventory
     }
 
     /// <summary>
+    /// 아이템을 이동시키는 함수
+    /// </summary>
+    /// <param name="form">시작 인덱스</param>
+    /// <param name="to">도착 인덱스</param>
+    public void MoveItem(uint from, uint to)
+    {
+        // from과 to에 아이템이 있는가 없는가
+        // from에 아이템이 있고 to에 있다.
+        // from에 아이템이 있고 to에는 없다.
+        // from에 아이템이 없고 to에 있다.            -> 아무일도 일어나면 안된다.
+        // from에 아이템이 없고 to에도 아이템이 없다.  -> 아무일도 일어나면 안된다.
+
+        if (IsValidAndNotEmptySlotIndex(from) && IsValidSlotIndex(to))
+        {
+            ItemSlot fromSlot = slots[from];
+            ItemSlot toSlot = slots[to];
+
+            itemData tempData = fromSlot.ItemData;
+            uint tempCount = fromSlot.ItemCount;
+            fromSlot.AssignSlotItem(toSlot.ItemData, toSlot.ItemCount);
+            toSlot.AssignSlotItem(tempData, tempCount);
+        }
+    }
+
+
+    /// <summary>
     /// 파라메터로 받은 인덱스가 적절한 인덱스인지 판단하는 함수
     /// </summary>
     /// <param name="index">확인할 인덱스</param>
     /// <returns>true면 사용 가능한 인덱스, false면 사용 불가능한 인덱스</returns>
     private bool IsValidSlotIndex(uint index) => (index < SlotCount);
-    
+
+    /// <summary>
+    /// 파라메터로 받은 인덱스가 적절한 인덱스이면서 비어있지 않은 것을 확인하는 함수
+    /// </summary>
+    /// <param name="index">확인할 인덱스</param>
+    /// <returns>true면 적절한 인덱스 이면서 아이템이 들어있는 함수, false 면 적절한 인덱스가 아니거나 비어있다.</returns>
+    private bool IsValidAndNotEmptySlotIndex(uint index) => (IsValidSlotIndex(index) && !slots[index].IsEmpty);
+
+
     /// <summary>
     /// 비어있는 슬롯을 찾는 함수
     /// </summary>
