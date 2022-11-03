@@ -14,7 +14,7 @@ public class Test_Inventory : TestBase
 
     protected override void Test1(InputAction.CallbackContext _)
     {
-        
+        inven.PrintInventory();
     }
 
     protected override void Test2(InputAction.CallbackContext _)
@@ -46,6 +46,9 @@ public class Test_Inventory : TestBase
         inven.PrintInventory();
         inven.MoveItem(5, 1);
         inven.PrintInventory();
+
+        inven.AddItem(ItemIDCode.Sapphire, 0);
+        inven.MoveItem(0, 1);
     }
     protected override void Test4(InputAction.CallbackContext _)
     {

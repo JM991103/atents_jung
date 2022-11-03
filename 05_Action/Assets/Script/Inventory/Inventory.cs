@@ -76,8 +76,8 @@ public class Inventory
         if (targetSlot != null)
         {
             // 같은 종류의 아이템이 있다.
-            targetSlot.IncreaseSlotItem();
-            result = true;
+            
+            result = (targetSlot.IncreaseSlotItem() == 0);    // 갯수 증가 시도. 결과에 따라서 result 변경
         }
         else
         {
@@ -138,8 +138,8 @@ public class Inventory
                 if (slot.ItemData == data)  // 같은 종류의 아이템이 있는가?
                 {
                     // 같은 종류의 아이템이 들어있으면 갯수만 추가
-                    slot.IncreaseSlotItem();
-                    result = true;
+                    
+                    result = (slot.IncreaseSlotItem() == 0);
                 }
                 else
                 {
@@ -216,15 +216,29 @@ public class Inventory
         // from에 아이템이 없고 to에 있다.            -> 아무일도 일어나면 안된다.
         // from에 아이템이 없고 to에도 아이템이 없다.  -> 아무일도 일어나면 안된다.
 
+        // from이 적절한 인덱스이고, 아이템이 들어있다. 그리고 to는 적절한 인덱스이다.
         if (IsValidAndNotEmptySlotIndex(from) && IsValidSlotIndex(to))
         {
+            // 슬롯 가져오기
             ItemSlot fromSlot = slots[from];
             ItemSlot toSlot = slots[to];
 
-            itemData tempData = fromSlot.ItemData;
-            uint tempCount = fromSlot.ItemCount;
-            fromSlot.AssignSlotItem(toSlot.ItemData, toSlot.ItemCount);
-            toSlot.AssignSlotItem(tempData, tempCount);
+            if (fromSlot.ItemData == toSlot.ItemData)
+            {
+                // from과 to가 같은 아이템을 가지고 있으면 to에서 아이템 합치기
+                uint overCount = toSlot.IncreaseSlotItem(fromSlot.ItemCount);       // 아이템 증가 시도한 후 넘친 갯수 받아오기
+                fromSlot.DecreaseSlotItem(fromSlot.ItemCount - overCount);          // from에소 to에 증가된 분량 만큼만 감소시키기
+                Debug.Log($"인벤토리의 {from}슬롯에서 {to}슬롯으로 아이템 합치기 성공");
+            }
+            else
+            {
+                // from과 to가 서로 다른 아이템을 가지고 있으면 서로 스왑처리
+                itemData tempData = fromSlot.ItemData;
+                uint tempCount = fromSlot.ItemCount;
+                fromSlot.AssignSlotItem(toSlot.ItemData, toSlot.ItemCount);
+                toSlot.AssignSlotItem(tempData, tempCount);
+                Debug.Log($"인벤토리의 {from}슬롯에서 {to}슬롯으로 아이템 교체 성공");
+            }
         }
     }
 
