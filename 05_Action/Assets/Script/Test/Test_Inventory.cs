@@ -52,8 +52,26 @@ public class Test_Inventory : TestBase
     }
     protected override void Test4(InputAction.CallbackContext _)
     {
-        inven.RemoveItem(0);
-        inven.RemoveItem(1, 3);
+        //inven.RemoveItem(0);
+        //inven.RemoveItem(1, 3);
+
+        inven.AddItem(ItemIDCode.Ruby);
+        inven.AddItem(ItemIDCode.Ruby);
+        inven.AddItem(ItemIDCode.Ruby);
+        inven.AddItem(ItemIDCode.Ruby);
+        inven.AddItem(ItemIDCode.Emerald);
+        inven.AddItem(ItemIDCode.Emerald);
+        inven.AddItem(ItemIDCode.Sapphire);
+
+        inven.PrintInventory();
+
+        inven.AddItem(ItemIDCode.Ruby, 5);
+        inven.AddItem(ItemIDCode.Ruby, 5);
+
+        inven.PrintInventory();
+
+        inven.MoveItem(0, 5);
+        inven.PrintInventory();
     }
     protected override void Test5(InputAction.CallbackContext _)
     {
