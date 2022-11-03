@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,11 +15,47 @@ public class ItemSlot
     /// 이 슬롯에 들어있는 아이템
     /// </summary>
     itemData slotItemData = null;
-    
+
     /// <summary>
     /// 이 슬롯에 들어있는 아이템 갯수
     /// </summary>
     uint itemCount = 0;
+
+    // 프로퍼티 ---------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// 이 슬롯에 들어있는 아이템 데이터
+    /// </summary>
+    public itemData ItemData
+    {
+        get => slotItemData;                // 읽기는 누구나 가능
+        private set                         // 쓰기는 자신만 가능
+        {
+            if (slotItemData != value)      // 슬롯에 아이템이 변경이 되었을 때만
+            {
+                slotItemData = value;       // 값을 변경하고
+                onSlotItemChange?.Invoke(); // 델리게이트에 연결된 함수들 실행(주로 UI갱신용)
+            }
+        }
+    }
+
+    /// <summary>
+    /// 이 슬롯에 들어있는 아이템 갯수
+    /// </summary>
+    public uint ItemCount
+    {
+        get => itemCount;                   // 읽기는 누구나 가능
+        private set                         // 쓰기는 자신만 가능
+        {
+            if (itemCount != value)         // 아이템 갯수에 변경이 일어났을 때만
+            {
+                itemCount = value;          // 값을 변경하고
+                onSlotItemChange?.Invoke(); // 델리게이트에 연결된 함수들 실행(주로 UI갱신용)
+            }
+        }
+    } 
+
+    // 프로퍼티 (읽기 전용) ---------------------------------------------------------------------------------------------
 
     /// <summary>
     /// 이 슬롯이 비어있는지 여부 (true면 비었고, false 무엇인가 들어있다.)
@@ -30,15 +67,11 @@ public class ItemSlot
     /// </summary>
     public uint Index => slotIndex;
 
-    /// <summary>
-    /// 이 슬롯에 들어있는 아이템 데이터
-    /// </summary>
-    public itemData ItemData => slotItemData;
+    // 델리게이트 --------------------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// 이 슬롯에 들어있는 아이템 갯수
-    /// </summary>
-    public uint ItemCount => itemCount;
+    public Action onSlotItemChange;
+
+    // 함수들 ------------------------------------------------------------------------------------------------------------
 
     public ItemSlot(uint index)
     {
@@ -52,9 +85,9 @@ public class ItemSlot
     /// <param name="count">설정된 갯수</param>
     public void AssignSlotItem(itemData data, uint count = 1)
     {
-        itemCount = count;
-        slotItemData = data;
-        Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{slotItemData.itemName}\" 아이템 {itemCount}개 설정");
+        ItemCount = count;
+        ItemData = data;
+        Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{ItemData.itemName}\" 아이템 {ItemCount}개 설정");
     }
 
     /// <summary>
@@ -62,8 +95,8 @@ public class ItemSlot
     /// </summary>
     public void ClearSlotItem()
     {
-        slotItemData = null;
-        itemCount = 0;
+        ItemData = null;
+        ItemCount = 0;
         Debug.Log($"인벤토리 {slotIndex}번 슬롯을 비웁니다.");
     }
 
@@ -73,8 +106,11 @@ public class ItemSlot
     /// <param name="count">증가시킬 아이템 갯수</param>
     public void IncreaseSlotItem(uint count = 1)
     {
-        itemCount += count;
-        Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{slotItemData.itemName}\" 아이템 {count}개만큼 증가. 현재 {itemCount}개");
+        if (!IsEmpty)   // 슬롯이 비어있지 않을 때만 가능
+        {
+            ItemCount += count;
+            Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{ItemData.itemName}\" 아이템 {count}개만큼 증가. 현재 {ItemCount}개");
+        }
     }
 
     /// <summary>
@@ -83,18 +119,22 @@ public class ItemSlot
     /// <param name="count">감소시킬 아이템 갯수</param>
     public void DecreaseSlotItem(uint count = 1)
     {
-        int newCount = (int)itemCount - (int)count; // underflow를 대비해서 부호있는 인티저로 처리
+        if (!IsEmpty)   // 슬롯이 비어있지 않을 때만 가능
+        {
 
-        if (newCount < 1)
-        {
-            // 새로운 갯수가 0이하면 슬롯을 비우기
-            ClearSlotItem();
-        }
-        else
-        {
-            // 갯수가 남아있으면 해당 갯수로 설정
-            itemCount = (uint)newCount;
-            Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{slotItemData.itemName}\" 아이템 {count}개만큼 잠소. 현재 {itemCount}개");
+            int newCount = (int)ItemCount - (int)count; // underflow를 대비해서 부호있는 인티저로 처리
+
+            if (newCount < 1)
+            {
+                // 새로운 갯수가 0이하면 슬롯을 비우기
+                ClearSlotItem();
+            }
+            else
+            {
+                // 갯수가 남아있으면 해당 갯수로 설정
+                ItemCount = (uint)newCount;
+                Debug.Log($"인벤토리 {slotIndex}번 슬롯에 \"{ItemData.itemName}\" 아이템 {count}개만큼 잠소. 현재 {ItemCount}개");
+            }
         }
     }
 }
