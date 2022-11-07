@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class ItemSlotUI : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private uint id;    // 몇번째 슬롯인가?
 
-    // Update is called once per frame
-    void Update()
+    protected ItemSlot itemSlot;    // 이 UI와 연결된 ItemSlot
+
+    public uint Id => id;
+    public ItemSlot ItemSlot => itemSlot;
+
+    public void InitializeSlot(uint id, ItemSlot slot)
     {
-        
+        this.id = id;
+        this.itemSlot = slot;
     }
 }

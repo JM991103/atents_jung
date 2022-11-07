@@ -5,11 +5,14 @@ using UnityEngine.InputSystem;
 
 public class Test_Inventory : TestBase
 {
+    public InventoryUI inventoryUI;
     Inventory inven;
+    
 
     private void Start()
     {
         inven = new Inventory();
+        inventoryUI.InitializeInventory(inven);
     }
 
     protected override void Test1(InputAction.CallbackContext _)
@@ -18,6 +21,30 @@ public class Test_Inventory : TestBase
     }
 
     protected override void Test2(InputAction.CallbackContext _)
+    {
+        
+    }
+
+    protected override void Test3(InputAction.CallbackContext _)
+    {
+       
+    }
+
+    protected override void Test4(InputAction.CallbackContext _)
+    {
+        
+    }
+
+    protected override void Test5(InputAction.CallbackContext _)
+    {
+        //inven.AddItem(ItemIDCode.Ruby, 9);
+        //inven.AddItem(ItemIDCode.Emerald, 8);
+        //inven.AddItem(ItemIDCode.Sapphire, 20);
+    }
+
+
+
+    private void Test_AddItem()
     {
         inven.AddItem(ItemIDCode.Ruby);
         inven.AddItem(ItemIDCode.Emerald);
@@ -28,8 +55,7 @@ public class Test_Inventory : TestBase
 
         inven.PrintInventory();
     }
-
-    protected override void Test3(InputAction.CallbackContext _)
+    private void MoveItem()
     {
         //inven.ClearItem(1);
         //inven.ClearItem(3);
@@ -50,7 +76,7 @@ public class Test_Inventory : TestBase
         inven.AddItem(ItemIDCode.Sapphire, 0);
         inven.MoveItem(0, 1);
     }
-    protected override void Test4(InputAction.CallbackContext _)
+    private void Test_ItemStack()
     {
         //inven.RemoveItem(0);
         //inven.RemoveItem(1, 3);
@@ -73,10 +99,6 @@ public class Test_Inventory : TestBase
         inven.MoveItem(0, 5);
         inven.PrintInventory();
     }
-    protected override void Test5(InputAction.CallbackContext _)
-    {
-        inven.AddItem(ItemIDCode.Ruby, 9);
-        inven.AddItem(ItemIDCode.Emerald, 8);
-        inven.AddItem(ItemIDCode.Sapphire, 20);
-    }
+
+
 }
