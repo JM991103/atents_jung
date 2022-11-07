@@ -31,10 +31,12 @@ public class Test_Inventory : TestBase
 
     protected override void Test3(InputAction.CallbackContext _)
     {
+        inven.MoveItem(0, 3);
     }    
 
     protected override void Test4(InputAction.CallbackContext _)
     {
+        inven.MoveItem(1, 2);
     }
     protected override void Test5(InputAction.CallbackContext _)
     {
