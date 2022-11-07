@@ -8,7 +8,8 @@ public class ItemSlotUI : MonoBehaviour
 
     protected ItemSlot itemSlot;    // 이 UI와 연결된 ItemSlot
 
-    public uint Id => id;
+
+    public uint ID => id;
     public ItemSlot ItemSlot => itemSlot;
 
     public void InitializeSlot(uint id, ItemSlot slot)

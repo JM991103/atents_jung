@@ -53,9 +53,6 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
     public float waitTime = 1.0f;   // 목적지에 도착했을 때 기다리는 시간
     float waitTimer;                // 남아있는 기다려야 하는 시간    
 
-    // 드랍 아이템 관련 변수 ------------------------------------------------------------------------
-    public GameObject[] dropItemPrefabs;
-
 
     // 컴포넌트 캐싱용 변수 -------------------------------------------------------------------------
     Animator anim;
@@ -85,21 +82,19 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
     public float maxHP = 100.0f;    // 최대 HP
     float hp = 100.0f;              // 현재 HP    
 
+
     // 아이템 드랍용 데이터 -------------------------------------------------------------------------
-    [System.Serializable]
+    [System.Serializable]    
     public struct ItemDropInfo          // 드랍 아이템 정보
     {
         public ItemIDCode id;           // 아이템 종류
-
         [Range(0.0f,1.0f)]
-        public float dropPercentage;    // 아이템 드랍 확률
-
-        
+        public float dropPercentage;    // 아이템 드랍 확율
     }
 
     /// <summary>
     /// 이 몬스터가 드랍할 아이템의 종류
-    /// </summary>
+    /// </summary>    
     public ItemDropInfo[] dropItems;
 
 
@@ -201,7 +196,7 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
                         break;
                     case EnemyState.Dead:
                         agent.isStopped = true;     // 길찾기 정지
-                        anim.SetTrigger("Die");     // 사망 애니메이션 재생                                                                        
+                        anim.SetTrigger("Die");     // 사망 애니메이션 재생                                                    
                         StartCoroutine(DeadRepresent());    // 시간이 지나면 서서히 가라앉는 연출 실행
                         stateUpdate = Update_Dead;  // FixedUpdate에서 실행될 델리게이트 변경
                         break;
@@ -433,36 +428,32 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
     void MakeDropItem()
     {
         float percentage = UnityEngine.Random.Range(0.0f, 1.0f);    // 드랍할 아이템을 결정하기 위한 랜덤 숫자 가져오기
-        int index = 0;  // 드랍할 (내가 가지고 있는) 아이템의 인덱스 
-        float max = 0;  // 가장 드랍할 확률이 높은 아이템을 찾기 위한 임시 값
-
-        for (int i =0; i < dropItems.Length; i++)
+        int index = 0;  // 드랍할 (내가 가지고 있는) 아이템의 인덱스
+        float max = 0;  // 가장 드랍할 확율이 높은 아이템을 찾기 위한 임시값
+        for (int i = 0; i < dropItems.Length; i++)
         {
-            if(max < dropItems[i].dropPercentage)
+            if( max < dropItems[i].dropPercentage )
             {
-                max = dropItems[i].dropPercentage;  // 가장 드랍 확률이 놓은 아이템 찾기
-                index = i;                          // index의 디폴트 값은 가장 드랍 확률이 높은 아이템
+                max = dropItems[i].dropPercentage;  // 가장 드랍 확율이 높은 아이템 찾기
+                index = i;                          // index의 디폴트 값은 가장 드랍 확율이 높은 아이템
             }
-        }    
+        }
 
-        float checkPercentage = 0.0f;               // 아이템의 드랍 확률을 누적하는 임시 값
-        for(int i = 0; i < dropItems.Length; i++)   
+        float checkPercentage = 0.0f;               // 아이템의 드랍 확율을 누적하는 임시 값
+        for(int i=0;i<dropItems.Length;i++)
         {
-            checkPercentage += dropItems[i].dropPercentage; // checkPercentage 계속 누적 시킴
-
-            // checkPercentage와 percentage 비교 (랜덤 숫자가 누적된 확률보다 낮은지 확인, 낮으면 해당 아이템 생성)
-            if (percentage <= checkPercentage)      
+            checkPercentage += dropItems[i].dropPercentage; // checkPercentage를 단계별로 계속 누적 시킴
+            
+            // checkPercentage와 percentage 비교 (랜덤 숫자가 누적된 확율보다 낮은지 확인, 낮으면 해당 아이템 생성)
+            if ( percentage <= checkPercentage)    
             {
                 index = i;  // 생성할 아이템 결정
                 break;      // for문 종료
             }
         }
 
-        // 인덱스 값의 프리펩을 자신의 위치에 자신의 회전값을 가지고 소환
-        //Instantiate(dropItemPrefabs[index], transform.position, transform.rotation);
-        GameObject obj = ItemFactory.MakeItem(dropItems[index].id , transform.position, true); // 선택된 아이템 생성
+        GameObject obj = ItemFactory.MakeItem(dropItems[index].id, transform.position, true); // 선택된 아이템 생성        
     }
-
 
     /// <summary>
     /// 사망 연출용 코루틴
@@ -534,25 +525,28 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
 
 #if UNITY_EDITOR
     /// <summary>
-    /// 인스펙터 창에서 값의 변경이 성공적으로 일어났을 때 실행되는 함수
+    /// 인스펙터 창에서 성공적으로 값이 변경되었을 때 실행
     /// </summary>
     private void OnValidate()
     {
-        // 드랍 아이템의 드랍 확률의 합을 1로 만들기
-        float total = 0.0f;
-        foreach (var item in dropItems)
+        if (State != EnemyState.Dead)
         {
-            total += item.dropPercentage;   // 전체 합 구하기
-        }
-        if (total > 0)
-        {
+            // 드랍 아이템의 드랍 확률의 합을 1로 만들기
+            float total = 0.0f;
+            foreach (var item in dropItems)
+            {
+                total += item.dropPercentage;   // 전체 합 구하기
+            }
+
             for (int i = 0; i < dropItems.Length; i++)
             {
                 dropItems[i].dropPercentage /= total;   // 전체 합으로 나누어서 최종합을 1로 만들기
             }
         }
-
     }
+    
+    
 #endif
+
 
 }

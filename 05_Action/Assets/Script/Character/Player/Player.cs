@@ -1,10 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
-#if UnityEditor
+#if UNITY_EDITOR
 using UnityEditor;
 #endif
 
@@ -180,7 +179,7 @@ public class Player : MonoBehaviour, IBattle, IHealth
     }
 
     /// <summary>
-    /// 플레이어 주변의 아이템을 확인하는 함수
+    /// 플레이어 주변의 아이템을 획득하는 함수
     /// </summary>
     public void ItemPickup()
     {
@@ -191,11 +190,13 @@ public class Player : MonoBehaviour, IBattle, IHealth
             Destroy(item.gameObject);
         }
     }
+
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Handles.DrawWireDisc(transform.position, transform.up, itemPickupRange);
     }
 #endif
+
 
 }

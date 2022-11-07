@@ -5,6 +5,7 @@ using UnityEngine;
 public class FollowCamera : MonoBehaviour
 {
     public float moveSpeed = 3.0f;
+
     Transform target;
     Vector3 offset = Vector3.zero;
     bool isTargetAlive;
@@ -19,15 +20,15 @@ public class FollowCamera : MonoBehaviour
         target = player.transform;     // 대상 구하기(플레이어)
         isTargetAlive = player.IsAlive;
         player.onDie += OnTargetDie;
-        offset = transform.position - target.position;  // 대상과의 간격 정해놓기
+        offset = transform.position - target.position;  // 대상과의 간격 저장해놓기
     }
 
     private void LateUpdate()
     {
         if (isTargetAlive)
         {
-            // 카메라의 위치 -> 목표치(대상의 위치 + 간격)으로 보간하며 변경. 1/moveSpeed 초에 걸쳐 목표치까지 변경
-            transform.position = Vector3.Slerp(transform.position, target.position + offset, moveSpeed * Time.deltaTime);
+            // 카메라의 위치 -> 목표치(대상의 위치 + 간격)로 보간하며 변경. 1/moveSpeed 초에 걸쳐 목표치까지 변경
+            transform.position = Vector3.Lerp(transform.position, target.position + offset, moveSpeed * Time.deltaTime);
         }
         else
         {
@@ -43,6 +44,5 @@ public class FollowCamera : MonoBehaviour
         diePosition = target.position + target.up * 10.0f;
         dieRotation = Quaternion.LookRotation(-target.up, -target.forward);
     }
-    
-    
+
 }

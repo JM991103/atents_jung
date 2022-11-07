@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15a0e147c9a5c1740996e79c422eb01b, type: 3}
+  m_Script: {fileID: 11500000, guid: 8b2b47a929babde449a30cf1c2c691ec, type: 3}
   m_Name: 00_Ruby
   m_EditorClassIdentifier: 
   id: 0
   itemName: "\uB8E8\uBE44"
-  modelprefab: {fileID: 2034249779284782040, guid: d9bd06b5df8d63c498b757c367de266a, type: 3}
+  modelPrefab: {fileID: 3841066470805140976, guid: 3da510e7117c0c34390469b95f0de116, type: 3}
   value: 100
   maxStackCount: 5

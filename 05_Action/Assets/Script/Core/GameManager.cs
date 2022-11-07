@@ -10,7 +10,7 @@ public class GameManager : Singleton<GameManager>
     Player player;
 
     /// <summary>
-    /// 아이템 데이터를 관리하는 매니저
+    /// 아이템 데이터를 관리하는 메니저
     /// </summary>
     ItemDataManager itemData;
 
@@ -20,7 +20,7 @@ public class GameManager : Singleton<GameManager>
     public Player Player => player;
 
     /// <summary>
-    /// 아이템 데이터 매니저(읽기 전용) 프로퍼티 
+    /// 아이템 데이터 메니저(읽기전용) 프로퍼티
     /// </summary>
     public ItemDataManager ItemData => itemData;
 

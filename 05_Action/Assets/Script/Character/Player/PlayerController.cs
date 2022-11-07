@@ -208,13 +208,11 @@ public class PlayerController : MonoBehaviour
 
 
     /// <summary>
-    /// 아이템 획득 버튼 눌렀을 때 실행
+    /// 아이템 획득 버튼을 눌렀을 때 실행
     /// </summary>
     /// <param name="_"></param>
     private void OnPickup(InputAction.CallbackContext _)
     {
         player.ItemPickup();
     }
-
-    
 }

@@ -57,7 +57,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Pickup"",
                     ""type"": ""Button"",
-                    ""id"": ""3ff2429a-63f3-4689-acf7-2b1f17299d5d"",
+                    ""id"": ""99e9ca6e-09c6-4a0f-b2c5-ab9457f23821"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -155,7 +155,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""03a9d0e2-cd9a-4b00-9cbd-c2f88bc418ad"",
+                    ""id"": ""cbdaf67c-7196-4dbb-9e8e-d2cbf08b2f68"",
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",

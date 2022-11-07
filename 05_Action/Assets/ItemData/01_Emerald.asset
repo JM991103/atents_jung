@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15a0e147c9a5c1740996e79c422eb01b, type: 3}
+  m_Script: {fileID: 11500000, guid: 8b2b47a929babde449a30cf1c2c691ec, type: 3}
   m_Name: 01_Emerald
   m_EditorClassIdentifier: 
   id: 1
   itemName: "\uC5D0\uBA54\uB784\uB4DC"
-  modelprefab: {fileID: 2034249779284782040, guid: d9dcc93817d9f794eb502798f29f74d5, type: 3}
+  modelPrefab: {fileID: 3841066470805140976, guid: a8f84d0260497734886273ef6dba5b85, type: 3}
   value: 200
   maxStackCount: 3
