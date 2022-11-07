@@ -209,6 +209,16 @@ public class Inventory
         return result;
     }
 
+    public void ClearInventory()
+    {
+        foreach (var slot in slots)
+        {
+            slot.ClearSlotItem();
+        }
+    }
+
+
+
     /// <summary>
     /// 아이템을 이동시키는 함수
     /// </summary>

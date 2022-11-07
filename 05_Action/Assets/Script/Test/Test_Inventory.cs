@@ -8,7 +8,7 @@ public class Test_Inventory : TestBase
     public InventoryUI inventoryUI;
 
     [Range(1,30)]
-    public int invenSize = 10;
+    public int invenSize = 6;
 
     Inventory inven;
 
@@ -25,6 +25,8 @@ public class Test_Inventory : TestBase
 
     protected override void Test2(InputAction.CallbackContext _)
     {
+        Test_AddItemForItem();
+        inventoryUI.InitializeInventory(inven);
     }    
 
     protected override void Test3(InputAction.CallbackContext _)
@@ -40,6 +42,26 @@ public class Test_Inventory : TestBase
         //inven.AddItem(ItemIDCode.Emerald, 8);
         //inven.AddItem(ItemIDCode.Sapphire, 20);
 
+    }
+
+    void Test_AddItemForItem()
+    {
+        inven.ClearInventory();
+
+        inven.AddItem(ItemIDCode.Ruby);
+        inven.AddItem(ItemIDCode.Ruby);
+        inven.AddItem(ItemIDCode.Ruby);
+        inven.AddItem(ItemIDCode.Ruby);
+        inven.AddItem(ItemIDCode.Emerald);
+        inven.AddItem(ItemIDCode.Emerald);
+        inven.AddItem(ItemIDCode.Sapphire);
+
+        inven.AddItem(ItemIDCode.Ruby, 5);
+        inven.AddItem(ItemIDCode.Ruby, 5);
+        inven.AddItem(ItemIDCode.Ruby, 5);
+        inven.AddItem(ItemIDCode.Ruby, 5);
+
+        inven.PrintInventory();
     }
 
     private void Test_AddItem()
