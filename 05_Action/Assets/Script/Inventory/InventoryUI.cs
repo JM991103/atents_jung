@@ -13,10 +13,13 @@ public class InventoryUI : MonoBehaviour
 
     ItemSlotUI[] slotUIs;
 
+    TempItemSlotUI tempSlotUI;
+
     private void Awake()
     {
         //Transform slotParent = transform.GetChild(0);
         slotUIs = GetComponentsInChildren<ItemSlotUI>();
+        tempSlotUI = GetComponentInChildren<TempItemSlotUI>();
     }
 
     /// <summary>
@@ -63,16 +66,20 @@ public class InventoryUI : MonoBehaviour
             slotUIs[i].onDragStart += OnItemDragStart;
             slotUIs[i].onMouseUp += OnItemDragEnd;
         }
+        tempSlotUI.InitializeSlot(Inventory.TempSlotIndex, inven.TempSlot);
+        tempSlotUI.Close();
     }
 
-    private void OnItemDragStart(uint obj)
+    private void OnItemDragStart(uint slotID)
     {
-        
+        inven.MoveItem(slotID, Inventory.TempSlotIndex);
+        tempSlotUI.Open();
     }
 
-    private void OnItemDragEnd(uint obj)
+    private void OnItemDragEnd(uint slotID)
     {
-        
+        tempSlotUI.Close();
+        inven.MoveItem(Inventory.TempSlotIndex, slotID);
     }
 
 }
