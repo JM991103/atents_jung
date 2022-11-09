@@ -8,7 +8,7 @@ using TreeEditor;
 using Unity.VisualScripting;
 using System;
 
-public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler
 {
     // 변수 ---------------------------------------------------------------------------------------------------
     private uint id;    // 몇번째 슬롯인가?
@@ -32,6 +32,7 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
     public Action<uint> onClick;            // 클릭이 되었을 때
     public Action<uint> onPointEnter;       // 마우스 포인터가 안으로 들어왔을 때
     public Action<uint> onPointExit;        // 마우스 포인터가 밖으로 나갔을 때
+    public Action<Vector2> onPointMove;     // 마우스 포인터가 안에서 움직일 때
 
     // 함수 ---------------------------------------------------------------------------------------------------
 
@@ -46,7 +47,7 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
     /// </summary>
     /// <param name="id">슬롯의 ID</param>
     /// <param name="slot">이 UI가 보여줄 ItemSlot</param>
-    public void InitializeSlot(uint id, ItemSlot slot)
+    public virtual void InitializeSlot(uint id, ItemSlot slot)
     {
         this.id = id;
         this.itemSlot = slot;
@@ -164,5 +165,14 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
     public void OnPointerExit(PointerEventData eventData)
     {
         onPointExit?.Invoke(ID);
+    }
+
+    /// <summary>
+    /// EventSystem에서 마우스 포인터가 이 UI 영역안에서 움직이면 실행되는 함수
+    /// </summary>
+    /// <param name="eventData">관련 이벤트 정보들</param>
+    public void OnPointerMove(PointerEventData eventData)
+    {
+        onPointMove?.Invoke(eventData.position);    // 스크린 좌표값 넘겨주기
     }
 }
