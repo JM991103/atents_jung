@@ -7,8 +7,10 @@ using TMPro;
 using TreeEditor;
 using Unity.VisualScripting;
 using System;
+using UnityEngine.InputSystem;
 
-public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler
+public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler,
+    IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler
 {
     // 변수 ---------------------------------------------------------------------------------------------------
     private uint id;    // 몇번째 슬롯인가?
@@ -30,6 +32,7 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
     public Action<uint> onDragEnd;          // 드래그가 끝났을 때(자신 안에서 끝)
     public Action<uint> onDragCancel;       // 드래그가 실패했을 때(자신 밖에서 끝)
     public Action<uint> onClick;            // 클릭이 되었을 때
+    public Action<uint> onShiftClick;       // 왼쪽 쉬프트 클릭이 되었을 때
     public Action<uint> onPointEnter;       // 마우스 포인터가 안으로 들어왔을 때
     public Action<uint> onPointExit;        // 마우스 포인터가 밖으로 나갔을 때
     public Action<Vector2> onPointMove;     // 마우스 포인터가 안에서 움직일 때
@@ -57,8 +60,10 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
         onDragEnd = null;
         onDragCancel = null;
         onClick = null;
+        onShiftClick = null;
         onPointEnter = null;
         onPointExit = null;
+        onPointMove = null;
 
         Refresh();
     }
@@ -146,7 +151,14 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
     /// <param name="eventData">관련 이벤트 정보들</param>
     public void OnPointerClick(PointerEventData eventData)
     {
-        onClick.Invoke(ID);
+        if (Keyboard.current.leftShiftKey.ReadValue() > 0)
+        {
+            onShiftClick?.Invoke(ID);
+        }
+        else
+        {
+            onClick?.Invoke(ID);
+        }    
     }
 
     /// <summary>
