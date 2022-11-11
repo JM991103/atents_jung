@@ -4,8 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
-public class ItemSpliterUI : MonoBehaviour
+public class ItemSpliterUI : MonoBehaviour, IScrollHandler
 {
     /// <summary>
     /// 아이템을 분리할 최소 갯수
@@ -80,7 +82,7 @@ public class ItemSpliterUI : MonoBehaviour
         // 슬라이더의 값이 변경될 때 변경된 값이 ItemSplitCount에 적용
         //slider.onValueChanged.AddListener(ChangeSliderValue);                                         // 일반 함수를 사용하는 방법
         slider.onValueChanged.AddListener((value) => ItemSplitCount = (uint)Mathf.RoundToInt(value));   // 람다 함수를 사용하는 방법
-
+        
         // 증가 버튼 컴포넌트 찾기
         Button increase = transform.GetChild(1).GetComponent<Button>();
         // 증가 버튼이 눌러질 때 마다 ItemSplitCount 1씩 증가
@@ -110,7 +112,7 @@ public class ItemSpliterUI : MonoBehaviour
     //{
     //    ItemSplitCount = (uint)Mathf.RoundToInt(value);
     //}
-
+    
     private void Start()
     {   
         Close();    // 시작할 때 닫고 시작하기
@@ -142,5 +144,35 @@ public class ItemSpliterUI : MonoBehaviour
     public void Close()
     {
         this.gameObject.SetActive(false);
+    }
+
+    private bool IsAreaInside(Vector2 screenPos)
+    {
+        RectTransform rectTransform = (RectTransform)transform;
+        float halfWidth = rectTransform.rect.width * 0.5f;
+        Vector2 min = new Vector2(rectTransform.position.x - halfWidth, rectTransform.position.y);
+        Vector2 max = new Vector2(rectTransform.position.x + halfWidth, rectTransform.position.y + rectTransform.rect.height); ;
+
+        return min.x < screenPos.x && screenPos.x < max.x && min.y < screenPos.y && screenPos.y < max.y;
+    }
+
+    public void OnMouseClick(InputAction.CallbackContext context)
+    {
+        if (gameObject.activeSelf)
+        {
+            Vector2 screenPos = Mouse.current.position.ReadValue();
+            if (!IsAreaInside(screenPos))
+            {
+                Close();
+            }
+            //Debug.Log(screenPos);
+
+        }
+        
+    }
+
+    public void OnScroll(PointerEventData eventData)
+    {
+        // eventData.scrollDelta; // 마우스 휠 정보를 가져올 수 있다.
     }
 }

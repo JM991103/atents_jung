@@ -37,6 +37,11 @@ public class InventoryUI : MonoBehaviour
     /// </summary>
     ItemSpliterUI spliter;
 
+    /// <summary>
+    /// 입력 처리용 인풋 액션 클래스
+    /// </summary>
+    PlayerInputActions inputActions;
+
     private void Awake()
     {
         // 컴포넌트 찾기
@@ -52,6 +57,20 @@ public class InventoryUI : MonoBehaviour
         detail = GetComponentInChildren<DetailInfoUI>();
         spliter = GetComponentInChildren<ItemSpliterUI>();
         spliter.onOkClick += OnSplitOK;     // 스플리터가 가지고 있는 onOkClick 델리게이트 함수 등록
+
+        inputActions = new PlayerInputActions();
+    }
+
+    public void OnEnable()
+    {
+        inputActions.UI.Enable();
+        inputActions.UI.Click.performed += spliter.OnMouseClick;
+    }
+
+    public void OnDisable()
+    {
+        inputActions.UI.Click.performed -= spliter.OnMouseClick;
+        inputActions.UI.Disable();
     }
 
     /// <summary>
@@ -143,6 +162,7 @@ public class InventoryUI : MonoBehaviour
         spliter.Open(slotUIs[slotID]);
         detail.Close();
         detail.Ispause = true;
+
     }
 
     /// <summary>
