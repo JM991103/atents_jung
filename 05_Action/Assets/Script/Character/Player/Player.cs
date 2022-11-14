@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public class Player : MonoBehaviour, IBattle, IHealth
+public class Player : MonoBehaviour, IBattle, IHealth, IMana
 {
     /// <summary>
     /// 무기에 붙어있는 파티클 시스템 컴포넌트
@@ -35,8 +35,10 @@ public class Player : MonoBehaviour, IBattle, IHealth
     public float defencePower = 3.0f;      // 방어력
     public float maxHP = 100.0f;    // 최대 HP
     float hp = 100.0f;              // 현재 HP
+    public float maxMP = 100.0f;    // 최대 MP
+    float mp = 100.0f;              // 현재 MP
     bool isAlive = true;            // 살았는지 죽었는지 확인용
-
+    float regenMp = 0.0f;
 
     Inventory inven;
 
@@ -67,14 +69,35 @@ public class Player : MonoBehaviour, IBattle, IHealth
             }
         }
     }
+    public float MP 
+    {
+        get => mp;
+        set
+        {
+            if (isAlive && mp != value)
+            {
+                mp = value;
+                
+
+                mp = Mathf.Clamp(mp, 0.0f, maxMP);
+
+                onManaChange?.Invoke(mp / maxMP);
+            }   
+        }
+    }
 
     // 프로퍼티 ------------------------------------------------------------------------------------
     public float MaxHP => maxHP;
     public bool IsAlive => isAlive;
 
+    public float MaxMP => maxMP;
+
     // 델리게이트 ----------------------------------------------------------------------------------
     public Action<float> onHealthChange { get; set; }
     public Action onDie { get; set; }
+
+    public Action<float> onManaChange { get; set; }
+
     // --------------------------------------------------------------------------------------------
 
     private void Awake()
@@ -98,6 +121,12 @@ public class Player : MonoBehaviour, IBattle, IHealth
         isAlive = true;
         
         GameManager.Inst.InvenUI.InitializeInventory(inven);
+    }
+
+    private void Update()
+    {
+        ManaRegenerate();
+        
     }
 
     /// <summary>
@@ -207,6 +236,18 @@ public class Player : MonoBehaviour, IBattle, IHealth
     private void OnDrawGizmos()
     {
         Handles.DrawWireDisc(transform.position, transform.up, itemPickupRange);
+    }
+
+    public void ManaRegenerate()
+    {
+        regenMp += Time.deltaTime;
+        if (regenMp > 2.0f)
+        {
+            Debug.Log("Mp가 회복되었다.");
+            MP += 5;
+            regenMp = 0;
+        }
+
     }
 #endif
 

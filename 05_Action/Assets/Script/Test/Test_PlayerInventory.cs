@@ -13,6 +13,7 @@ public class Test_PlayerInventory : TestBase
     }
     protected override void Test1(InputAction.CallbackContext _)
     {
-        
+        player.HP = 10;
+        player.MP = 10;
     }
 }
