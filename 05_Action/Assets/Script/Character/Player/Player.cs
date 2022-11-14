@@ -88,15 +88,15 @@ public class Player : MonoBehaviour, IBattle, IHealth
         weaponPS = weapon_r.GetComponentInChildren<ParticleSystem>();   // 무기에 붙어있는 파티클 시스템 가져오기
         weaponBlade = weapon_r.GetComponentInChildren<Collider>();      // 무기의 충돌 영역 가져오기
 
-        
+        inven = new Inventory(this);
+
     }
 
     private void Start()
     {
         hp = maxHP;
         isAlive = true;
-
-        inven = new Inventory(this);
+        
         GameManager.Inst.InvenUI.InitializeInventory(inven);
     }
 

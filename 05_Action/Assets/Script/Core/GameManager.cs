@@ -39,6 +39,8 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     protected override void Initialize()
     {
+        base.Initialize();
+
         itemData = GetComponent<ItemDataManager>();
 
         player = FindObjectOfType<Player>();
