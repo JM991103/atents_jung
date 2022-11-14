@@ -1,17 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class Test_PlayerInventory : MonoBehaviour
+public class Test_PlayerInventory : TestBase
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    Player player;
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
+    {
+        player = GameManager.Inst.Player;
+    }
+    protected override void Test1(InputAction.CallbackContext _)
     {
         
     }
