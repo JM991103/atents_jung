@@ -42,6 +42,11 @@ public class InventoryUI : MonoBehaviour
     /// </summary>
     PlayerInputActions inputActions;
 
+    /// <summary>
+    /// 인벤토리에서 인벤토리를 소유한 플레이어를 가져와 확인 시켜주는 프로퍼티
+    /// </summary>
+    public Player Owner => inven.Owner;
+
     private void Awake()
     {
         // 컴포넌트 찾기
@@ -132,6 +137,20 @@ public class InventoryUI : MonoBehaviour
         tempSlotUI.Close(); // 기본적으로 닫아 놓기
     }
 
+    /// <summary>
+    /// 확인할 스크린 좌표가 인벤토리 영역 안인지 확인하는 함수
+    /// </summary>
+    /// <param name="screenPos">확인할 스크린 좌표</param>
+    /// <returns>인벤토리 영역 안에 있으면 true, 아니면 false</returns>
+    public bool IsInInventoryArea(Vector2 screenPos)
+    {
+        RectTransform rectTransform = (RectTransform)transform;
+
+        Vector2 min = new(rectTransform.position.x - rectTransform.sizeDelta.x, rectTransform.position.y);
+        Vector2 max = new(rectTransform.position.x, rectTransform.position.y + rectTransform.sizeDelta.y);
+
+        return (min.x < screenPos.x && screenPos.x < max.x && min.y < screenPos.y && screenPos.y < max.y);      // mi, max 사이에 있는지 확인
+    }
 
     /// <summary>
     /// 슬롯에 드래그를 시작했을 때 실행될 함수

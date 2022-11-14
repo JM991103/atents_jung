@@ -8,6 +8,7 @@ using TreeEditor;
 using Unity.VisualScripting;
 using System;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.HID;
 
 public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler,
     IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler
@@ -39,7 +40,7 @@ public class ItemSlotUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
 
     // 함수 ---------------------------------------------------------------------------------------------------
 
-    private void Awake()
+    protected void Awake()
     {
         itemImage = transform.GetChild(0).GetComponent<Image>();
         itemCountText = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
