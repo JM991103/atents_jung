@@ -254,21 +254,21 @@
         },
         {
             "name": "UI",
-            "id": "1d1ab7b6-e35f-43f3-bae1-7923d687bb72",
+            "id": "c1154155-2386-47d5-9b28-65b39dc80434",
             "actions": [
                 {
                     "name": "Click",
                     "type": "Button",
-                    "id": "7c0aa258-d3d2-4aff-9270-451c39d2bae1",
+                    "id": "975eff0d-38ce-4adf-bab9-851056f7f19f",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Scrool",
+                    "name": "Wheel",
                     "type": "Value",
-                    "id": "4f5a9cbf-b29d-41a2-a39a-826a3502c48c",
+                    "id": "9b19d0b2-4c6f-4847-ac77-efefa5356e08",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
@@ -278,7 +278,7 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "5cfc6706-78c5-4c0f-b3ee-378c033b69a1",
+                    "id": "1381e994-2a24-4038-99a4-e984699fbfe2",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
@@ -289,12 +289,12 @@
                 },
                 {
                     "name": "",
-                    "id": "e391b0ab-c644-45b1-ab7b-310dcba6598b",
+                    "id": "237ec3c9-b403-4573-b3b4-052e1227d0ea",
                     "path": "<Mouse>/scroll",
                     "interactions": "",
                     "processors": "",
                     "groups": "KM",
-                    "action": "Scrool",
+                    "action": "Wheel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

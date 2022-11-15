@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    // 변수 ------------------------------------------------------------------------------------
-
+    // 변수 ---------------------------------------------------------------------------------------
+    
     /// <summary>
     /// 플레이어
     /// </summary>
@@ -18,7 +18,8 @@ public class GameManager : Singleton<GameManager>
 
     InventoryUI inventoryUI;
 
-    // 프로퍼티 ----------------------------------------------------------------------------------
+
+    // 프로퍼티 ------------------------------------------------------------------------------------
 
     /// <summary>
     /// player 읽기 전용 프로퍼티.
@@ -32,7 +33,7 @@ public class GameManager : Singleton<GameManager>
 
     public InventoryUI InvenUI => inventoryUI;
 
-    // 함수 ------------------------------------------------------------------------------------
+    // 함수 ---------------------------------------------------------------------------------------
 
     /// <summary>
     /// 게임 메니저가 새로 만들어지거나 씬이 로드 되었을 때 실행될 초기화 함수
@@ -42,9 +43,7 @@ public class GameManager : Singleton<GameManager>
         base.Initialize();
 
         itemData = GetComponent<ItemDataManager>();
-
         player = FindObjectOfType<Player>();
-
         inventoryUI = FindObjectOfType<InventoryUI>();
     }
 }

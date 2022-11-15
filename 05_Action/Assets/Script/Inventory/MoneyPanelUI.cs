@@ -19,7 +19,6 @@ public class MoneyPanelUI : MonoBehaviour
     /// <param name="money">플레이어가 현재 가지고 있는 돈</param>
     public void Refresh(int money)
     {
-        moneyText.text = $"{money:N0}";     // N0로 자동으로 3자리마라 콤마 찍기
+        moneyText.text = $"{money:N0}";     // N0로 자동으로 3자리마다 콤마 찍기
     }
-    
 }

@@ -31,25 +31,22 @@ public class Singleton<T> : MonoBehaviour where T : Component
                 return null;
             }
 
-            if ( _instance == null )
+            if( _instance == null )
             {
                 // 한번도 사용된 적이 없다.
-                var obj = FindObjectOfType<T>();            // 같은 타입의 컴포넌트가 게임에 있는지 찾아보기
+                T obj = FindObjectOfType<T>();              // 같은 타입의 컴포넌트가 게임에 있는지 찾아보기
                 if(obj == null)
                 {
-                    //PreInitialize(obj);
-                    GameObject gameObj = new GameObject();  // 다른 객체가 없다. 없으면 새로 만든다.
+                    GameObject gameObj = new GameObject();  // 다른 객체가 없으면 새로 만든다.
                     gameObj.name = $"{typeof(T).Name}";
-                    _instance = gameObj.AddComponent<T>();
-                                           
+                    obj = gameObj.AddComponent<T>();
                 }
-                _instance = obj;                              // 찾거나 새로 만드는 객체를 인스턴스로 설정한다.
 
-                DontDestroyOnLoad(_instance.gameObject);      // 씬이 사라지더라도 게임 오브젝트를 삭제하지 않게 하는 코드 
-
+                _instance = obj;                            // 찾거나 새로 만든 객체를 인스턴스로 설정한다.
+                DontDestroyOnLoad(_instance.gameObject);    // 씬이 사라지더라도 게임 오브젝트를 삭제하지 않게 하는 코드
             }
 #if PRINT_DEBUG_INFO
-            Debug.Log($"singleton({_instance.gameObject.name}) : Get");
+            Debug.Log($"Singleton({_instance.gameObject.name}) : Get");
 #endif
             return _instance;   // 무조건 null이 아닌 값이 리턴된다.
         }
@@ -61,13 +58,13 @@ public class Singleton<T> : MonoBehaviour where T : Component
     private void Awake()
     {
 #if PRINT_DEBUG_INFO
-        Debug.Log($"singleton({this.gameObject.name}) : Awake");
+        Debug.Log($"Singleton({this.gameObject.name}) : Awake");
 #endif
         if (_instance == null)
         {
             // 처음 생성 완료된 싱글톤 게임 오브젝트
-            _instance = this as T;                   // _instance에 이 스크립트의 객체 저장
-            DontDestroyOnLoad(_instance.gameObject);      // 씬이 사라지더라도 게임 오브젝트를 삭제하지 않게 하는 코드 
+            _instance = this as T;                      // _instance에 이 스크립트의 객체 저장
+            DontDestroyOnLoad(_instance.gameObject);    // 씬이 사라지더라도 게임 오브젝트를 삭제하지 않게 하는 코드
         }
         else
         {
@@ -82,7 +79,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
     private void OnEnable()
     {
 #if PRINT_DEBUG_INFO
-        Debug.Log($"singleton({this.gameObject.name}) : OnEnable");
+        Debug.Log($"Singleton({this.gameObject.name}) : OnEnable");
 #endif
         SceneManager.sceneLoaded += OnSceneLoaded;  // 씬 로드가 완료되면 Initialize 함수 실행
     }
@@ -90,15 +87,16 @@ public class Singleton<T> : MonoBehaviour where T : Component
     private void OnDisable()
     {
 #if PRINT_DEBUG_INFO
-        Debug.Log($"singleton({this.gameObject.name}) : OnDisable");
+        Debug.Log($"Singleton({this.gameObject.name}) : OnDisable");
 #endif
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+
     private void OnApplicationQuit()
     {
 #if PRINT_DEBUG_INFO
-        Debug.Log($"singleton({this.gameObject.name}) : Quit");
+        Debug.Log($"Singleton({this.gameObject.name}) : Quit");
 #endif
         isShutDown = true;
     }
@@ -106,9 +104,9 @@ public class Singleton<T> : MonoBehaviour where T : Component
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
 #if PRINT_DEBUG_INFO
-        Debug.Log($"singleton({this.gameObject.name}) : SceneLoaded");
+        Debug.Log($"Singleton({this.gameObject.name}) : SceneLoaded");
 #endif
-        Initialize();   // 씬이 로드 되면  초기화함수 따로 실행
+        Initialize();   // 씬이 로드 되면 초기화 함수 따로 실행
     }
 
     /// <summary>
@@ -116,7 +114,9 @@ public class Singleton<T> : MonoBehaviour where T : Component
     /// </summary>
     protected virtual void Initialize()
     {
-
+#if PRINT_DEBUG_INFO
+        Debug.Log($"Singleton({this.gameObject.name}) : Initialize");
+#endif
     }
 }
 

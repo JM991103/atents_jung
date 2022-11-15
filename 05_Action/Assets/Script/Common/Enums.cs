@@ -9,8 +9,8 @@ public enum ItemIDCode
     Sapphire,
     HealingPotion,
     ManaPotion,
-    CooperCoin,
-    SiverCoin,
+    CopperCoin,
+    SilverCoin,
     GoldCoin,
     IronSword,
     SilverSword
@@ -18,6 +18,6 @@ public enum ItemIDCode
 
 public enum EquipPartType
 {
-    weapon = 0,
-    shield
+    Weapon = 0,
+    Shield
 }

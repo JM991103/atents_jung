@@ -276,21 +276,21 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         },
         {
             ""name"": ""UI"",
-            ""id"": ""1d1ab7b6-e35f-43f3-bae1-7923d687bb72"",
+            ""id"": ""c1154155-2386-47d5-9b28-65b39dc80434"",
             ""actions"": [
                 {
                     ""name"": ""Click"",
                     ""type"": ""Button"",
-                    ""id"": ""7c0aa258-d3d2-4aff-9270-451c39d2bae1"",
+                    ""id"": ""975eff0d-38ce-4adf-bab9-851056f7f19f"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Scrool"",
+                    ""name"": ""Wheel"",
                     ""type"": ""Value"",
-                    ""id"": ""4f5a9cbf-b29d-41a2-a39a-826a3502c48c"",
+                    ""id"": ""9b19d0b2-4c6f-4847-ac77-efefa5356e08"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -300,7 +300,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""5cfc6706-78c5-4c0f-b3ee-378c033b69a1"",
+                    ""id"": ""1381e994-2a24-4038-99a4-e984699fbfe2"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -311,12 +311,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""e391b0ab-c644-45b1-ab7b-310dcba6598b"",
+                    ""id"": ""237ec3c9-b403-4573-b3b4-052e1227d0ea"",
                     ""path"": ""<Mouse>/scroll"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KM"",
-                    ""action"": ""Scrool"",
+                    ""action"": ""Wheel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -358,7 +358,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Click = m_UI.FindAction("Click", throwIfNotFound: true);
-        m_UI_Scrool = m_UI.FindAction("Scrool", throwIfNotFound: true);
+        m_UI_Wheel = m_UI.FindAction("Wheel", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -541,13 +541,13 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_UI;
     private IUIActions m_UIActionsCallbackInterface;
     private readonly InputAction m_UI_Click;
-    private readonly InputAction m_UI_Scrool;
+    private readonly InputAction m_UI_Wheel;
     public struct UIActions
     {
         private @PlayerInputActions m_Wrapper;
         public UIActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Click => m_Wrapper.m_UI_Click;
-        public InputAction @Scrool => m_Wrapper.m_UI_Scrool;
+        public InputAction @Wheel => m_Wrapper.m_UI_Wheel;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -560,9 +560,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Click.started -= m_Wrapper.m_UIActionsCallbackInterface.OnClick;
                 @Click.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnClick;
                 @Click.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnClick;
-                @Scrool.started -= m_Wrapper.m_UIActionsCallbackInterface.OnScrool;
-                @Scrool.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnScrool;
-                @Scrool.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnScrool;
+                @Wheel.started -= m_Wrapper.m_UIActionsCallbackInterface.OnWheel;
+                @Wheel.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnWheel;
+                @Wheel.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnWheel;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -570,9 +570,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Click.started += instance.OnClick;
                 @Click.performed += instance.OnClick;
                 @Click.canceled += instance.OnClick;
-                @Scrool.started += instance.OnScrool;
-                @Scrool.performed += instance.OnScrool;
-                @Scrool.canceled += instance.OnScrool;
+                @Wheel.started += instance.OnWheel;
+                @Wheel.performed += instance.OnWheel;
+                @Wheel.canceled += instance.OnWheel;
             }
         }
     }
@@ -604,6 +604,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     public interface IUIActions
     {
         void OnClick(InputAction.CallbackContext context);
-        void OnScrool(InputAction.CallbackContext context);
+        void OnWheel(InputAction.CallbackContext context);
     }
 }

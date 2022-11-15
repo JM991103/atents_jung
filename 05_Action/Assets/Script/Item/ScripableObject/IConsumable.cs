@@ -1,6 +1,6 @@
 using UnityEngine;
 
-internal interface IConsumable
+interface IConsumable
 {
     void Consume(GameObject target);
 }

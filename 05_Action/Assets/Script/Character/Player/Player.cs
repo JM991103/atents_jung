@@ -35,6 +35,7 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
     public float defencePower = 3.0f;      // 방어력
     public float maxHP = 100.0f;    // 최대 HP
     float hp = 100.0f;              // 현재 HP
+
     public float maxMP = 100.0f;    // 최대 MP
     float mp = 100.0f;              // 현재 MP
 
@@ -71,29 +72,31 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
             }
         }
     }
+
+    public float MaxHP => maxHP;
+    public bool IsAlive => isAlive;
     public float MP 
     {
-        get => mp;
+        get => mp; 
         set
         {
-            if (isAlive && mp != value) // 살아있고 HP가 변경되었을 때만 실행
-            { 
+            if (isAlive && mp != value) // 살아있고 mp가 변경되었을 때만 실행
+            {
                 mp = Mathf.Clamp(value, 0.0f, maxMP);
 
                 onManaChange?.Invoke(mp / maxMP);
-            }   
+            }
         }
     }
-   
-    public float MaxHP => maxHP;
-    public bool IsAlive => isAlive;
+
     public float MaxMP => maxMP;
+
     public int Money
     {
         get => money;
         set
         {
-            if (money != value)
+            if(money != value)
             {
                 money = value;
                 onMoneyChange?.Invoke(money);
@@ -104,9 +107,12 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
 
     // 델리게이트 ----------------------------------------------------------------------------------
     public Action<int> onMoneyChange;   // 돈이 변경되면 실행될 델리게이트
+
     public Action<float> onHealthChange { get; set; }
+
     public Action<float> onManaChange { get; set; }
-    public Action onDie { get; set; }
+
+    public Action onDie { get; set; }    
 
     // --------------------------------------------------------------------------------------------
 
@@ -119,17 +125,16 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
 
         // 장비교체가 일어나면 새로 설정해야 한다.
         weaponPS = weapon_r.GetComponentInChildren<ParticleSystem>();   // 무기에 붙어있는 파티클 시스템 가져오기
-        weaponBlade = weapon_r.GetComponentInChildren<Collider>();      // 무기의 충돌 영역 가져오기
+        weaponBlade = weapon_r.GetComponentInChildren<Collider>();      // 무기의 충돌 영역 가져오기                
 
         inven = new Inventory(this);
-
     }
 
     private void Start()
     {
         hp = maxHP;
         isAlive = true;
-        
+
         GameManager.Inst.InvenUI.InitializeInventory(inven);
     }
 
@@ -228,9 +233,10 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
         foreach(var itemCollider in items)
         {
             Item item = itemCollider.gameObject.GetComponent<Item>();
+
             // 즉시 사용해야 하는 아이템인지 확인
             IConsumable consumable = item.data as IConsumable;
-            if (consumable != null)
+            if(consumable != null)
             {
                 // 즉시 사용되는 아이템
                 consumable.Consume(this.gameObject);    // 즉시 사용
@@ -239,12 +245,11 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
             else
             {
                 // 인벤토리에 들어갈 아이템
-                if (inven.AddItem(item.data))   // 인벤토리에 추가하고, 추가가 성공하면
+                if (inven.AddItem(item.data))           // 인벤토리에 추가하고, 추가가 성공하면
                 {
                     Destroy(itemCollider.gameObject);   // 아이템 오브젝트 삭제하기
                 }
-            }
-
+            }            
         }
     }
 
@@ -270,14 +275,14 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
         //float timeStart = Time.realtimeSinceStartup;    // 시작 시간 기록
         //Debug.Log($"Regen Start");
         float regenPerSec = totalRegen / duration;      // 초당 회복량 계산
-        float timeElapsed = 0.0f;                       // 진행 시간 기록
-        while (timeElapsed < duration)                  // 진행 시간이 duration을 지날 때까지 반복
+        float timeElapsed = 0.0f;                       // 진행 시간 기록용
+        while(timeElapsed < duration)                   // 진행시간이 duration을 지날 때까지 반복
         {
-            timeElapsed += Time.deltaTime;              // 진행 시간 누적시키기
+            timeElapsed += Time.deltaTime;              // 진행시간 누적시키기
             MP += Time.deltaTime * regenPerSec;         // MP를 1초에 초당 회복량만큼 증가
             yield return null;                          // 다음 프레임 시작까지 대기
         }
-        //Debug.Log($"Regen End : {Time.realtimeSinceStartup * timeStart}");      // 전체 걸린 시간 측정용
+        //Debug.Log($"Regen End : ({Time.realtimeSinceStartup - timeStart})");    // 전체 걸린 시간 측정용
     }
 
     /// <summary>
@@ -288,24 +293,22 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
     /// <returns></returns>
     IEnumerator ManaRegeneration_Tick(float totalRegen, float duration)
     {
-        float tick = 1.0f;                                   // 1번 회복하는 시간 간격(1초에 한번씩 회복이 발생한다.)
-        int regenCount = Mathf.FloorToInt(duration / tick);  // 전체 회복 횟수 duration / tick 계산함
-        float regenPerTick = totalRegen / regenCount;        // 한 틱당 회복량
-        for(int i = 0; i < regenCount; i++)                  // 전체 반복 횟수만큼 for 진행
+        float tick = 1.0f;                                  // 1번 회복하는 시간 간격(1초에 한번씩 회복이 발생한다)
+        int regenCount = Mathf.FloorToInt(duration / tick); // 전체 회복 횟수
+        float regenPerTick = totalRegen / regenCount;       // 한 틱당 회복량
+        for(int i=0;i<regenCount;i++)                       // 전체 반복 횟수만큼 for 진행
         {
-            MP += regenPerTick;                              // 한 틱당 회복량을 추가
-            yield return new WaitForSeconds(tick);           // 다음 틱까지 대기
+            MP += regenPerTick;                             // 한 틱당 회복량을 추가
+            //Debug.Log($"Regen : {regenPerTick}");
+            yield return new WaitForSeconds(tick);          // 다음 틱까지 대기
         }
     }
-
-
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Handles.DrawWireDisc(transform.position, transform.up, itemPickupRange);
     }
-
 #endif
 
 

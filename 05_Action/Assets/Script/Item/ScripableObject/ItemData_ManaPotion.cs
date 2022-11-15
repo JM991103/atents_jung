@@ -4,8 +4,8 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Mana Potion", menuName = "Scriptable Object/Item Data - Mana Potion", order = 3)]
 public class ItemData_ManaPotion : ItemData, IUsable
-{
-    [Header("마나 포션 데이터")]   
+{    
+    [Header("마나포션 데이터")]
     public float totalRegenPoint = 30.0f;   // 전체 회복량
     public float duration = 3.0f;           // 전체 회복 시간
 
@@ -16,14 +16,15 @@ public class ItemData_ManaPotion : ItemData, IUsable
     public bool Use(GameObject target = null)
     {
         bool result = false;
-        IMana mana = target.GetComponent<IMana>();        // 마나포션은 MP를 가지고 있는 target에게만 적용된다.
+        IMana mana = target.GetComponent<IMana>();    // 마나포션은 MP를 가지고 있는 target에게만 적용된다.
         if (mana != null)
         {
-            mana.ManaRegenerate(totalRegenPoint, duration);
+            mana.ManaRegenerate(totalRegenPoint, duration); // 플레이어의 ManaRegenerate함수를 이용해서 마나 회복 처리
 
             Debug.Log($"{itemName}을 사용했습니다. MP가 {duration}초 동안 {totalRegenPoint}만큼 증가합니다.");
             result = true;
         }
+
         return result;
     }
 }

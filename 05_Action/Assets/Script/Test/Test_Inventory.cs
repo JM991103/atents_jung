@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,14 +8,13 @@ public class Test_Inventory : TestBase
 {
     public InventoryUI inventoryUI;
 
-    [Range(1,30)]
-    public int invenSize = 6;
-
+    [Range(1, 30)]
+    public int invenSize = 10;
     Inventory inven;
 
     private void Start()
     {
-        inven = new Inventory(null,invenSize);
+        inven = new Inventory(null, invenSize);
         inventoryUI.InitializeInventory(inven);
     }
 
@@ -25,7 +25,7 @@ public class Test_Inventory : TestBase
 
     protected override void Test2(InputAction.CallbackContext _)
     {
-        Test_AddItemForItem();
+        Test_AddItemForUI();
         inventoryUI.InitializeInventory(inven);
     }    
 
@@ -36,8 +36,9 @@ public class Test_Inventory : TestBase
 
     protected override void Test4(InputAction.CallbackContext _)
     {
-        inven.MoveItem(1, 2);
+        inven.MoveItem(3, 0);
     }
+    
     protected override void Test5(InputAction.CallbackContext _)
     {
         //inven.AddItem(ItemIDCode.Ruby, 9);
@@ -46,7 +47,8 @@ public class Test_Inventory : TestBase
 
     }
 
-    void Test_AddItemForItem()
+
+    void Test_AddItemForUI()
     {
         inven.ClearInventory();
 
@@ -65,6 +67,7 @@ public class Test_Inventory : TestBase
 
         inven.PrintInventory();
     }
+
 
     private void Test_AddItem()
     {

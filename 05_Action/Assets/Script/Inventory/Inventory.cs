@@ -54,10 +54,9 @@ public class Inventory
     /// </summary>
     public Player Owner => owner;
 
-    // 함수들 --------------------------------------------------------------------------------------
-
+    // 함수들 --------------------------------------------------------------------------------------       
     public Inventory(Player owner, int size = Default_Inventory_Size)
-    {
+    {        
         Debug.Log($"{size}칸짜리 인벤토리 생성");
         slots = new ItemSlot[size];
         for (int i = 0; i < size; i++)
@@ -217,21 +216,21 @@ public class Inventory
         else
         {
             Debug.Log($"실패 : {slotIndex}는 잘못된 인덱스입니다.");
-        }
-        
+        }       
 
         return result;
     }
 
+    /// <summary>
+    /// 인벤토리의 모든 아이템을 비우는 함수
+    /// </summary>
     public void ClearInventory()
     {
-        foreach (var slot in slots)
+        foreach(var slot in slots)
         {
             slot.ClearSlotItem();
         }
     }
-
-
 
     /// <summary>
     /// 아이템을 이동시키는 함수
@@ -245,7 +244,7 @@ public class Inventory
         {
             // 슬롯 가져오기
             ItemSlot fromSlot = (from == Inventory.TempSlotIndex) ? TempSlot : slots[from];
-            ItemSlot toSlot = (to == Inventory.TempSlotIndex) ? TempSlot : slots[to];            
+            ItemSlot toSlot = (to == Inventory.TempSlotIndex) ? TempSlot : slots[to];
 
             if (fromSlot.ItemData == toSlot.ItemData)
             {
@@ -273,13 +272,14 @@ public class Inventory
     /// <param name="count">감소시키는 갯수</param>
     public void MoveItemToTempSlot(uint slotID, uint count)
     {
-        if (IsValidAndNotEmptySlotIndex(slotID))        // 적절한 슬롯일 때(인덱스가 적절하고, 아이템이 들어있다.)
+        if (IsValidAndNotEmptySlotIndex(slotID))    // 적절한 슬롯일때(인덱스가 적절하고 아이템이 들어있다.)
         {
             ItemSlot fromSlot = slots[slotID];                  // 슬롯 가져오고
-            fromSlot.DecreaseSlotItem(count);                   // 원래 슬롯에 들어있던아이템 갯수는 count만큼 감소 
-            tempSlot.AssignSlotItem(fromSlot.ItemData, count);  // 임시 슬롯에 원래 슬롯에 들어있던 아이템 종류를 count만큼 설정하고
+            fromSlot.DecreaseSlotItem(count);                   // 원래 슬롯에 들어있던 아이템 갯수는 count만큼 감소
+            tempSlot.AssignSlotItem(fromSlot.ItemData, count);  // 임시 슬롯에 원래 슬롯에 들어있던 아이템 종류를 count만큼 설정
         }
     }
+
     // 아이템 사용
 
     /// <summary>
@@ -311,7 +311,7 @@ public class Inventory
 
         foreach(var slot in slots)
         {
-            // 같은 종류의 아이템이고 빈킨이 있어야 한다.
+            // 같은 종류의 아이템이고 빈칸이 있어야 한다.
             if( slot.ItemData == itemData && slot.ItemCount < slot.ItemData.maxStackCount)
             {
                 findSlot = slot;
@@ -327,7 +327,7 @@ public class Inventory
     /// </summary>
     /// <param name="index">확인할 인덱스</param>
     /// <returns>true면 사용가능한 인덱스, false면 사용불가능한 인덱스</returns>
-    private bool IsValidSlotIndex(uint index) => (index < SlotCount) || (index == Inventory.TempSlotIndex);
+    private bool IsValidSlotIndex(uint index) => (index < SlotCount) || (index == TempSlotIndex);
 
     /// <summary>
     /// 파라메터로 받은 인덱스가 적절한 인덱스이면서 비어있지 않은 것을 확인하는 함수
@@ -338,16 +338,14 @@ public class Inventory
     {
         if (IsValidSlotIndex(index))
         {
-            ItemSlot testSlot = (index == TempSlotIndex) ? tempSlot : slots[index];
+            ItemSlot testSlot = (index == TempSlotIndex) ? TempSlot : slots[index];
 
             return !testSlot.IsEmpty;
         }
 
         return false;
-
     }
     
-
     public void PrintInventory()
     {
         // 출력 예시 : [ 루비(1), 사파이어(1), 에메랄드(2), (빈칸), (빈칸), (빈칸) ]

@@ -959,11 +959,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GUI_33
+      name: Play
       rect:
         serializedVersion: 2
         x: 84
-        y: 836
+        y: 833
         width: 72
         height: 118
       alignment: 0
@@ -1526,7 +1526,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cancel
+      name: Close
       rect:
         serializedVersion: 2
         x: 573
@@ -1588,7 +1588,6 @@ TextureImporter:
       GUI_44: 21300078
       GUI_68: 21300122
       GUI_15: 21300030
-      Cancel: 21300120
       GUI_54: 21300094
       GUI_13: 21300026
       GUI_12: 21300024
@@ -1603,9 +1602,10 @@ TextureImporter:
       GUI_62: 21300110
       GUI_16: 21300032
       GUI_8: 21300016
+      Close: 21300120
       GUI_10: 21300020
-      GUI_31: 21300062
       GUI_58: 21300102
+      GUI_31: 21300062
       GUI_7: 21300014
       GUI_60: 21300106
       GUI_28: 21300056
@@ -1615,7 +1615,7 @@ TextureImporter:
       GUI_42: 21300074
       GUI_34: 21300068
       GUI_32: 21300064
-      GUI_33: 21300066
+      Play: 21300066
       GUI_19: 21300038
       GUI_53: 21300092
       OK: 21300118
