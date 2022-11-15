@@ -11,5 +11,13 @@ public enum ItemIDCode
     ManaPotion,
     CooperCoin,
     SiverCoin,
-    GoldCoin
+    GoldCoin,
+    IronSword,
+    SilverSword
+}
+
+public enum EquipPartType
+{
+    weapon = 0,
+    shield
 }
