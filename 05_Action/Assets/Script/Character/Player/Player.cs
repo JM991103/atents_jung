@@ -228,12 +228,13 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
         foreach(var itemCollider in items)
         {
             Item item = itemCollider.gameObject.GetComponent<Item>();
+            // 즉시 사용해야 하는 아이템인지 확인
             IConsumable consumable = item.data as IConsumable;
             if (consumable != null)
             {
                 // 즉시 사용되는 아이템
-                consumable.Consume(this.gameObject);
-                Destroy(itemCollider.gameObject);
+                consumable.Consume(this.gameObject);    // 즉시 사용
+                Destroy(itemCollider.gameObject);       // 삭제
             }
             else
             {

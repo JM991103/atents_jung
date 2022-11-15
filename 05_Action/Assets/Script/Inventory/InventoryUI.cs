@@ -37,6 +37,9 @@ public class InventoryUI : MonoBehaviour
     /// </summary>
     ItemSpliterUI spliter;
 
+    /// <summary>
+    /// 보유 금액 표시 창
+    /// </summary>
     MoneyPanelUI moneyPanel;
 
     /// <summary>

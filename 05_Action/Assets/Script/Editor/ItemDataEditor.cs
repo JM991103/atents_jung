@@ -5,7 +5,7 @@ using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 
-// ItemData용 커스텀 에디터를 작성한다는 표시
+// ItemData용 커스텀 에디터를 작성한다는 표시, 두번째 파라메터를 true로 해서 자식 클래스도 같이 적용받게 만들기
 [CustomEditor(typeof(ItemData),true)]
 public class ItemDataEditor : Editor
 {
