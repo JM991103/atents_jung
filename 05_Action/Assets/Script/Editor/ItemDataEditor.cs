@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEditor;
 
 // ItemData용 커스텀 에디터를 작성한다는 표시
-[CustomEditor(typeof(ItemData))]
+[CustomEditor(typeof(ItemData),true)]
 public class ItemDataEditor : Editor
 {
     // 선택된 ItemData를 저장할 변수

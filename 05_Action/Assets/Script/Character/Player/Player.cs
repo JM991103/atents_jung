@@ -42,7 +42,9 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
 
     Inventory inven;
 
-    public float itemPickupRange = 2.0f; 
+    public float itemPickupRange = 2.0f;
+
+    int money = 0;
 
     // 프로퍼티 ------------------------------------------------------------------------------------
     public float AttackPower => attackPower;
@@ -86,8 +88,22 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
     public float MaxHP => maxHP;
     public bool IsAlive => isAlive;
     public float MaxMP => maxMP;
+    public int Money
+    {
+        get => money;
+        set
+        {
+            if (money != value)
+            {
+                money = value;
+                onMoneyChange?.Invoke(money);
+            }
+        }
+    }
+
 
     // 델리게이트 ----------------------------------------------------------------------------------
+    public Action<int> onMoneyChange;   // 돈이 변경되면 실행될 델리게이트
     public Action<float> onHealthChange { get; set; }
     public Action<float> onManaChange { get; set; }
     public Action onDie { get; set; }
@@ -212,11 +228,22 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
         foreach(var itemCollider in items)
         {
             Item item = itemCollider.gameObject.GetComponent<Item>();
-
-            if (inven.AddItem(item.data))   // 추가가 성공하면
+            IConsumable consumable = item.data as IConsumable;
+            if (consumable != null)
             {
-                Destroy(itemCollider.gameObject);   // 아이템 오브젝트 삭제하기
+                // 즉시 사용되는 아이템
+                consumable.Consume(this.gameObject);
+                Destroy(itemCollider.gameObject);
             }
+            else
+            {
+                // 인벤토리에 들어갈 아이템
+                if (inven.AddItem(item.data))   // 인벤토리에 추가하고, 추가가 성공하면
+                {
+                    Destroy(itemCollider.gameObject);   // 아이템 오브젝트 삭제하기
+                }
+            }
+
         }
     }
 
@@ -270,11 +297,14 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
         }
     }
 
+
+
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Handles.DrawWireDisc(transform.position, transform.up, itemPickupRange);
-    } 
+    }
+
 #endif
 
 

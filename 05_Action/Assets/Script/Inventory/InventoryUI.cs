@@ -37,6 +37,8 @@ public class InventoryUI : MonoBehaviour
     /// </summary>
     ItemSpliterUI spliter;
 
+    MoneyPanelUI moneyPanel;
+
     /// <summary>
     /// 입력 처리용 인풋 액션 클래스
     /// </summary>
@@ -62,6 +64,8 @@ public class InventoryUI : MonoBehaviour
         detail = GetComponentInChildren<DetailInfoUI>();
         spliter = GetComponentInChildren<ItemSpliterUI>();
         spliter.onOkClick += OnSplitOK;     // 스플리터가 가지고 있는 onOkClick 델리게이트 함수 등록
+
+        moneyPanel = GetComponentInChildren<MoneyPanelUI>();
 
         inputActions = new PlayerInputActions();
     }
@@ -135,6 +139,10 @@ public class InventoryUI : MonoBehaviour
         tempSlotUI.InitializeSlot(Inventory.TempSlotIndex, inven.TempSlot);     // 임시 슬롯 초기화 
         tempSlotUI.onTempSlotOpenClose += OnDetailPause;
         tempSlotUI.Close(); // 기본적으로 닫아 놓기
+
+        // 돈이 변경되면 moneyPanel도 갱신되게 변경
+        Owner.onMoneyChange += moneyPanel.Refresh;
+        moneyPanel.Refresh(Owner.Money);
     }
 
     
