@@ -37,8 +37,8 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
     float hp = 100.0f;              // 현재 HP
     public float maxMP = 100.0f;    // 최대 MP
     float mp = 100.0f;              // 현재 MP
+
     bool isAlive = true;            // 살았는지 죽었는지 확인용
-    float regenMp = 0.0f;
 
     Inventory inven;
 
@@ -74,29 +74,23 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
         get => mp;
         set
         {
-            if (isAlive && mp != value)
-            {
-                mp = value;
-                
-
-                mp = Mathf.Clamp(mp, 0.0f, maxMP);
+            if (isAlive && mp != value) // 살아있고 HP가 변경되었을 때만 실행
+            { 
+                mp = Mathf.Clamp(value, 0.0f, maxMP);
 
                 onManaChange?.Invoke(mp / maxMP);
             }   
         }
     }
-
-    // 프로퍼티 ------------------------------------------------------------------------------------
+   
     public float MaxHP => maxHP;
     public bool IsAlive => isAlive;
-
     public float MaxMP => maxMP;
 
     // 델리게이트 ----------------------------------------------------------------------------------
     public Action<float> onHealthChange { get; set; }
-    public Action onDie { get; set; }
-
     public Action<float> onManaChange { get; set; }
+    public Action onDie { get; set; }
 
     // --------------------------------------------------------------------------------------------
 
@@ -121,12 +115,6 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
         isAlive = true;
         
         GameManager.Inst.InvenUI.InitializeInventory(inven);
-    }
-
-    private void Update()
-    {
-        ManaRegenerate();
-        
     }
 
     /// <summary>
@@ -232,23 +220,61 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana
         }
     }
 
+    /// <summary>
+    /// 마나 회복용 함수
+    /// </summary>
+    /// <param name="totalRegen">전체 회복량</param>
+    /// <param name="duration">전체 회복하는데 걸리는 시간</param>
+    public void ManaRegenerate(float totalRegen, float duration)
+    {
+        StartCoroutine(ManaRegeneration(totalRegen, duration));
+        //StartCoroutine(ManaRegeneration_Tick(totalRegen, duration));
+    }
+
+    /// <summary>
+    /// 마나 회복용 코루틴
+    /// </summary>
+    /// <param name="totalRegen">전체 회복량</param>
+    /// <param name="duration">전체 회복하는데 걸리는 시간</param>
+    /// <returns></returns>
+    IEnumerator ManaRegeneration(float totalRegen, float duration)
+    {
+        //float timeStart = Time.realtimeSinceStartup;    // 시작 시간 기록
+        //Debug.Log($"Regen Start");
+        float regenPerSec = totalRegen / duration;      // 초당 회복량 계산
+        float timeElapsed = 0.0f;                       // 진행 시간 기록
+        while (timeElapsed < duration)                  // 진행 시간이 duration을 지날 때까지 반복
+        {
+            timeElapsed += Time.deltaTime;              // 진행 시간 누적시키기
+            MP += Time.deltaTime * regenPerSec;         // MP를 1초에 초당 회복량만큼 증가
+            yield return null;                          // 다음 프레임 시작까지 대기
+        }
+        //Debug.Log($"Regen End : {Time.realtimeSinceStartup * timeStart}");      // 전체 걸린 시간 측정용
+    }
+
+    /// <summary>
+    /// 틱마다 마나가 회복되는 코루틴
+    /// </summary>
+    /// <param name="totalRegen">전체 회복량</param>
+    /// <param name="duration">전체 회복하는데 걸리는 시간</param>
+    /// <returns></returns>
+    IEnumerator ManaRegeneration_Tick(float totalRegen, float duration)
+    {
+        float tick = 1.0f;                                   // 1번 회복하는 시간 간격(1초에 한번씩 회복이 발생한다.)
+        int regenCount = Mathf.FloorToInt(duration / tick);  // 전체 회복 횟수 duration / tick 계산함
+        float regenPerTick = totalRegen / regenCount;        // 한 틱당 회복량
+        for(int i = 0; i < regenCount; i++)                  // 전체 반복 횟수만큼 for 진행
+        {
+            MP += regenPerTick;                              // 한 틱당 회복량을 추가
+            yield return new WaitForSeconds(tick);           // 다음 틱까지 대기
+        }
+    }
+
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Handles.DrawWireDisc(transform.position, transform.up, itemPickupRange);
-    }
-
-    public void ManaRegenerate()
-    {
-        regenMp += Time.deltaTime;
-        if (regenMp > 2.0f)
-        {
-            Debug.Log("Mp가 회복되었다.");
-            MP += 5;
-            regenMp = 0;
-        }
-
-    }
+    } 
 #endif
 
 
