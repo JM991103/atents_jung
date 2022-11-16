@@ -123,6 +123,8 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquiptarget
 
     public Action onDie { get; set; }
 
+    public Action<EquipPartType> onEquipItemClear;   // 장비 아이템이 변경되었음을 알리는 델리게이트
+
     // --------------------------------------------------------------------------------------------
 
     private void Awake()
@@ -348,6 +350,7 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquiptarget
             Destroy(child.gameObject);
         }   
         partsItems[(int)part] = null;                       // 아이템 장비가 해제되었다고 표시
+        onEquipItemClear?.Invoke(part);                     // 아이템이 해제된 장비를 알림
     }
 
     /// <summary>
