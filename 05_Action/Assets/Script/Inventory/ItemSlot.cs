@@ -167,7 +167,8 @@ public class ItemSlot
         if (equip != null)
         {
             // 아이템 장비처리
-            equip.EquipItem(target);
+            //equip.EquipItem(target);
+            equip.AutoEquipItem(target);
 
         }
         else
