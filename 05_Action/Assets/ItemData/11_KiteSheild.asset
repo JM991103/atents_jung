@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3c61d7284d7ce14692494e362d304b4, type: 3}
+  m_Name: 11_KiteSheild
+  m_EditorClassIdentifier: 
+  id: 10
+  itemName: "\uC0BC\uAC01 \uAC15\uCCA0 \uBC29\uD328"
+  modelPrefab: {fileID: 3841066470805140976, guid: 5e41c1acd0c08d34585cf8cd68e1415c, type: 3}
+  itemIcon: {fileID: 21300000, guid: 256205b9c6ca12c45ab7762da8a65631, type: 3}
+  value: 500
+  maxStackCount: 1
+  itemDescription: "\uCCA0\uB85C \uB9CC\uB4E4\uC5B4\uC9C4 \uB2E8\uB2E8\uD55C \uBC29\uD328\uC774\uB2E4."
+  EquipPrefab: {fileID: 3832907126045494399, guid: 69b9816d290774840b0efb0469e307f7, type: 3}
+  defencePower: 30

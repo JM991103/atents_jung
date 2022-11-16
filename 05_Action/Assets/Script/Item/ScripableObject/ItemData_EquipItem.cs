@@ -17,6 +17,8 @@ public class ItemData_EquipItem : ItemData, IEquipItem
     /// </summary>
     public EquipPartType EquipPart => EquipPartType.Weapon;
 
+    public EquipPartType EquipParts => EquipPartType.Shield;
+
     /// <summary>
     /// 아이템 장비하기
     /// </summary>
