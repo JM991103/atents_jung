@@ -9,5 +9,5 @@ public class ItemData_Weapon : ItemData_EquipItem
     public float attackPower = 30;
 
     // new를 상속 받은 프로퍼티가 아닌 새로 갈아치우고 이걸 사용함
-    public new EquipPartType EquipPart => EquipPartType.Weapon;
+    public override EquipPartType EquipPart => EquipPartType.Weapon;
 }

@@ -368,7 +368,7 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquiptarget
             case EquipPartType.Weapon:
                 result = weapon_r;
                 break;
-            case EquipPartType.Shield:
+            case EquipPartType.Sheild:
                 result = weapon_l;
                 break;
         }

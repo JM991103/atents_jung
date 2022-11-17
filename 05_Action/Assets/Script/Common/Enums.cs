@@ -13,11 +13,14 @@ public enum ItemIDCode
     SilverCoin,
     GoldCoin,
     IronSword,
-    SilverSword
+    SilverSword,
+    RoundShield,
+    KiteShield
+     
 }
 
 public enum EquipPartType
 {
     Weapon = 0,
-    Shield
+    Sheild
 }
