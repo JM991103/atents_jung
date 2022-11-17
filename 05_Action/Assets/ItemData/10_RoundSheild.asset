@@ -20,4 +20,4 @@ MonoBehaviour:
   maxStackCount: 1
   itemDescription: "\uB465\uADFC \uBAA8\uC591\uC758 \uB098\uBB34 \uBC29\uD328\uC774\uB2E4."
   EquipPrefab: {fileID: 6597358353836066591, guid: 0959f4e56c28c8642868d0acac599a20, type: 3}
-  defencePower: 30
+  defencePower: 15
