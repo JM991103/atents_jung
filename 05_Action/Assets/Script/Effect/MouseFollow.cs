@@ -30,7 +30,7 @@ public class MouseFollow : MonoBehaviour
     private void OnMouseMove(InputAction.CallbackContext context)
     {
         Vector3 mousePos = context.ReadValue<Vector2>();
-        mousePos.z = 10.0f;
+        mousePos.z = distance;
 
         Vector3 target = Camera.main.ScreenToWorldPoint(mousePos);
         
