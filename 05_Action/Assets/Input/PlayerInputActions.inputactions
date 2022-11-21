@@ -273,6 +273,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "InventoryOnOff",
+                    "type": "Button",
+                    "id": "f0745a53-e15d-4add-9b66-a798b1849b94",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -295,6 +304,17 @@
                     "processors": "",
                     "groups": "KM",
                     "action": "Wheel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3a1d805e-745a-4251-87cb-d27e3a33ec1d",
+                    "path": "<Keyboard>/i",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KM",
+                    "action": "InventoryOnOff",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
