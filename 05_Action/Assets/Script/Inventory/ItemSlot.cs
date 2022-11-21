@@ -209,7 +209,7 @@ public class ItemSlot
     /// 이 슬롯에서 아이템을 제거하는 함수
     /// </summary>
     public void ClearSlotItem()
-    {
+    { 
         ItemData = null;
         IsEquipped = false;
         ItemCount = 0;
