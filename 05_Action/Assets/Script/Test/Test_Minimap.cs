@@ -6,7 +6,11 @@ public class Test_Minimap : MonoBehaviour
 {
     void Start()
     {
-        //ItemData_EquipItem item = GameManager.Inst.ItemData[ItemIDCode.SilverSword] as ItemData_EquipItem;
+        ItemData_EquipItem item = GameManager.Inst.ItemData[ItemIDCode.SilverSword] as ItemData_EquipItem;
         //GameManager.Inst.Player.EquipItem(EquipPartType.Weapon, item);
+        GameManager.Inst.Player.Test_AddItem(item);
+        GameManager.Inst.Player.Test_UseItem(0);
     }
+
+
 }

@@ -70,8 +70,6 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     Player player;
 
-    
-
     private void Awake()
     {
         // 컴포넌트 만들어졌을 때 인풋 액션 인스턴스 생성
@@ -81,6 +79,13 @@ public class PlayerController : MonoBehaviour
         anim = GetComponent<Animator>();
         cc = GetComponent<CharacterController>();
         player = GetComponent<Player>();
+    }
+
+    private void Start()
+    {
+        InventoryUI invenUI = GameManager.Inst.InvenUI;
+        invenUI.onInventoryOpen += () => inputActions.Player.Disable();
+        invenUI.onInventoryClose += () => inputActions.Player.Enable();
     }
 
     private void OnEnable()
