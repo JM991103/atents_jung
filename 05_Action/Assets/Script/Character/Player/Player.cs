@@ -122,7 +122,12 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquiptarget
     /// <summary>
     /// 아이템 장비 현황을 확인할 수 있는 프로퍼티
     /// </summary>
-    public ItemSlot[] PartsSlots => partsSlots;    
+    public ItemSlot[] PartsSlots => partsSlots;
+
+    /// <summary>
+    /// 락온한 대상의 트랜스폼과 같음(위치만 확정)
+    /// </summary>
+    public Transform LockOnTransform => lockOnEffect.transform;
 
     // 델리게이트 ----------------------------------------------------------------------------------
     public Action<int> onMoneyChange;   // 돈이 변경되면 실행될 델리게이트
@@ -395,23 +400,42 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquiptarget
 
     public void LockOnToggle()
     {
-        if (lockOnEffect.activeSelf)
-        {
-            LockOff();
-        }
-        else
-        {
-            LockOn();
-        }
+        LockOn();
     }
 
     void LockOn()
     {
-        lockOnEffect.SetActive(true);
+        Collider[] enemies = Physics.OverlapSphere(transform.position, lockOnEange, LayerMask.GetMask("AttackTarget"));
+        if (enemies.Length > 0)
+        {
+            // 찾은 적 중 가장 가까이에 있는 적 찾기
+            Transform nearest = null;
+            float nearestDistance = float.MaxValue;
+            foreach (var enemy in enemies)
+            {
+                Vector3 dir = enemy.transform.position - transform.position;
+                float distanceSqr = dir.sqrMagnitude;       // root 연산은 느리기 때문에 sqrMagnitude 사용
+                if (distanceSqr < nearestDistance)
+                {
+                    nearestDistance = dir.sqrMagnitude;
+                    nearest = enemy.transform;
+                }
+            }
+            // 가장 가까이에 있는 적에게 LockOnEffect 붙이기
+            lockOnEffect.transform.SetParent(nearest);              // LockOnEffect의 부모를 적으로 설정
+            lockOnEffect.transform.localPosition = Vector3.zero;    // LockOnEffect의 위치를 적의 위치로 설정
+
+            lockOnEffect.SetActive(true);
+        }
+        else
+        {
+            LockOff();
+        }
     }
 
     void LockOff()
     {
+        lockOnEffect.transform.SetParent(null);
         lockOnEffect.SetActive(false);
     }
 
