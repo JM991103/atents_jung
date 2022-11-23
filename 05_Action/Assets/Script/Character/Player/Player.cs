@@ -55,7 +55,7 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquiptarget
     /// <summary>
     /// 락온 이펙트
     /// </summary>
-    GameObject lockOnEffect;
+    LockOnEffect lockOnEffect;
 
     /// <summary>
     /// 락온 범위
@@ -125,9 +125,9 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquiptarget
     public ItemSlot[] PartsSlots => partsSlots;
 
     /// <summary>
-    /// 락온한 대상의 트랜스폼과 같음(위치만 확정)
+    /// 락온한 대상의 트랜스폼
     /// </summary>
-    public Transform LockOnTransform => lockOnEffect.transform;
+    public Transform LockOnTransform => lockOnEffect.transform.parent;
 
     // 델리게이트 ----------------------------------------------------------------------------------
     public Action<int> onMoneyChange;   // 돈이 변경되면 실행될 델리게이트
@@ -151,8 +151,8 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquiptarget
               
         partsSlots = new ItemSlot[Enum.GetValues(typeof(EquipPartType)).Length];
 
-        lockOnEffect = transform.GetChild(6).gameObject;
-        lockOnEffect.SetActive(false);
+        lockOnEffect = GetComponentInChildren<LockOnEffect>();
+        LockOff();
 
         inven = new Inventory(this);
     }
@@ -422,10 +422,7 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquiptarget
                 }
             }
             // 가장 가까이에 있는 적에게 LockOnEffect 붙이기
-            lockOnEffect.transform.SetParent(nearest);              // LockOnEffect의 부모를 적으로 설정
-            lockOnEffect.transform.localPosition = Vector3.zero;    // LockOnEffect의 위치를 적의 위치로 설정
-
-            lockOnEffect.SetActive(true);
+            lockOnEffect.SetLockOnTarget(nearest);                  // 부모지정과 위치 변경
         }
         else
         {
@@ -435,8 +432,7 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquiptarget
 
     void LockOff()
     {
-        lockOnEffect.transform.SetParent(null);
-        lockOnEffect.SetActive(false);
+        lockOnEffect.SetLockOnTarget(null);        
     }
 
     /// <summary>
