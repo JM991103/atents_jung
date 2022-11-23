@@ -52,6 +52,16 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquiptarget
     /// </summary>
     ItemSlot[] partsSlots;
 
+    /// <summary>
+    /// 락온 이펙트
+    /// </summary>
+    GameObject lockOnEffect;
+
+    /// <summary>
+    /// 락온 범위
+    /// </summary>
+    float lockOnEange = 5.0f;
+
     // 프로퍼티 ------------------------------------------------------------------------------------
     public float AttackPower => attackPower;
 
@@ -135,6 +145,9 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquiptarget
         weapon_l = GetComponentInChildren<ShildPosition>().transform;   // 방패가 붙는 위치를 컴포넌트의 타입으로 찾기
               
         partsSlots = new ItemSlot[Enum.GetValues(typeof(EquipPartType)).Length];
+
+        lockOnEffect = transform.GetChild(6).gameObject;
+        lockOnEffect.SetActive(false);
 
         inven = new Inventory(this);
     }
@@ -378,6 +391,28 @@ public class Player : MonoBehaviour, IBattle, IHealth, IMana, IEquiptarget
                 break;
         }
         return result;
+    }
+
+    public void LockOnToggle()
+    {
+        if (lockOnEffect.activeSelf)
+        {
+            LockOff();
+        }
+        else
+        {
+            LockOn();
+        }
+    }
+
+    void LockOn()
+    {
+        lockOnEffect.SetActive(true);
+    }
+
+    void LockOff()
+    {
+        lockOnEffect.SetActive(false);
     }
 
     /// <summary>
