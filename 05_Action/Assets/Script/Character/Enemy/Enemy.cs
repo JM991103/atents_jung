@@ -37,6 +37,8 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
     /// </summary>
     public float sightRange = 10.0f;
 
+    public float CloseSightRange = 2.5f;
+
     /// <summary>
     /// 시야각의 절반
     /// </summary>
@@ -183,6 +185,7 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
                 {
                     case EnemyState.Wait:
                         agent.isStopped = true;
+                        agent.velocity = Vector3.zero;
                         waitTimer = waitTime;       // 타이머 초기화
                         anim.SetTrigger("Stop");    // 가만히 있는 애니메이션 재생
                         stateUpdate = Update_Wait;  // FixedUpdate에서 실행될 델리게이트 변경
@@ -200,12 +203,14 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
                         break;
                     case EnemyState.Attack:
                         agent.isStopped = true;     // 이동 정지
+                        agent.velocity = Vector3.zero;
                         anim.SetTrigger("Stop");    // 애니메이션 변경
                         attackCooltime = attackSpeed;   // 공격 쿨타임 초기화
                         stateUpdate = Update_Attack;    // FixedUpdate에서 실행될 델리게이트 변경
                         break;
                     case EnemyState.Dead:
                         agent.isStopped = true;     // 길찾기 정지
+                        agent.velocity = Vector3.zero;
                         anim.SetTrigger("Die");     // 사망 애니메이션 재생                                                    
                         StartCoroutine(DeadRepresent());    // 시간이 지나면 서서히 가라앉는 연출 실행
                         stateUpdate = Update_Dead;  // FixedUpdate에서 실행될 델리게이트 변경
@@ -258,7 +263,10 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
             if (attackTarget == target)     // 공격하던 대상이 범위를 벗어나면
             {
                 attackTarget = null;        // 공격 대상을 비우기
-                State = EnemyState.Chase;   // 플레이어가 공격 범위에서 벗어나면 다시 추적 상태로
+                if (State != EnemyState.Dead)
+                {
+                    State = EnemyState.Chase;   // 플레이어가 공격 범위에서 벗어나면 다시 추적 상태로
+                }
             }
         };
     }
@@ -382,20 +390,30 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
             Vector3 playerPos = colliders[0].transform.position;    // 플레이어의 위치
             Vector3 toPlayerDir = playerPos - transform.position;   // 플레이어로 가는 방향
             
-            // 시야각 안에 플레이어가 있는지 확인
-            if(IsInSightAngle(toPlayerDir))
+            if(toPlayerDir.sqrMagnitude < CloseSightRange * CloseSightRange)    // 근접 시야 범위 안에 있는지 확인
             {
-                // 시야각 안에 player가 있다.
-
-                // 시야가 다른 물체로 인해 막혔는지 확인
-                if(!IsSightBlocked(toPlayerDir))
-                {
-                    // 시야가 다른 몰체로 인해 막히지 않았다.
-
-                    chaseTarget = colliders[0].transform;   // 추적할 플레이어 저장
-                    result = true;
-                }                
+                // 근접 시야 범위 안에 player가 있다
+                chaseTarget = colliders[0].transform;           // 추적할 플레이어 저장
+                result = true;
             }
+            else
+            {                
+                if (IsInSightAngle(toPlayerDir))   // 시야각 안에 플레이어가 있는지 확인
+                {
+                    // 시야각 안에 player가 있다.
+
+                    // 시야가 다른 물체로 인해 막혔는지 확인
+                    if (!IsSightBlocked(toPlayerDir))
+                    {
+                        // 시야가 다른 몰체로 인해 막히지 않았다.
+
+                        chaseTarget = colliders[0].transform;   // 추적할 플레이어 저장
+                        result = true;
+                    }
+                }
+
+            }
+
         }
         //LayerMask.GetMask("Player","Water","UI"); // 리턴 2^6+2^4+2^5 = 64+16+32 = 112
         //LayerMask.NameToLayer("Player");          // 리턴 6
@@ -558,7 +576,7 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
         {
             Handles.color = Color.red;      // 보이면 빨간색
         }
-
+        Handles.color = Color.green;
         Vector3 forward = transform.forward * sightRange;                               // 앞쪽 방향으로 시야 범위만큼 가는 벡터
         Handles.DrawDottedLine(transform.position, transform.position + forward, 2.0f); // 중심선 그리기
 
@@ -569,6 +587,10 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
         Handles.DrawLine(transform.position, transform.position + q2 * forward);    // 중심선을 시계방향으로 회전시켜서 그리기
 
         Handles.DrawWireArc(transform.position, transform.up, q1 * forward, sightHalfAngle * 2, sightRange, 5.0f);  // 호 그리기
+
+        // 근접 시야 처리
+        Handles.color = Color.yellow;
+        Handles.DrawWireDisc(transform.position, transform.up, CloseSightRange);
 #endif
     }
 

@@ -3,10 +3,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+# endif
+
 public class Enemy_AttackArea : MonoBehaviour
 {
     public Action<IBattle> onPlayerIn;
     public Action<IBattle> onPlayerOut;
+    public SphereCollider col;
+
+    float attackRange;
+
+    private void Awake()
+    {
+        if (col == null)
+        {
+            col = GetComponent<SphereCollider>();
+
+        }
+        attackRange = col.radius;
+    }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Handles.color = Color.red;
+        Handles.DrawWireDisc(transform.position, transform.up, attackRange, 5);
+    }
+#endif
+
 
     private void OnTriggerEnter(Collider other)
     {

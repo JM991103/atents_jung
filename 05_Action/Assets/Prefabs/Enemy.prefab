@@ -668,6 +668,7 @@ MonoBehaviour:
   waypoints: {fileID: 0}
   moveSpeed: 3
   sightRange: 10
+  CloseSightRange: 2.5
   sightHalfAngle: 50
   waitTime: 1
   attackPower: 10
@@ -937,6 +938,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e36bd9540e554654cb2e5a9222ffa4c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  col: {fileID: 7016249821763942659}
 --- !u!1001 &1180206826935182146
 PrefabInstance:
   m_ObjectHideFlags: 0
