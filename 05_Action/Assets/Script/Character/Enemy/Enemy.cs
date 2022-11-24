@@ -83,6 +83,9 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
     public float maxHP = 100.0f;    // 최대 HP
     float hp = 100.0f;              // 현재 HP    
 
+    float attackSpeed = 1.0f;       // 1초마다 공격
+    float attackCooltime = 1.0f;    // 쿨타임이 0 미만이 되면 공격
+    IBattle attackTarget;
 
     // 아이템 드랍용 데이터 -------------------------------------------------------------------------
     [System.Serializable]    
@@ -196,10 +199,10 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
                         stateUpdate = Update_Chase; // FixedUpdate에서 실행될 델리게이트 변경
                         break;
                     case EnemyState.Attack:
-                        agent.isStopped = true;
-                        anim.SetTrigger("Stop");
-                        
-                        stateUpdate = Update_Attack;
+                        agent.isStopped = true;     // 이동 정지
+                        anim.SetTrigger("Stop");    // 애니메이션 변경
+                        attackCooltime = attackSpeed;   // 공격 쿨타임 초기화
+                        stateUpdate = Update_Attack;    // FixedUpdate에서 실행될 델리게이트 변경
                         break;
                     case EnemyState.Dead:
                         agent.isStopped = true;     // 길찾기 정지
@@ -241,16 +244,23 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
         dieEffect = GetComponentInChildren<ParticleSystem>();
 
         Enemy_AttackArea attackArea = GetComponentInChildren<Enemy_AttackArea>();
-        attackArea.onPlayerIn += () =>
+        attackArea.onPlayerIn += (target) =>
         {
             if (State == EnemyState.Chase)      // 순찰 상태이면
             {
+                attackTarget = target;
                 State = EnemyState.Attack;      // 공격 상태로 변경
             }
         };
 
-        attackArea.onPlayerOut += () => State = EnemyState.Chase;   // 플레이어가 공격 범위에서 벗어나면 다시 추적 상태로
-         
+        attackArea.onPlayerOut += (target) =>
+        {
+            if (attackTarget == target)     // 공격하던 대상이 범위를 벗어나면
+            {
+                attackTarget = null;        // 공격 대상을 비우기
+                State = EnemyState.Chase;   // 플레이어가 공격 범위에서 벗어나면 다시 추적 상태로
+            }
+        };
     }
 
     private void Start()
@@ -332,7 +342,18 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
     /// </summary>
     private void Update_Attack()
     {
+        attackCooltime -= Time.deltaTime;   // 쿨타임 감소
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(attackTarget.transform.position - transform.position), 1.0f);
+            // 공격 대상 바라보게 만들기
+            
         
+        if(attackCooltime < 0)              // 쿨타임 체크
+        {
+            // 공격하고, 쿨타임 초기화
+            anim.SetTrigger("Attack");      // 공격 애니메이션 처리
+            Attack(attackTarget);           // 공격 처리
+             
+        }
     }
 
     /// <summary>
@@ -422,6 +443,7 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
     public void Attack(IBattle target)
     {
         target?.Defence(AttackPower);
+        attackCooltime = attackSpeed;   // 쿨타임 초기화
     }
 
     /// <summary>
