@@ -7,9 +7,19 @@ public class Test_Light : TestBase
 {
     public Light targetLight;
 
+    TrailRenderer trail;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        trail = GetComponent<TrailRenderer>();
+    }  
+    
+
     protected override void Test1(InputAction.CallbackContext _)
     {
-        targetLight.color = Color.red;
+        trail.startWidth = 1.0f;
+        trail.endWidth = 0.1f;
     }
 
     protected override void Test2(InputAction.CallbackContext _)
