@@ -20,6 +20,8 @@ public class Test_Light : TestBase
     {
         trail.startWidth = 1.0f;
         trail.endWidth = 0.1f;
+        trail.startColor = Color.red;
+        trail.endColor = Color.green;
     }
 
     protected override void Test2(InputAction.CallbackContext _)
