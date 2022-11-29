@@ -22,4 +22,16 @@ public class Test_ImageNumber : TestBase
             imageNumber.Number = TestNumber;
         }
     }
+    protected override void Test1(InputAction.CallbackContext _)
+    {
+        GameManager.Inst.TestTimer_Play();
+    }
+    protected override void Test2(InputAction.CallbackContext _)
+    {
+        GameManager.Inst.TestTimer_Stop();
+    }
+    protected override void Test3(InputAction.CallbackContext _)
+    {
+        GameManager.Inst.TestTimer_Reset();
+    }
 }

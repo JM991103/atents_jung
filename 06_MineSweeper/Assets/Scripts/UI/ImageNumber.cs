@@ -67,6 +67,7 @@ public class ImageNumber : MonoBehaviour
         int tempNum = Mathf.Abs(number);        // 부호 제거. 무조건 +로 변경
         //List<int> digits = new List<int>(3);  
         Queue<int> digitsQ = new Queue<int>(3); // 각 자리수 숫자를 저장할 큐 만들기
+
         while (tempNum > 0)                     // 각 자리수별로 숫자를 잘라서 digitsQ에 저장하기
         {
             //digits.Add(tempNum % 10);
@@ -85,9 +86,9 @@ public class ImageNumber : MonoBehaviour
             index++;
         }
 
-        for (int i = index; i < numberImages.Length; i++)   // 적용하고 남은 사리수들의 숫자를 빈칸으로 채우기
+        for (int i = index; i < numberImages.Length; i++)   // 적용하고 남은 자리수들의 숫자를 빈칸으로 채우기
         {
-            numberImages[i].sprite = EmptySprite;
+            numberImages[i].sprite = ZeroSprite;
         }
 
         if (number < 0)         // 음수였을 경우
