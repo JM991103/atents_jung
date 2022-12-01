@@ -21,14 +21,14 @@ public class Timer : MonoBehaviour
 
     private void Update()
     {
-        if (isPlay) // 플레이 상태일 때만 실행
+        if(isPlay)  // 플레이 상태일 때만
         {
             elapsedTime += Time.deltaTime;  // 시간 누적하기
         }
     }
 
     /// <summary>
-    /// 타이머 시작
+    /// 타이머 시간 측정 시작
     /// </summary>
     public void Play()
     {
@@ -44,12 +44,11 @@ public class Timer : MonoBehaviour
     }
 
     /// <summary>
-    /// 타이머 시간 초기화 후 정지
+    /// 타이머 초기화 후 정지
     /// </summary>
     public void TimerReset()
     {
         elapsedTime = 0.0f;
         isPlay = false;
     }
-
 }

@@ -14,7 +14,7 @@ public class Cell : MonoBehaviour
         Question    // 물음표 표시됨
     }
 
-    // 변수 -----------------------------------------------------------------------------------------------------------------
+    // 변수  --------------------------------------------------------------------------------------
 
     /// <summary>
     /// ID가 잘못되었다고 알려주는 const
@@ -29,10 +29,10 @@ public class Cell : MonoBehaviour
     /// <summary>
     /// 셀이 열려있는지 닫혀있는지 여부. true면 열려있고 false면 닫혀있다.
     /// </summary>
-    bool isOpen = false;
-
+    bool isOpen = false;        
+    
     /// <summary>
-    /// 이 셀에 지뢰가 있는지 없는지 여부 true면 지회가 있고 false면 없다.
+    /// 이 셀에 지뢰가 있는지 없는지 여부. true면 지뢰가 있다. false면 없다.
     /// </summary>
     bool hasMine = false;
 
@@ -46,17 +46,18 @@ public class Cell : MonoBehaviour
     /// </summary>
     int aroundMineCount = 0;
 
-    // 프로퍼티 -----------------------------------------------------------------------------------------------------------------
 
+    // 프로퍼티 ------------------------------------------------------------------------------------
+    
     /// <summary>
-    /// ID 확인 및 설정용 프로퍼티 (설정은 한번만 가능)
+    /// ID 확인 및 설정용 프로퍼티(설정은 한번만 가능)
     /// </summary>
     public int ID
     {
         get => id;
         set
         {
-            if (id == ID_NOT_VALID)     // ID는 처음 한번만 설정 가능
+            if( id == ID_NOT_VALID )    // ID는 처음 한번만 설정 가능
             {
                 id = value;
             }
@@ -74,7 +75,7 @@ public class Cell : MonoBehaviour
     public bool HasMine => hasMine;
 
     /// <summary>
-    /// 셀에 깃발이 표시되어있는지 확인하는 프로퍼티
+    /// 셀에 깃발이 표시되어 있는지 확인하는 프로퍼티
     /// </summary>
     public bool IsFlaged => markState == CellMarkState.Flag;
 
@@ -83,7 +84,27 @@ public class Cell : MonoBehaviour
     /// </summary>
     public bool IsQuestion => markState == CellMarkState.Question;
 
-    // 함수 -----------------------------------------------------------------------------------------------------------------
+    // 함수 ---------------------------------------------------------------------------------------
+
+    // 확인해야 할 마우스 이벤트
+    // 1. 셀이 눌려졌다.
+    // 2. 셀이 때졌다.
+    // 3. 마우스가 안으로 들어왔다.
+    // 4. 마우스가 밖으로 나갔다.
+    // 5. 마우스가 눌려져 있는지 때져있는지. - 인풋 시스템 활용하기
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log("들어왔음");
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        Debug.Log("나갔음");
+    }
+
+
+
 
     /// <summary>
     /// 셀을 여는 함수
@@ -94,15 +115,15 @@ public class Cell : MonoBehaviour
     }
 
     /// <summary>
-    /// 셀에 빈것 -> 깃발 -> 물음표 -> 빈것 ->  순서대로 표시하는 함수
+    /// 셀에 빈것->깃발->물음표->빈것->... 순서로 표시하는 함수
     /// </summary>
     void SetMark()
     {
 
-    }
+    }    
 
     /// <summary>
-    /// 셀이 눌러졌을 때 실행될 함수
+    /// 셀이 눌러졌을 때 실행될 함수.
     /// </summary>
     public void CellPress()
     {
@@ -110,7 +131,7 @@ public class Cell : MonoBehaviour
     }
 
     /// <summary>
-    /// 누른 셀을 뗐을 때 실행될 함수
+    /// 누른 셀을 땠을 때 실행될 함수.
     /// </summary>
     public void CellRelease()
     {
@@ -119,7 +140,7 @@ public class Cell : MonoBehaviour
     }
 
     /// <summary>
-    /// 주변8칸에 지뢰가 추가될때 실행되는 함수 
+    /// 주변 8칸에 지뢰가 추가될 때 실행되는 함수
     /// </summary>
     public void IncreaseAroundMineCount()
     {

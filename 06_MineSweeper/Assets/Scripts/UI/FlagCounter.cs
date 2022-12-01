@@ -18,8 +18,8 @@ public class FlagCounter : MonoBehaviour
         gameManager.onFlagCountChange += Refresh;
     }
 
-    private void Refresh(int Count)
+    private void Refresh(int count)
     {
-        imageNumber.Number = Count;
+        imageNumber.Number = count;
     }
 }

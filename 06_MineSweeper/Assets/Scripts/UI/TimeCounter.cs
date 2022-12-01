@@ -17,8 +17,8 @@ public class TimeCounter : MonoBehaviour
         gameManager.onTimeCountChange += Refresh;
     }
 
-    private void Refresh(int Count)
+    private void Refresh(int count)
     {
-        imageNumber.Number = Count;
+        imageNumber.Number = count;
     }
 }

@@ -1,4 +1,4 @@
-//#define TEST_CODE
+#define TEST_CODE
 
 using System;
 using System.Collections;
@@ -54,18 +54,22 @@ public class GameManager : Singleton<GameManager>
     {
         timer.Play();
     }
+
     public void TestTimer_Stop()
     {
         timer.Stop();
     }
+
     public void TestTimer_Reset()
     {
         timer.TimerReset();
     }
+
     public void TestFlag_Increase()
     {
         FlagCount++;
     }
+
     public void TestFlag_Decrease()
     {
         FlagCount--;
