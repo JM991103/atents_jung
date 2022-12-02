@@ -96,10 +96,7 @@ public class Board : MonoBehaviour
             int randomIndex = Random.Range(0, count + 1 - i);
             int lastIndex = count - i;
             (source[randomIndex], source[lastIndex]) = (source[lastIndex], source[randomIndex]);
-
         }
-
-
     }
 
     /// <summary>
