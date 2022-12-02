@@ -152,6 +152,6 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void SetMine()
     {
-
+        hasMine = true;
     }
 }

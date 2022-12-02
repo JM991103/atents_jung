@@ -66,6 +66,40 @@ public class Board : MonoBehaviour
                 cells[cell.ID] = cell;                                      // cells 배열에 저장
             }
         }
+
+        for (int i = 0; i < mineCount; i++)
+        {
+            int rand = Random.Range(0, cells.Length);
+
+            if (!cells[rand].HasMine)
+            {
+                cells[rand].SetMine();
+                Debug.Log($"지뢰 {i}");
+            }
+            else
+            {
+                i--;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 파라메터로 받은 배열 내부의 데이터 순서를 섞는 함수
+    /// </summary>
+    /// <param name="source">내부 데이터를 섞을 배열</param>
+    public void Shuffle(int[] source)
+    {
+        int count = source.Length - 1;
+        for (int i = 0; i < count; i++)
+        {
+            // 랜덤으로 하나 고르기
+            int randomIndex = Random.Range(0, count + 1 - i);
+            int lastIndex = count - i;
+            (source[randomIndex], source[lastIndex]) = (source[lastIndex], source[randomIndex]);
+
+        }
+
+
     }
 
     /// <summary>
