@@ -29,6 +29,18 @@ public class Board : MonoBehaviour
     /// </summary>
     Cell[] cells;
 
+    /// <summary>
+    /// 열린 셀에서 표시될 이미지
+    /// </summary>
+    public Sprite[] openCellImages;
+
+    /// <summary>
+    /// OpenCellType으로 이미지를 받아오는 인덱서
+    /// </summary>
+    /// <param name="type">필요 이미지의 enum타입</param>
+    /// <returns>enum타입에 맞는 이미지</returns>
+    public Sprite this[OpenCellType type] => openCellImages[(int)type];
+
     //private void Start()
     //{
     //    Initialize();
@@ -61,25 +73,22 @@ public class Board : MonoBehaviour
                 GameObject cellObj = Instantiate(cellPrefab, transform);    // 이 보드를 부모로 삼고 생성
                 Cell cell = cellObj.GetComponent<Cell>();                   // 생성한 오브젝트에서 Cell 컴포넌트 찾기
                 cell.ID = y * width + x;                                    // ID 설정 (ID를 통해 위치도 확인 가능)
+                cell.Board = this;                                          // 보드 설정
                 cellObj.name = $"Cell_{cell.ID}_{x}_{y}";                   // 오브젝트 이름 지정
                 cell.transform.position = basePos + offset + new Vector3(x * Distance, -y * Distance);  // 적절한 위치에 배치
                 cells[cell.ID] = cell;                                      // cells 배열에 저장
             }
         }
 
+        int[] ids = new int[cells.Length]; ;
+        for (int i = 0; i < cells.Length; i++)
+        {
+            ids[i] = i;
+        }
+        Shuffle(ids);
         for (int i = 0; i < mineCount; i++)
         {
-            int rand = Random.Range(0, cells.Length);
-
-            if (!cells[rand].HasMine)
-            {
-                cells[rand].SetMine();
-                Debug.Log($"지뢰 {i}");
-            }
-            else
-            {
-                i--;
-            }
+            cells[ids[i]].SetMine();
         }
     }
 
@@ -97,6 +106,45 @@ public class Board : MonoBehaviour
             int lastIndex = count - i;
             (source[randomIndex], source[lastIndex]) = (source[lastIndex], source[randomIndex]);
         }
+    }
+
+    /// <summary>
+    /// 파라메터로 받은 ID를 가진 셀 주변의 셀들을 리턴하는 함수
+    /// </summary>
+    /// <param name="id">찾을 중심 셀</param>
+    /// <returns>id 주변에 있는 셀들</returns>
+    public List<Cell> GetNeighbors(int id)
+    {
+        List<Cell> result = new List<Cell>(8);
+        Vector2Int grid = IdToGrid(id);
+
+        for (int i = -1; i < 2; i++)
+        {
+            for (int j = -1; j < 2; j++)
+            {
+                int index = GridToID(j + grid.x, i + grid.y);
+                if (index != Cell.ID_NOT_VALID && !(i == 0 && j == 0))
+                {
+                    result.Add(cells[index]);
+                }
+            }
+        }        
+        return result;
+    }
+
+    Vector2Int IdToGrid(int id)
+    {
+        return new Vector2Int(id % width, id / width);
+    }
+
+    int GridToID(int x, int y)
+    {
+        if (x >= 0 && x < width && y >= 0 && y < height)
+        {
+            return x + y * width;
+        }
+
+        return Cell.ID_NOT_VALID;
     }
 
     /// <summary>

@@ -19,7 +19,7 @@ public class Cell : MonoBehaviour
     /// <summary>
     /// ID가 잘못되었다고 알려주는 const
     /// </summary>
-    const int ID_NOT_VALID = -1;
+    public const int ID_NOT_VALID = -1;
 
     /// <summary>
     /// 셀의 ID이면서 위치를 표시하는 역할
@@ -46,9 +46,16 @@ public class Cell : MonoBehaviour
     /// </summary>
     int aroundMineCount = 0;
 
+    /// <summary>
+    /// 이 셀이 들어있는 보드
+    /// </summary>
+    Board parentBoard;
+
+    SpriteRenderer cover;
+    SpriteRenderer inside;
 
     // 프로퍼티 ------------------------------------------------------------------------------------
-    
+
     /// <summary>
     /// ID 확인 및 설정용 프로퍼티(설정은 한번만 가능)
     /// </summary>
@@ -60,6 +67,21 @@ public class Cell : MonoBehaviour
             if( id == ID_NOT_VALID )    // ID는 처음 한번만 설정 가능
             {
                 id = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 이 셀이 소속되어있는 보드 확인 및 설정용 프로퍼티 (설정은 한번만 가능)
+    /// </summary>
+    public Board Board
+    {
+        get => parentBoard;
+        set
+        {
+            if (parentBoard == null)
+            {
+                parentBoard = value;
             }
         }
     }
@@ -92,6 +114,14 @@ public class Cell : MonoBehaviour
     // 3. 마우스가 안으로 들어왔다.
     // 4. 마우스가 밖으로 나갔다.
     // 5. 마우스가 눌려져 있는지 때져있는지. - 인풋 시스템 활용하기
+
+    private void Awake()
+    {
+        Transform child = transform.GetChild(0);
+        cover = child.GetComponent<SpriteRenderer>();
+        child = transform.GetChild(1);
+        inside = child.GetComponent<SpriteRenderer>();
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -144,7 +174,11 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void IncreaseAroundMineCount()
     {
-        aroundMineCount++;
+        if (!hasMine)
+        {
+            aroundMineCount++;
+            inside.sprite = Board[(OpenCellType)aroundMineCount];   // 주변 지뢰 숫자에 맞게 이미지 설정
+        }
     }
 
     /// <summary>
@@ -152,6 +186,14 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void SetMine()
     {
-        hasMine = true;
+        hasMine = true;     // 지뢰 설치 되었다고 표시
+        inside.sprite = Board[OpenCellType.Mine_NotFound];  // 지뢰로 이미지 변경
+
+        // 이 셀 주변 셀들의 IncreaseAroundMineCount함수 실행(aroundMineCount를 1씩 증가)
+        List<Cell> cellList = Board.GetNeighbors(ID);
+        foreach (var cell in cellList)
+        {
+            cell.IncreaseAroundMineCount();
+        }
     }
 }
