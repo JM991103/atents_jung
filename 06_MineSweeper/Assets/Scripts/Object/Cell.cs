@@ -133,9 +133,6 @@ public class Cell : MonoBehaviour
         //Debug.Log("나갔음");
     }
 
-
-
-
     /// <summary>
     /// 셀을 여는 함수
     /// </summary>

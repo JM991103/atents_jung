@@ -237,6 +237,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellPrefab: {fileID: 411506224221964697, guid: 3ae350eb594ae514d82df350c230c752, type: 3}
+  openCellImages:
+  - {fileID: 996171067, guid: 29427a1d2842fc444b97f496f148fc66, type: 3}
+  - {fileID: -1090858278, guid: 29427a1d2842fc444b97f496f148fc66, type: 3}
+  - {fileID: 1260903593, guid: 29427a1d2842fc444b97f496f148fc66, type: 3}
+  - {fileID: -110899689, guid: 29427a1d2842fc444b97f496f148fc66, type: 3}
+  - {fileID: -657841235, guid: 29427a1d2842fc444b97f496f148fc66, type: 3}
+  - {fileID: -1137335001, guid: 29427a1d2842fc444b97f496f148fc66, type: 3}
+  - {fileID: -1082773311, guid: 29427a1d2842fc444b97f496f148fc66, type: 3}
+  - {fileID: 1082889864, guid: 29427a1d2842fc444b97f496f148fc66, type: 3}
+  - {fileID: 172028970, guid: 29427a1d2842fc444b97f496f148fc66, type: 3}
+  - {fileID: -2012973956, guid: 29427a1d2842fc444b97f496f148fc66, type: 3}
+  - {fileID: 2057585030, guid: 29427a1d2842fc444b97f496f148fc66, type: 3}
+  - {fileID: -561946691, guid: 29427a1d2842fc444b97f496f148fc66, type: 3}
 --- !u!4 &224722678
 Transform:
   m_ObjectHideFlags: 0
@@ -444,7 +457,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1035658168
 MonoBehaviour:
   m_ObjectHideFlags: 0
