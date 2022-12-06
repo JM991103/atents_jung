@@ -34,6 +34,7 @@ public class GameManager : Singleton<GameManager>
         {
             flagCount = value;
             onFlagCountChange?.Invoke(flagCount);
+            Debug.Log($"현재 깃발 갯수 : {flagCount}");
         }
     }
     public Action<int> onFlagCountChange;
@@ -52,6 +53,8 @@ public class GameManager : Singleton<GameManager>
         base.Initialize();
         timer = GetComponent<Timer>();
 
+        FlagCount = mineCount;
+
         board = FindObjectOfType<Board>();
         board.Initialize(boardWidth, boardHeight, mineCount);
     }
@@ -59,6 +62,16 @@ public class GameManager : Singleton<GameManager>
     private void Update()
     {
         TimeCount = (int)timer.ElapsedTime;
+    }
+
+    public void IncreaseFlagCount()
+    {
+        FlagCount++;
+    }
+
+    public void DecreaseFlagCount()
+    {
+        FlagCount--;
     }
 
 #if TEST_CODE
