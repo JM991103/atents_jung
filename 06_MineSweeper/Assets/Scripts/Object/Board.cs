@@ -92,7 +92,7 @@ public class Board : MonoBehaviour
                 Cell cell = cellObj.GetComponent<Cell>();                   // 생성한 오브젝트에서 Cell 컴포넌트 찾기
                 cell.ID = y * width + x;                                    // ID 설정 (ID를 통해 위치도 확인 가능)
                 cell.Board = this;                                          // 보드 설정
-                cellObj.name = $"Cell_{cell.ID}_{x}_{y}";                   // 오브젝트 이름 지정
+                cellObj.name = $"Cell_{cell.ID}_({x}_{y})";                   // 오브젝트 이름 지정
                 cell.transform.position = basePos + offset + new Vector3(x * Distance, -y * Distance);  // 적절한 위치에 배치
                 cells[cell.ID] = cell;                                      // cells 배열에 저장
             }
@@ -150,19 +150,30 @@ public class Board : MonoBehaviour
         return result;
     }
 
+    /// <summary>
+    /// ID를 Grid좌표로 변경하는 함수. Vaild한 그리드 좌표가 나온다는 보장은 없음
+    /// </summary>
+    /// <param name="id">Grid로 변경할 ID</param>
+    /// <returns>변경 완료된 Grid좌표</returns>
     Vector2Int IdToGrid(int id)
     {
         return new Vector2Int(id % width, id / width);
     }
 
+    /// <summary>
+    /// Grid 좌표를 ID로 변경하는 함수
+    /// </summary>
+    /// <param name="x">변경할 그리드 좌표의 X값</param>
+    /// <param name="y">변경할 그리드 좌표의 Y값</param>
+    /// <returns>변경에 성공하면 정상적인 ID. 실패할 경우 ID_NOT_VALID(-1)</returns>
     int GridToID(int x, int y)
     {
         if (IsValidGrid(x, y))
         {
-            return x + y * width;
+            return x + y * width;   // 그리드 좌표가 적합하면 변환
         }
 
-        return Cell.ID_NOT_VALID;
+        return Cell.ID_NOT_VALID;   // 적합하지 않으면 ID_NOT_VALID
     }
 
     /// <summary>
@@ -172,16 +183,24 @@ public class Board : MonoBehaviour
     /// <returns>스크린좌표와 매칭되는 보드 위의 그리드 좌표</returns>
     Vector2Int ScreenToGrid(Vector2 screenPos)
     {
+        // 스크린 좌표를 월드 좌표로 변경하기
+        Vector2 worldPos = (Vector2)Camera.main.ScreenToWorldPoint(screenPos);
+
         // 보드의 왼쪽 위(시작 좌표) 구하기
         Vector2 startPos = new Vector2(-width * Distance * 0.5f, height * Distance * 0.5f) + (Vector2)transform.position;
 
         // 보드의 왼쪽 위에서 마우스가 얼마만큼 떨어져 있는지 확인
-        Vector2 diff = (Vector2)Camera.main.ScreenToWorldPoint(screenPos) - startPos;
+        Vector2 diff = worldPos - startPos;
 
         // Distance로 나누어서 Grid좌표로 변환
         return new((int)(diff.x / Distance), (int)(-diff.y / Distance));
     }
 
+    /// <summary>
+    /// 입력받은 스크린 좌표를 ID로 변경하는 함수
+    /// </summary>
+    /// <param name="screenPos">확인할 스크린좌표</param>
+    /// <returns>스크린좌표와 매칭되는 보드위의 셀 ID</returns>
     int ScreenToID(Vector2 screenPos)
     {
         Vector2Int grid = ScreenToGrid(screenPos);
@@ -189,11 +208,22 @@ public class Board : MonoBehaviour
         return GridToID(grid.x, grid.y);
     }
 
+    /// <summary>
+    /// 보드안에 있는 그리드 좌표인지 확인하는 함수
+    /// </summary>
+    /// <param name="x">그리드 좌표의 X</param>
+    /// <param name="y">그리드 좌표의 Y</param>
+    /// <returns>보드 안에 있는 그리드 좌표이면 true, 아니면 false</returns>
     bool IsValidGrid(int x, int y)
     {
         return x >= 0 && x < width && y >= 0 && y < height;
     }
 
+    /// <summary>
+    /// 보드안에 있는 그리드 좌표인지 확인하는 함수
+    /// </summary>
+    /// <param name="grid">확인할 그리드 좌표</param>
+    /// <returns>보드 안에 있는 그리드 좌표이면 true, 아니면 false</returns>
     bool IsValidGrid(Vector2Int grid)
     {
         return IsValidGrid(grid.x, grid.y);
@@ -223,11 +253,11 @@ public class Board : MonoBehaviour
     private void OnRightClick(InputAction.CallbackContext _)
     {
         Debug.Log("오른쪽 클릭");
-        Vector2 screenPos = Mouse.current.position.ReadValue();
-        Vector2Int grid = ScreenToGrid(screenPos);
-        if (IsValidGrid(grid))
+        Vector2 screenPos = Mouse.current.position.ReadValue();     // 마우스 커서의 스크린 좌표를 읽기
+        Vector2Int grid = ScreenToGrid(screenPos);                  // 스크린 좌표를 Grid좌표로 변환
+        if (IsValidGrid(grid))                                      // 결과 그리드 좌표가 적합한지 확인 => 적합하지 않으면 보드 밖이라는 의미
         {
-            Cell target = cells[GridToID(grid.x, grid.y)];
+            Cell target = cells[GridToID(grid.x, grid.y)];          // 해당 셀 가져오기
             Debug.Log($"{target.gameObject.name}을 우클릭 했습니다.");
         }
         else
