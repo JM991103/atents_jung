@@ -38,6 +38,7 @@ public class GameManager : Singleton<GameManager>
         }
     }
     public Action<int> onFlagCountChange;
+    //FlagCounter flagCounter;
 
     // 난이도 관련 -----------------------------------------------------------------------------------------------
     public int mineCount = 10;
@@ -53,7 +54,7 @@ public class GameManager : Singleton<GameManager>
         base.Initialize();
         timer = GetComponent<Timer>();
 
-        FlagCount = mineCount;
+        FlagCount = mineCount;        
 
         board = FindObjectOfType<Board>();
         board.Initialize(boardWidth, boardHeight, mineCount);

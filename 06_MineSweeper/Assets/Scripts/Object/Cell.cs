@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Cell : MonoBehaviour
 {
@@ -131,12 +133,21 @@ public class Cell : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //Debug.Log("들어왔음");
+        if (Mouse.current.leftButton.ReadValue() > 0)
+        {
+            Debug.Log($"마우스 왼쪽 버튼을 누른채로 들어왔음\n{this.gameObject.name}");
+            PressCover();
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         //Debug.Log("나갔음");
+        if (Mouse.current.leftButton.ReadValue() > 0)
+        {
+            Debug.Log($"마우스 왼쪽 버튼을 누른채로 나갔음\n{this.gameObject.name}");
+            RestoreCover();
+        }
     }
 
     /// <summary>
@@ -148,19 +159,12 @@ public class Cell : MonoBehaviour
     }
 
     /// <summary>
-    /// 셀에 빈것->깃발->물음표->빈것->... 순서로 표시하는 함수
-    /// </summary>
-    void SetMark()
-    {
-
-    }    
-
-    /// <summary>
     /// 셀이 눌러졌을 때 실행될 함수.
     /// </summary>
     public void CellPress()
     {
         // 눌러진 이미지로 변경
+        PressCover();
     }
 
     /// <summary>
@@ -170,6 +174,40 @@ public class Cell : MonoBehaviour
     {
         // 여는 경우 : Open();
         // 복구되는 경우
+        //cover.sprite = Board[CloseCellType.Close];
+        RestoreCover();
+    }
+
+    void PressCover()
+    {
+        switch (markState)
+        {
+            case CellMarkState.None:
+                cover.sprite = Board[CloseCellType.Close_Press];
+                break;
+            case CellMarkState.Question:
+                cover.sprite = Board[CloseCellType.Question_Press];
+                break;
+            case CellMarkState.Flag:
+            default:
+                break;
+        }
+    }
+
+    void RestoreCover()
+    {
+        switch (markState)
+        {
+            case CellMarkState.None:
+                cover.sprite = Board[CloseCellType.Close];
+                break;
+            case CellMarkState.Question:
+                cover.sprite = Board[CloseCellType.Question];
+                break;
+            case CellMarkState.Flag:
+            default:
+                break;
+        }
     }
 
     /// <summary>
@@ -200,26 +238,29 @@ public class Cell : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public void CellRightPress()
     {
-        // markState 가 none이면 flag가 된다.     -> 깃발 갯수가 줄어든다. 셀 이미지 변경된다.
-        // markState 가 flag이면 question이 된다. -> 깃발 갯수가 늘어난다. 셀 이미지 변경된다.
-        // markState 가 question이면 none가 된다. -> 셀 이미지 변경된다.
         if (!IsOpen)
         {
             switch (markState)
             {
                 case CellMarkState.None:
+                    // markState 가 none이면 flag가 된다.     -> 깃발 갯수가 줄어든다. 셀 이미지 변경된다.
                     markState = CellMarkState.Flag;
                     cover.sprite = Board[CloseCellType.Flag];
                     onFlagUse?.Invoke();
                     break;
                 case CellMarkState.Flag:
+                    // markState 가 flag이면 question이 된다. -> 깃발 갯수가 늘어난다. 셀 이미지 변경된다.
                     markState = CellMarkState.Question;
                     cover.sprite = Board[CloseCellType.Question];
                     onFlagReturn?.Invoke();
                     break;
                 case CellMarkState.Question:
+                    // markState 가 question이면 none가 된다. -> 셀 이미지 변경된다.
                     markState = CellMarkState.None;
                     cover.sprite = Board[CloseCellType.Close];
                     break;
