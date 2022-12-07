@@ -226,10 +226,11 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void CellRelease()
     {
-        // 여는 경우 : Open();
-        // 복구되는 경우
+        foreach(var cell in pressedCells)   // 눌러져 있던 셀들을 전부 순회하면서 열기
+        {
+            cell.Open();            
+        }
         RestoreCovers();    // 눌렀다고 표시한 모든 셀을 복구 시키기
-        Open();             // 자신을 열기
     }
 
     /// <summary>
@@ -343,20 +344,26 @@ public class Cell : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 셀 위에 마우스가 올라왔을 때 실행되는 함수
+    /// </summary>
     public void OnEnterCell()
     {
         //Debug.Log("들어왔음");
-        if (Mouse.current.leftButton.ReadValue() > 0)
+        if (Mouse.current.leftButton.ReadValue() > 0)   // 마우스 왼쪽 버튼이 눌러져 있으면
         {
             Debug.Log($"마우스 왼쪽 버튼을 누른채로 들어왔음\n{this.gameObject.name}");
             CellPress();
         }
     }
 
+    /// <summary>
+    /// 셀 위에 마우스가 있다가 밖으로 나갔을 때 실행되는 함수
+    /// </summary>
     public void OnExitCell()
     {
         //Debug.Log("나갔음");
-        if (Mouse.current.leftButton.ReadValue() > 0)
+        if (Mouse.current.leftButton.ReadValue() > 0)   // 마우스 왼쪽 버튼이 눌러져 있으면
         {
             Debug.Log($"마우스 왼쪽 버튼을 누른채로 나갔음\n{this.gameObject.name}");
             RestoreCovers();

@@ -11,6 +11,11 @@ public class Board : MonoBehaviour
     public GameObject cellPrefab;
 
     /// <summary>
+    /// 인풋 액션
+    /// </summary>
+    PlayerInputActions inputActions;
+
+    /// <summary>
     /// 보드가 가지는 가로 셀의 길이. (가로 줄의 셀 갯수)
     /// </summary>
     private int width = 16;
@@ -41,6 +46,11 @@ public class Board : MonoBehaviour
     public Sprite[] closeCellImages;
 
     /// <summary>
+    /// 현재 마우스가 올라가 있는 셀
+    /// </summary>
+    Cell currentCell = null;    
+
+    /// <summary>
     /// OpenCellType으로 이미지를 받아오는 인덱서
     /// </summary>
     /// <param name="type">필요 이미지의 enum타입</param>
@@ -54,7 +64,16 @@ public class Board : MonoBehaviour
     /// <returns>enum타입에 맞는 이미지</returns>
     public Sprite this[CloseCellType type] => closeCellImages[(int)type];
 
-    PlayerInputActions inputActions;
+    Cell CurrentCell
+    {
+        get => currentCell;
+        set
+        {            
+            currentCell?.OnExitCell();// 셀에서 마우스 나가는 처리
+            currentCell = value;           
+            currentCell?.OnEnterCell(); // 셀에 마우스가 들어가는 처리
+        }
+    }
 
     private void Awake()
     {
@@ -309,22 +328,10 @@ public class Board : MonoBehaviour
         }        
     }
 
-    Cell currentCell = null;
-    Cell CurrentCell
-    {
-        get => currentCell;
-        set
-        {
-           
-            // 셀에서 마우스 나가는 처리
-            currentCell?.OnExitCell();
-            
-            currentCell = value;
-            // 셀에 마우스가 들어가는 처리
-            currentCell?.OnEnterCell();
-        }
-    }
-
+    /// <summary>
+    /// 마우스가 움직일 때 실행되는 함수
+    /// </summary>
+    /// <param name="context"></param>
     private void OnMouseMove(InputAction.CallbackContext context)
     {
         Vector2 screenPos = context.ReadValue<Vector2>();
@@ -338,5 +345,4 @@ public class Board : MonoBehaviour
             CurrentCell = null;
         }
     }
-
 }
