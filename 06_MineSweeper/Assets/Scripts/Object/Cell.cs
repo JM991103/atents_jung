@@ -54,8 +54,25 @@ public class Cell : MonoBehaviour
     /// </summary>
     Board parentBoard;
 
+    /// <summary>
+    /// 닫혀있을 때 보일 스프라이트 렌더러
+    /// </summary>
     SpriteRenderer cover;
+
+    /// <summary>
+    /// 열렸을 때 보일 스프라이트 렌더러
+    /// </summary>
     SpriteRenderer inside;
+
+    /// <summary>
+    /// 이 셀의 의해 눌러진 셀의 목록(자기 자신 or 자기 주변에 닫혀있던 셀)
+    /// </summary>
+    List<Cell> pressedCells;
+
+    /// <summary>
+    /// 이 셀의 주변 셀들
+    /// </summary>
+    List<Cell> neighbors;
 
     // 프로퍼티 ------------------------------------------------------------------------------------
 
@@ -125,62 +142,102 @@ public class Cell : MonoBehaviour
 
     private void Awake()
     {
+        pressedCells = new List<Cell>(8);           // 새로 메모리 할당
+
         Transform child = transform.GetChild(0);
         cover = child.GetComponent<SpriteRenderer>();
         child = transform.GetChild(1);
         inside = child.GetComponent<SpriteRenderer>();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void Start()
     {
-        if (Mouse.current.leftButton.ReadValue() > 0)
-        {
-            Debug.Log($"마우스 왼쪽 버튼을 누른채로 들어왔음\n{this.gameObject.name}");
-            PressCover();
-        }
+        neighbors = Board.GetNeighbors(this.ID);
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        //Debug.Log("나갔음");
-        if (Mouse.current.leftButton.ReadValue() > 0)
-        {
-            Debug.Log($"마우스 왼쪽 버튼을 누른채로 나갔음\n{this.gameObject.name}");
-            RestoreCover();
-        }
-    }
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    //Debug.Log("들어왔음");
+    //    if (Mouse.current.leftButton.ReadValue() > 0)
+    //    {
+    //        Debug.Log($"마우스 왼쪽 버튼을 누른채로 들어왔음\n{this.gameObject.name}");
+    //        CellPress();
+    //    }
+    //}
+
+    //private void OnTriggerExit2D(Collider2D collision)
+    //{
+    //    //Debug.Log("나갔음");
+    //    if (Mouse.current.leftButton.ReadValue() > 0)
+    //    {
+    //        Debug.Log($"마우스 왼쪽 버튼을 누른채로 나갔음\n{this.gameObject.name}");
+    //        RestoreCovers();
+    //    }
+    //}
 
     /// <summary>
     /// 셀을 여는 함수
     /// </summary>
     void Open()
     {
+        if (!isOpen && !IsFlaged)               // 닫혀있고 깃발 표시가 안되어있을 때만 연다..
+        {
+            isOpen = true;                      // 열렸다고 표시하고
+            cover.gameObject.SetActive(false);  // 셀이 열릴 때 커버를 비활성화
 
+            if (aroundMineCount == 0 && !hasMine)           // 주변 지뢰 갯수가 0이면 
+            {                
+                foreach (var cell in neighbors) // 주변 셀들을
+                {
+                    cell.Open();                // 모두 연다. (재귀호출)
+                }
+            }
+        }
     }
 
     /// <summary>
-    /// 셀이 눌러졌을 때 실행될 함수.
+    /// 마우스 왼쪽 버튼이 이 셀을 눌렀을 때 실행될 함수.
     /// </summary>
     public void CellPress()
     {
-        // 눌러진 이미지로 변경
-        PressCover();
+        pressedCells.Clear();   // 새롭게 눌려졌으니 기존에 눌려져 있던 셀에 대한 기록은 제거
+        if (isOpen)
+        {
+            // 이 셀이 열려져 있으면, 자신 주변의 닫힌 셀을 모두 누른 표시를 한다.
+           
+            foreach (var cell in neighbors)     // 주변 셀을 모두 순회한다.
+            {
+                if (!cell.IsOpen)               // 주변 셀 중에 닫혀있는 셀만 
+                {
+                    pressedCells.Add(cell);     // 누르고 있는 셀이라고 표시하고
+                    cell.CellPress();           // 누르고 있는 표시진행
+                }
+            }
+        }
+        else
+        {
+            // 이 셀이 닫힌 셀일 때 자신을 누른 표시를 한다.
+            PressCover();
+        }
     }
 
     /// <summary>
-    /// 누른 셀을 땠을 때 실행될 함수.
+    /// 마우스 왼쪽 버튼이 이 셀 위에서 떨어졌을 때 실행될 함수.
     /// </summary>
     public void CellRelease()
     {
         // 여는 경우 : Open();
         // 복구되는 경우
-        //cover.sprite = Board[CloseCellType.Close];
-        RestoreCover();
+        RestoreCovers();    // 눌렀다고 표시한 모든 셀을 복구 시키기
+        Open();             // 자신을 열기
     }
 
+    /// <summary>
+    /// 이 셀이 눌러졌을 때 처리해야 할 일을 모아놓은 함수
+    /// </summary>
     void PressCover()
     {
-        switch (markState)
+        switch (markState)  // 표시 상태에 따라 이미지 변경
         {
             case CellMarkState.None:
                 cover.sprite = Board[CloseCellType.Close_Press];
@@ -192,8 +249,12 @@ public class Cell : MonoBehaviour
             default:
                 break;
         }
+        pressedCells.Add(this); // 눌러진 셀이라고 표시
     }
 
+    /// <summary>
+    /// 이 셀 하나가 눌려져 있다가 복구 될 때 해야할 일을 모아 놓은 함수
+    /// </summary>
     void RestoreCover()
     {
         switch (markState)
@@ -208,6 +269,18 @@ public class Cell : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    /// <summary>
+    /// 이 셀과 관련해서 눌러져 있던 셀들이 복구 될 때 해야할 일을 모아 놓은 함수
+    /// </summary>
+    void RestoreCovers()
+    {
+        foreach (var cell in pressedCells)  // 전부 순회하면서 복구
+        {
+            cell.RestoreCover();
+        }
+        pressedCells.Clear();               // 리스트 비우기
     }
 
     /// <summary>
@@ -231,7 +304,7 @@ public class Cell : MonoBehaviour
         inside.sprite = Board[OpenCellType.Mine_NotFound];  // 지뢰로 이미지 변경
 
         // 이 셀 주변 셀들의 IncreaseAroundMineCount함수 실행(aroundMineCount를 1씩 증가)
-        List<Cell> cellList = Board.GetNeighbors(ID);
+        List<Cell> cellList = Board.GetNeighbors(ID);   // 실행 타이밍이 Start보다 빨라 따로 구해줌
         foreach (var cell in cellList)
         {
             cell.IncreaseAroundMineCount();
@@ -269,4 +342,25 @@ public class Cell : MonoBehaviour
             }            
         }
     }
+
+    public void OnEnterCell()
+    {
+        //Debug.Log("들어왔음");
+        if (Mouse.current.leftButton.ReadValue() > 0)
+        {
+            Debug.Log($"마우스 왼쪽 버튼을 누른채로 들어왔음\n{this.gameObject.name}");
+            CellPress();
+        }
+    }
+
+    public void OnExitCell()
+    {
+        //Debug.Log("나갔음");
+        if (Mouse.current.leftButton.ReadValue() > 0)
+        {
+            Debug.Log($"마우스 왼쪽 버튼을 누른채로 나갔음\n{this.gameObject.name}");
+            RestoreCovers();
+        }
+    }
+
 }
