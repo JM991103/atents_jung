@@ -64,6 +64,9 @@ public class Board : MonoBehaviour
     /// <returns>enum타입에 맞는 이미지</returns>
     public Sprite this[CloseCellType type] => closeCellImages[(int)type];
 
+    /// <summary>
+    /// 현재 마우스가 올라가 있는 셀을 확인하는 프로퍼티
+    /// </summary>
     Cell CurrentCell
     {
         get => currentCell;
@@ -286,6 +289,10 @@ public class Board : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 마우스 왼쪽 버튼을 눌렀을 때 실행될 함수
+    /// </summary>
+    /// <param name="_"></param>
     private void OnLeftPress(InputAction.CallbackContext _)
     {
         Debug.Log("왼쪽 클릭");
@@ -298,6 +305,10 @@ public class Board : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 마우스 왼쪽 버튼을 땠을 때 실행될 함수
+    /// </summary>
+    /// <param name="_"></param>
     private void OnLeftRelease(InputAction.CallbackContext _)
     {
         Debug.Log("왼쪽 땠다");
@@ -310,7 +321,10 @@ public class Board : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// 마우스 오른쪽 버튼을 눌렀을 때 실행될 함수
+    /// </summary>
+    /// <param name="_"></param>
     private void OnRightClick(InputAction.CallbackContext _)
     {
         Debug.Log("오른쪽 클릭");
@@ -338,11 +352,11 @@ public class Board : MonoBehaviour
         Vector2Int grid = ScreenToGrid(screenPos);                  // 스크린 좌표를 Grid좌표로 변환
         if (IsValidGrid(grid))                                      // 결과 그리드 좌표가 적합한지 확인 => 적합하지 않으면 보드 밖이라는 의미
         {            
-            CurrentCell = cells[GridToID(grid.x, grid.y)];          // 해당 셀 가져오기         
+            CurrentCell = cells[GridToID(grid.x, grid.y)];          // 해당 셀을 CurrentCell에 기록       
         }
         else
         {
-            CurrentCell = null;
+            CurrentCell = null;                                     // CurrentCell 비우기
         }
     }
 }
