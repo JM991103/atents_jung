@@ -345,6 +345,18 @@ public class Cell : MonoBehaviour
         }
     }
 
+    public void ResetCell()
+    {
+        isOpen = false;
+        cover.gameObject.SetActive(true);
+        hasMine = false;
+        markState = CellMarkState.None;
+        aroundMineCount = 0;
+        cover.sprite = Board[CloseCellType.Close];
+        inside.sprite = Board[OpenCellType.Empty];
+        pressedCells.Clear();
+    }
+
     /// <summary>
     /// 셀을 오른쪽 클릭했을 때 실행될 함수
     /// </summary>
