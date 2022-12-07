@@ -144,6 +144,8 @@ public class Board : MonoBehaviour
                 cells[cell.ID] = cell;                                      // cells 배열에 저장
             }
         }
+        gameManager.onGameReset += ResetBoard;
+        gameManager.onGameOver += onGameOver;
 
         ResetBoard();
     }
@@ -377,6 +379,28 @@ public class Board : MonoBehaviour
         else
         {
             CurrentCell = null;                                     // CurrentCell 비우기
+        }
+    }
+
+    /// <summary>
+    /// 게임 오버가 되었을 때 Board가 처리해야 할 일을 수행하는 함수
+    /// </summary>
+    private void onGameOver()
+    {
+        // 잘못 꽂은 깃발 처리
+        // 못찾은 지뢰 표시
+        foreach (var cell in cells)
+        {
+            if (cell.IsFlaged && !cell.HasMine)
+            {
+                // 깃발을 잘못 설치했다. == 깃발이 표시되어 있는데 지뢰가 없다.
+                cell.SetIncorrect();
+            }
+            if (!cell.IsFlaged && cell.HasMine)
+            {
+                // 지뢰를 못찾았다. == 지뢰는 있는데 깃발이 표시되어 있지 않다.
+                cell.SetMineNotFound();
+            }
         }
     }
 }
