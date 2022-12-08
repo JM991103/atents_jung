@@ -119,18 +119,22 @@ public class GameManager : Singleton<GameManager>
         Debug.Log("Over 상태");
     }
 
+    /// <summary>
+    /// 플레이어의 행동이 끝날 때 실행될 함수
+    /// </summary>
     public void FinishPlayerAction()
     {
         //bool result = false;
 
         //FlagCount;
-        Debug.Log($"OpenCellCount : {Board.OpenCellCount}");
-        Debug.Log($"FoundMineCount : {Board.FoundMineCount}");
+        //Debug.Log($"OpenCellCount : {Board.OpenCellCount}");
+        //Debug.Log($"FoundMineCount : {Board.FoundMineCount}");
 
-        //if ()
-        //{
-        //    GameClear();
-        //}
+        // 클리어 조건을 만족시키는지 확인
+        if (flagCount == 0 && ((Board.OpenCellCount + Board.FoundMineCount) == boardWidth * boardHeight))
+        {
+            GameClear();
+        }
 
         //return result;
     }

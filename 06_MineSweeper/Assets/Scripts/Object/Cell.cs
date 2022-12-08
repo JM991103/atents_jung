@@ -128,8 +128,13 @@ public class Cell : MonoBehaviour
 
     // 델리게이트 ----------------------------------------------------------------------------------
 
-    public Action onFlagUse;
-    public Action onFlagReturn;
+    public Action onFlagUse;        // 깃발 설치했을 때 실행될 델리게이트
+    public Action onFlagReturn;     // 깃발 설치 취소 했을 때 실행될 델리게이트
+
+    public Action onMineFound;      // 지뢰를 찾았을 때 실행될 델리게이트
+    public Action onMineFoundCancel;// 찾은 지뢰를 취소 했을 때 실행될 델리게이트
+
+    public Action onOpen;           // 셀이 열렸을 때 실행될 델리게이트
 
     // 함수 ---------------------------------------------------------------------------------------
 
@@ -155,26 +160,6 @@ public class Cell : MonoBehaviour
         neighbors = Board.GetNeighbors(this.ID);
     }
 
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    //Debug.Log("들어왔음");
-    //    if (Mouse.current.leftButton.ReadValue() > 0)
-    //    {
-    //        Debug.Log($"마우스 왼쪽 버튼을 누른채로 들어왔음\n{this.gameObject.name}");
-    //        CellPress();
-    //    }
-    //}
-
-    //private void OnTriggerExit2D(Collider2D collision)
-    //{
-    //    //Debug.Log("나갔음");
-    //    if (Mouse.current.leftButton.ReadValue() > 0)
-    //    {
-    //        Debug.Log($"마우스 왼쪽 버튼을 누른채로 나갔음\n{this.gameObject.name}");
-    //        RestoreCovers();
-    //    }
-    //}
-
     /// <summary>
     /// 셀을 여는 함수
     /// </summary>
@@ -183,6 +168,8 @@ public class Cell : MonoBehaviour
         if (!isOpen && !IsFlaged)               // 닫혀있고 깃발 표시가 안되어있을 때만 연다..
         {
             isOpen = true;                      // 열렸다고 표시하고
+            onOpen?.Invoke();                   // 열렸다고 신호 보내기
+
             if (hasMine)                        // 지뢰가 있으면  
             {
                 inside.sprite = Board[OpenCellType.Mine_Explosion]; // 터지는 이미지로 변경
@@ -365,19 +352,26 @@ public class Cell : MonoBehaviour
     {
         if (GameManager.Inst.IsPlaying && !IsOpen)
         {
-
             switch (markState)
             {
                 case CellMarkState.None:
                     // markState 가 none이면 flag가 된다.     -> 깃발 갯수가 줄어든다. 셀 이미지 변경된다.
                     markState = CellMarkState.Flag;
                     cover.sprite = Board[CloseCellType.Flag];
+                    if (HasMine)
+                    {
+                        onMineFound?.Invoke();
+                    }
                     onFlagUse?.Invoke();
                     break;
                 case CellMarkState.Flag:
                     // markState 가 flag이면 question이 된다. -> 깃발 갯수가 늘어난다. 셀 이미지 변경된다.
                     markState = CellMarkState.Question;
                     cover.sprite = Board[CloseCellType.Question];
+                    if (HasMine)
+                    {
+                        onMineFoundCancel?.Invoke();
+                    }
                     onFlagReturn?.Invoke();
                     break;
                 case CellMarkState.Question:

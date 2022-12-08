@@ -56,12 +56,18 @@ public class Board : MonoBehaviour
     /// </summary>
     Cell currentCell = null;
 
+    /// <summary>
+    /// 이 보드에서 열려있는 셀의 숫자
+    /// </summary>
     private int openCellCount = 0;
 
+    /// <summary>
+    /// 이 보드에서 찾은 지뢰의 숫자
+    /// </summary>
     private int foundMineCount = 0;
 
     // 델리 게이트
-
+        
     public Action onBoardPress;
     public Action onBoardRelease;
 
@@ -81,7 +87,14 @@ public class Board : MonoBehaviour
     /// <returns>enum타입에 맞는 이미지</returns>
     public Sprite this[CloseCellType type] => closeCellImages[(int)type];
 
+    /// <summary>
+    /// 열린 셀의 갯수를 확인만 가능한 프로퍼티
+    /// </summary>
     public int OpenCellCount => openCellCount;
+
+    /// <summary>
+    /// 찾은 지뢰의 갯수를 확인만 가능한 프로퍼티
+    /// </summary>
     public int FoundMineCount => foundMineCount;
 
     /// <summary>
@@ -155,7 +168,7 @@ public class Board : MonoBehaviour
                 cell.onFlagUse += gameManager.DecreaseFlagCount;
                 cell.onFlagUse += gameManager.FinishPlayerAction;
                 cell.onFlagReturn += gameManager.IncreaseFlagCount;
-                cell.onFlagReturn += gameManager.FinishPlayerAction;
+                cell.onFlagReturn += gameManager.FinishPlayerAction;        // 존재가 애매함(실질적인 의미없음)
                 cell.onOpen += () => openCellCount++;
                 cell.onOpen +=  gameManager.FinishPlayerAction;
                 cell.onMineFound += () => foundMineCount++;
