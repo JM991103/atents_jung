@@ -41,25 +41,7 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// GameOver 상태로 들어갔을 때 실행될 델리게이트
     /// </summary>
-    public Action onGameOver;
-
-    // 타이머 관련 --------------------------------------------------------------------------------------------
-    private Timer timer;
-    private int timeCount = 0;
-    public int TimeCount
-    {
-        get => timeCount;
-        private set
-        {
-            if (timeCount != value)
-            {
-                timeCount = value;
-                onTimeCountChange?.Invoke(timeCount);
-            }
-        }
-    }
-    public Action<int> onTimeCountChange;
-
+    public Action onGameOver;  
 
     // 깃발 갯수 관련 --------------------------------------------------------------------------------------------
     private int flagCount = 0;
@@ -88,17 +70,11 @@ public class GameManager : Singleton<GameManager>
     protected override void Initialize()
     {
         base.Initialize();
-        timer = GetComponent<Timer>();
 
         FlagCount = mineCount;        
 
         board = FindObjectOfType<Board>();
         board.Initialize(boardWidth, boardHeight, mineCount);
-    }
-
-    private void Update()
-    {
-        TimeCount = (int)timer.ElapsedTime;
     }
 
     public void IncreaseFlagCount()
@@ -116,8 +92,8 @@ public class GameManager : Singleton<GameManager>
         if (state == GameState.Ready)
         {
             state = GameState.play;
-            timer.TimerReset();
-            timer.Play();
+            //timer.TimerReset();
+            //timer.Play();
             onGameStart?.Invoke();
             Debug.Log("Play 상태");
         }
@@ -126,7 +102,7 @@ public class GameManager : Singleton<GameManager>
     public void GameReset()
     {
         state = GameState.Ready;
-        timer.TimerReset();
+        //timer.TimerReset();
         FlagCount = mineCount;
         onGameReset?.Invoke();
         Debug.Log("Ready 상태");
@@ -135,7 +111,7 @@ public class GameManager : Singleton<GameManager>
     public void GameClear()
     {
         state = GameState.GameClear;
-        timer.Stop();
+        //timer.Stop();
         onGameClear?.Invoke();
         Debug.Log("Clear 상태");
     }
@@ -143,27 +119,13 @@ public class GameManager : Singleton<GameManager>
     public void GameOver()
     {
         state = GameState.GameOver;
-        timer.Stop();
+        //timer.Stop();
         onGameOver?.Invoke();
         Debug.Log("Over 상태");
     }
 
 
-#if TEST_CODE
-    public void TestTimer_Play()
-    {
-        timer.Play();
-    }
-
-    public void TestTimer_Stop()
-    {
-        timer.Stop();
-    }
-
-    public void TestTimer_Reset()
-    {
-        timer.TimerReset();
-    }
+#if TEST_CODE    
 
     public void TestFlag_Increase()
     {

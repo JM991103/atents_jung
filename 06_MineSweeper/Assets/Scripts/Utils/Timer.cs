@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,11 +20,30 @@ public class Timer : MonoBehaviour
     /// </summary>
     public float ElapsedTime => elapsedTime;
 
+
+    int visibleTime = 0;
+    public Action<int> onTimeChange;
+
+    private void Start()
+    {
+        GameManager gameManager = GameManager.Inst;
+        gameManager.onGameStart += TimerReset;
+        gameManager.onGameStart += Play;
+        gameManager.onGameClear += Stop;
+        gameManager.onGameOver += Stop;
+        gameManager.onGameReset += TimerReset;
+    }
+
     private void Update()
     {
         if(isPlay)  // 플레이 상태일 때만
         {
             elapsedTime += Time.deltaTime;  // 시간 누적하기
+            if(visibleTime != (int)elapsedTime)
+            {
+                visibleTime = (int)elapsedTime;
+                onTimeChange?.Invoke(visibleTime);
+            }
         }
     }
 
