@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,8 @@ using UnityEngine;
 public class TimeCounter : MonoBehaviour
 {
     ImageNumber imageNumber;
+
+    int time;
 
     private void Awake()
     {
@@ -21,4 +24,5 @@ public class TimeCounter : MonoBehaviour
     {
         imageNumber.Number = count;
     }
+
 }
