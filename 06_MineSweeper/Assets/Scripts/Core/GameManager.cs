@@ -119,6 +119,21 @@ public class GameManager : Singleton<GameManager>
         Debug.Log("Over 상태");
     }
 
+    public void FinishPlayerAction()
+    {
+        //bool result = false;
+
+        //FlagCount;
+        Debug.Log($"OpenCellCount : {Board.OpenCellCount}");
+        Debug.Log($"FoundMineCount : {Board.FoundMineCount}");
+
+        //if ()
+        //{
+        //    GameClear();
+        //}
+
+        //return result;
+    }
 
 #if TEST_CODE    
 

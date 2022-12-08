@@ -56,6 +56,10 @@ public class Board : MonoBehaviour
     /// </summary>
     Cell currentCell = null;
 
+    private int openCellCount = 0;
+
+    private int foundMineCount = 0;
+
     // 델리 게이트
 
     public Action onBoardPress;
@@ -76,6 +80,9 @@ public class Board : MonoBehaviour
     /// <param name="type">필요 이미지의 enum타입</param>
     /// <returns>enum타입에 맞는 이미지</returns>
     public Sprite this[CloseCellType type] => closeCellImages[(int)type];
+
+    public int OpenCellCount => openCellCount;
+    public int FoundMineCount => foundMineCount;
 
     /// <summary>
     /// 현재 마우스가 올라가 있는 셀을 확인하는 프로퍼티
@@ -146,7 +153,13 @@ public class Board : MonoBehaviour
                 cell.ID = y * width + x;                                    // ID 설정 (ID를 통해 위치도 확인 가능)
                 cell.Board = this;                                          // 보드 설정
                 cell.onFlagUse += gameManager.DecreaseFlagCount;
+                cell.onFlagUse += gameManager.FinishPlayerAction;
                 cell.onFlagReturn += gameManager.IncreaseFlagCount;
+                cell.onFlagReturn += gameManager.FinishPlayerAction;
+                cell.onOpen += () => openCellCount++;
+                cell.onOpen +=  gameManager.FinishPlayerAction;
+                cell.onMineFound += () => foundMineCount++;
+                cell.onMineFoundCancel += () => foundMineCount--;
                 cellObj.name = $"Cell_{cell.ID}_({x}_{y})";                   // 오브젝트 이름 지정
                 cell.transform.position = basePos + offset + new Vector3(x * Distance, -y * Distance);  // 적절한 위치에 배치
                 cells[cell.ID] = cell;                                      // cells 배열에 저장
@@ -162,7 +175,7 @@ public class Board : MonoBehaviour
     /// 보드를 초기 상태로 되돌리고 랜덤으로 지뢰설치
     /// </summary>
     public void ResetBoard()
-    {
+    {        
         // 모든 셀 초기화
         foreach(var cell in cells)
         {
@@ -180,6 +193,9 @@ public class Board : MonoBehaviour
         {
             cells[ids[i]].SetMine();
         }
+                
+        openCellCount = 0;      // 모든 셀이 다 닫혀있음.
+        foundMineCount = 0;     // 찾은 지뢰 갯수 초기화
     }
 
 
