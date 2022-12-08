@@ -13,12 +13,8 @@ public class TimeCounter : MonoBehaviour
     {
         timer = GetComponent<Timer>();
         imageNumber = GetComponent<ImageNumber>();
-        timer.onTimeChange += Refresh;
-    }
 
-    private void Update()
-    {
-            
+        timer.onTimeChange += Refresh;
     }
 
     private void Refresh(int count)
