@@ -98,6 +98,11 @@ public class Board : MonoBehaviour
     public int FoundMineCount => foundMineCount;
 
     /// <summary>
+    /// 
+    /// </summary>
+    public int NotFoundMineCount => mineCount - foundMineCount;
+
+    /// <summary>
     /// 현재 마우스가 올라가 있는 셀을 확인하는 프로퍼티
     /// </summary>
     Cell CurrentCell
