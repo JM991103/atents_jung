@@ -165,14 +165,12 @@ public class Board : MonoBehaviour
                 Cell cell = cellObj.GetComponent<Cell>();                   // 생성한 오브젝트에서 Cell 컴포넌트 찾기
                 cell.ID = y * width + x;                                    // ID 설정 (ID를 통해 위치도 확인 가능)
                 cell.Board = this;                                          // 보드 설정
-                cell.onFlagUse += gameManager.DecreaseFlagCount;
-                cell.onFlagUse += gameManager.FinishPlayerAction;
-                cell.onFlagReturn += gameManager.IncreaseFlagCount;
-                cell.onFlagReturn += gameManager.FinishPlayerAction;        // 존재가 애매함(실질적인 의미없음)
-                cell.onOpen += () => openCellCount++;
-                cell.onOpen +=  gameManager.FinishPlayerAction;
+                cell.onFlagUse += gameManager.DecreaseFlagCount;                
+                cell.onFlagReturn += gameManager.IncreaseFlagCount;                
+                cell.onOpen += () => openCellCount++;                
                 cell.onMineFound += () => foundMineCount++;
                 cell.onMineFoundCancel += () => foundMineCount--;
+                cell.onAction += gameManager.FinishPlayerAction;
                 cellObj.name = $"Cell_{cell.ID}_({x}_{y})";                   // 오브젝트 이름 지정
                 cell.transform.position = basePos + offset + new Vector3(x * Distance, -y * Distance);  // 적절한 위치에 배치
                 cells[cell.ID] = cell;                                      // cells 배열에 저장
