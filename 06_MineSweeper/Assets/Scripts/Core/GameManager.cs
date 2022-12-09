@@ -102,7 +102,8 @@ public class GameManager : Singleton<GameManager>
     {
         base.Initialize();
 
-        FlagCount = mineCount;        
+        FlagCount = mineCount;
+        actionCount = 0;
 
         board = FindObjectOfType<Board>();
         board.Initialize(boardWidth, boardHeight, mineCount);
@@ -132,6 +133,7 @@ public class GameManager : Singleton<GameManager>
     {
         state = GameState.Ready;
         FlagCount = mineCount;
+        actionCount = 0;
         onGameReset?.Invoke();
         Debug.Log("Ready 상태");
     }
@@ -161,8 +163,7 @@ public class GameManager : Singleton<GameManager>
         //Debug.Log($"OpenCellCount : {Board.OpenCellCount}");
         //Debug.Log($"FoundMineCount : {Board.FoundMineCount}");
 
-        // 클리어 조건을 만족시키는지 확인
-        // Board.FoundMineCount == (boardWidth = boardHeight - Board.OpenCellCount)
+        // 클리어 조건을 만족시키는지 확인        
         if (flagCount == 0 && ((Board.OpenCellCount + Board.FoundMineCount) == boardWidth * boardHeight))
         {
             GameClear();
