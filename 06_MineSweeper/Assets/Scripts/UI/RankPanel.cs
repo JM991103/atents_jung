@@ -23,7 +23,7 @@ public class RankPanel : MonoBehaviour
     {
         // 모든 자식 탭 찾기
         tabs = GetComponentsInChildren<Tab>();
-
+        
         foreach (var tab in tabs)
         {
             // 탭이 선택되었을 때 실행될 델리게이트에 람다 함수 등록
