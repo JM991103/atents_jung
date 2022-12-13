@@ -58,6 +58,9 @@ public class GameManager : Singleton<GameManager>
     public Action<int> onFlagCountChange;
     //FlagCounter flagCounter;
 
+    Timer timer;
+    public float PlayTime => timer.ElapsedTime;
+
     // 난이도 관련 -----------------------------------------------------------------------------------------------
     public int mineCount = 10;
     public int boardWidth = 8;
@@ -77,10 +80,10 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// 플레이어가 이번 판에서 했던 행동 횟수용. 프로퍼티
     /// </summary>
-    private int ActionCount
+    public int ActionCount
     {
         get => actionCount;
-        set
+        private set
         {
             if(actionCount != value)
             {
@@ -107,6 +110,8 @@ public class GameManager : Singleton<GameManager>
 
         board = FindObjectOfType<Board>();
         board.Initialize(boardWidth, boardHeight, mineCount);
+
+        timer = FindObjectOfType<Timer>();
     }
 
     public void IncreaseFlagCount()
