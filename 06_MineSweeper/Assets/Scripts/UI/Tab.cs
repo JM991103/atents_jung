@@ -23,6 +23,7 @@ public class Tab : MonoBehaviour
             TabSelected(isSelected);
         }
     }
+
     private void Awake()
     {
         tabButton = GetComponent<Button>();
