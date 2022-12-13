@@ -14,16 +14,13 @@ public class Tab : MonoBehaviour
 
     public Action<Tab> onTabSelected;
 
-    bool IsSelected
+    public bool IsSelected
     {
         get => isSelected;
         set
         {
-            if (isSelected != value)
-            {
-                isSelected = value;
-                TabSelected(isSelected);
-            }
+            isSelected = value;
+            TabSelected(isSelected);
         }
     }
     private void Awake()
@@ -39,6 +36,7 @@ public class Tab : MonoBehaviour
         tabImage = GetComponent<Image>();
 
         childPanel = transform.GetChild(1);
+        IsSelected = false;
     }
 
     void TabSelected(bool selected)
@@ -57,6 +55,7 @@ public class Tab : MonoBehaviour
             ChildPanelClose();
         }
     }
+
     public void ChildPanelOpen()
     {
         if (IsSelected)

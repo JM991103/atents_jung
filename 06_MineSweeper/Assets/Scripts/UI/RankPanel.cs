@@ -4,15 +4,42 @@ using UnityEngine;
 
 public class RankPanel : MonoBehaviour
 {
-    Tab actionRank;
-    Tab timeRank;
-    ToggleButton toggleButton;
+    Tab[] tabs;
+    Tab selectedTab;
+    ToggleButton toggle;
 
     private void Awake()
     {
-        actionRank = transform.GetChild(0).GetComponent<Tab>();
-        timeRank = transform.GetChild(1).GetComponent<Tab>();
-        toggleButton = transform.GetChild(2).GetComponent<ToggleButton>();
+        tabs = GetComponentsInChildren<Tab>();
+
+        foreach (var tab in tabs)
+        {
+            tab.onTabSelected += (newSelectedTab) =>
+            {
+                if (newSelectedTab != selectedTab)   // 서로 다른 탭일 때만 변경
+                {
+                    selectedTab.IsSelected = false;
+                    selectedTab = newSelectedTab;
+                    selectedTab.IsSelected = true;
+                }
+            };
+        }
+
+        toggle = GetComponentInChildren<ToggleButton>();
+        toggle.onToggleChange += (isOn) =>
+        {
+            if (isOn && selectedTab != null)
+            {
+                selectedTab.ChildPanelOpen();
+            }
+            else
+            {
+                foreach (var tab in tabs)
+                {
+                    tab.ChildPanelClose();
+                }
+            }
+        };
     }
 
     private void Start()
@@ -21,23 +48,22 @@ public class RankPanel : MonoBehaviour
         gameManager.onGameClear += Open;
         gameManager.onGameOver += Open;
         gameManager.onGameReset += Close;
-        Close();
 
-        
+        selectedTab = tabs[0];
+        selectedTab.IsSelected = true;
+
+        Close();
     }
 
     void Open()
-    {        
+    {
         this.gameObject.SetActive(true);
-        toggleButton.SetToggleState(true);
-        actionRank.ChildPanelOpen();
     }
 
     void Close()
     {
         this.gameObject.SetActive(false);
-        toggleButton.SetToggleState(false);
-        actionRank.ChildPanelClose();
+        
     }
 
 }
