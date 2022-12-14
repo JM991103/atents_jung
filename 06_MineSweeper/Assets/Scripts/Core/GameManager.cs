@@ -52,7 +52,7 @@ public class GameManager : Singleton<GameManager>
         {
             flagCount = value;
             onFlagCountChange?.Invoke(flagCount);
-            Debug.Log($"현재 깃발 갯수 : {flagCount}");
+            //Debug.Log($"현재 깃발 갯수 : {flagCount}");
         }
     }
     public Action<int> onFlagCountChange;
@@ -68,6 +68,10 @@ public class GameManager : Singleton<GameManager>
     private Board board;
 
     public Board Board => board;
+
+    // 랭킹 관련 -------------------------------------------------------------------------------------------------
+    RankData rankData;
+    public RankData RankData => rankData;
 
     // UI 관련 --------------------------------------------------------------------------------------------------
 
@@ -89,7 +93,7 @@ public class GameManager : Singleton<GameManager>
             {
                 actionCount = value;
                 onActionCountChange?.Invoke(actionCount);
-                Debug.Log($"ActionCount : {actionCount}");
+                //Debug.Log($"ActionCount : {actionCount}");
             }
         }
     }
@@ -112,6 +116,8 @@ public class GameManager : Singleton<GameManager>
         board.Initialize(boardWidth, boardHeight, mineCount);
 
         timer = FindObjectOfType<Timer>();
+
+        rankData = GetComponent<RankData>();
     }
 
     public void IncreaseFlagCount()
@@ -130,7 +136,7 @@ public class GameManager : Singleton<GameManager>
         {
             state = GameState.play;
             onGameStart?.Invoke();
-            Debug.Log("Play 상태");
+            //Debug.Log("Play 상태");
         }
     }
 
@@ -140,21 +146,21 @@ public class GameManager : Singleton<GameManager>
         FlagCount = mineCount;
         actionCount = 0;
         onGameReset?.Invoke();
-        Debug.Log("Ready 상태");
+        //Debug.Log("Ready 상태");
     }
 
     public void GameClear()
     {
         state = GameState.GameClear;
         onGameClear?.Invoke();
-        Debug.Log("Clear 상태");
+        //Debug.Log("Clear 상태");
     }
 
     public void GameOver()
     {
         state = GameState.GameOver;
         onGameOver?.Invoke();
-        Debug.Log("Over 상태");
+        //Debug.Log("Over 상태");
     }
 
     /// <summary>

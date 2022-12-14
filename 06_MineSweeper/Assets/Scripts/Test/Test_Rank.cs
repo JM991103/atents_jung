@@ -34,7 +34,7 @@ public class SortTest : IComparable
 
     public void Print()
     {
-        Debug.Log($"a : {a}, b : {b}");
+        //Debug.Log($"a : {a}, b : {b}");
     }
 }
 
@@ -53,7 +53,7 @@ public class Test_Rank : TestBase
 
         foreach (var num in list)
         {
-            Debug.Log($"{num}");
+            //Debug.Log($"{num}");
         }
     }
 

@@ -24,7 +24,7 @@ public class Test_Cell : TestBase
             output += $"{num},";
         }
         output += "끝";
-        Debug.Log(output);
+        //Debug.Log(output);
     }
 
     protected override void Test3(InputAction.CallbackContext _)
@@ -56,9 +56,9 @@ public class Test_Cell : TestBase
             }
             output += "\n";
         }
-        Debug.Log(output);
+        //Debug.Log(output);
 
-        Debug.Log($"경과 시간 : {Time.realtimeSinceStartup - startTime}");
+        //Debug.Log($"경과 시간 : {Time.realtimeSinceStartup - startTime}");
 
     }
 }

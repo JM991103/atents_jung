@@ -1,16 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEngine;
+
 
 public class RankData : MonoBehaviour
 {
     public int rankCount = 5;
 
+    const string RankDataFolder = "Save";
+    const string RankDataFileName = "Svae.Json";
+
     List<int> actionRank;
     List<float> timeRank;
 
     public List<int> ActionRakn => actionRank;
-    public List<float> TimeAction => timeRank;
+    public List<float> TimeRank => timeRank;
 
     private void Awake()
     {
@@ -25,31 +31,37 @@ public class RankData : MonoBehaviour
         GameManager gameManager = GameManager.Inst;
         gameManager.onGameClear += () =>
         {
-            UpdateActionRank(gameManager.ActionCount);
-            UpdateTimeRank(gameManager.PlayTime);
+            UpdateRank(gameManager.ActionCount, gameManager.PlayTime);
         };
     }
 
     /// <summary>
-    /// ActionRank 갱신 시도. 새로운 데이터(행동횟수)를 랭크에 추가할지 판단 후 정리
+    /// ActionRank와 TimeRank 갱신 시도. 새로운 데이터(행동횟수)를 랭크에 추가할지 판단 후 정리
     /// </summary>
-    /// <param name="data">새로 추가 시도하는 행동 횟수</param>
-    void UpdateActionRank(int data)
+    /// <param name="actionCount">새로 추가 시도하는 행동 횟수</param>
+    /// <param name="playTime">새로 추가 시도하는 플레이 타임</param>
+    void UpdateRank(int actionCount, float playTime)
     {
-        // actionRank에 data를 추가하고 소팅한 다음에 마지막 노드를 제거
-        Debug.Log($"UpdateActionRank : {data}");
-        // 랭킹에 변화가 있으면
-        SaveData();
-    }
+        //Debug.Log($"UpdateActionRank : {actionCount}, {playTime}");
+        // actionRank에 actionCount를 추가하고
+        actionRank.Add(actionCount);
+        // TImeRank에 playTime을 추가하고
+        timeRank.Add(playTime);
 
-    /// <summary>
-    /// TimeRank 갱신 시도. 새로운 데이터(클리어 시간)을 랭크에 추가할지 판단 후 정리
-    /// </summary>
-    /// <param name="data">새로 추가 시도하는 클리어 시간</param>
-    void UpdateTimeRank(float data)
-    {
-        // actionRank에 data를 추가하고 소팅한 다음에 마지막 노드를 제거
-        Debug.Log($"UpdateTimeRank : {data}");
+        // 각각 소팅(정렬)하고
+        actionRank.Sort();
+        timeRank.Sort();
+
+        // 각 리스트의 크기가 rankCount보다 크면 마지막 노드(6등)를 제거
+        if (actionRank.Count > rankCount)
+        {
+            actionRank.RemoveAt(rankCount);
+        }
+        if (timeRank.Count > rankCount)
+        {
+            timeRank.RemoveAt(rankCount);
+        }
+
         // 랭킹에 변화가 있으면
         SaveData();
     }
@@ -59,7 +71,25 @@ public class RankData : MonoBehaviour
     /// </summary>
     void SaveData()
     {
-        Debug.Log("데이터 세이브");
+        //Debug.Log("데이터 세이브");
+
+        // 저장할 데이터 만들기
+        JsonSaveData jsonSaveData = new();
+        jsonSaveData.actionCountRank = actionRank.ToArray();
+        jsonSaveData.playTimeRank = timeRank.ToArray();
+
+        string json = JsonUtility.ToJson(jsonSaveData);
+
+        // 폴더가 있는지 확인하고 없으면 만든다.
+        string path = $"{Application.dataPath}/{RankDataFolder}";
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+
+        // 파일 저장하기
+        string fullPath = $"{path}/{RankDataFileName}";
+        File.WriteAllText(fullPath, json);
     }
 
     /// <summary>
@@ -67,6 +97,35 @@ public class RankData : MonoBehaviour
     /// </summary>
     void LoadData()
     {
-        Debug.Log("데이터 로딩");
+        //Debug.Log("데이터 로딩");
+        string path = $"{Application.dataPath}/{RankDataFolder}";
+        string fullPath = $"{path}/{RankDataFileName}";
+
+        if (Directory.Exists(path) && File.Exists(fullPath))    // 폴더와 파일 둘 다 있을 때만 읽기
+        {
+            string json = File.ReadAllText(fullPath);
+            JsonSaveData jsonSaveData = JsonUtility.FromJson<JsonSaveData>(json);
+            actionRank = new List<int>(jsonSaveData.actionCountRank);
+            timeRank = new List<float>(jsonSaveData.playTimeRank);
+
+            int listSize = rankCount + 1;
+            if (actionRank.Capacity != listSize)    // Capacity 크기가 다를 때 처리
+            {
+                if (actionRank.Capacity > listSize) // actionRank에 listSize보다 더 많이 들어있을 때 (거의 확률 없음)
+                {
+                    actionRank.RemoveRange(listSize, actionRank.Capacity - listSize);
+                }
+                actionRank.Capacity = (rankCount + 1);
+            }
+
+            if (timeRank.Capacity != listSize)    // Capacity 크기가 다를 때 처리
+            {
+                if (timeRank.Capacity > listSize) // actionRank에 listSize보다 더 많이 들어있을 때 (거의 확률 없음)
+                {
+                    timeRank.RemoveRange(listSize, timeRank.Capacity - listSize);
+                }
+                timeRank.Capacity = (rankCount + 1);
+            }
+        }
     }
 }

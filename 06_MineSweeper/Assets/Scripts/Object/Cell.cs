@@ -401,7 +401,7 @@ public class Cell : MonoBehaviour
         //Debug.Log("들어왔음");
         if (Mouse.current.leftButton.ReadValue() > 0)   // 마우스 왼쪽 버튼이 눌러져 있으면
         {
-            Debug.Log($"마우스 왼쪽 버튼을 누른채로 들어왔음\n{this.gameObject.name}");
+            //Debug.Log($"마우스 왼쪽 버튼을 누른채로 들어왔음\n{this.gameObject.name}");
             CellPress();
         }
     }
@@ -414,7 +414,7 @@ public class Cell : MonoBehaviour
         //Debug.Log("나갔음");
         if (Mouse.current.leftButton.ReadValue() > 0)   // 마우스 왼쪽 버튼이 눌러져 있으면
         {
-            Debug.Log($"마우스 왼쪽 버튼을 누른채로 나갔음\n{this.gameObject.name}");
+            //Debug.Log($"마우스 왼쪽 버튼을 누른채로 나갔음\n{this.gameObject.name}");
             RestoreCovers();
         }
     }
