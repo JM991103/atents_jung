@@ -36,7 +36,7 @@ public class Tab : MonoBehaviour
         get => isSelected;
         set
         {
-            isSelected = value;            
+            isSelected = value;
             if (isSelected)     // 탭 선택 여부에 따라서 색상 변경 및 처리
             {
                 // 선택 되었을 때 처리
@@ -62,8 +62,13 @@ public class Tab : MonoBehaviour
         });
         tabImage = GetComponent<Image>();
 
-        IsSelected = false;         // 기본적으로는 선택 되어있지 않은 것으로 처리
         subPanel = GetComponentInChildren<TabSubPanel>();
+        IsSelected = false;         // 기본적으로는 선택 되어있지 않은 것으로 처리            
+    }
+
+    private void Start()
+    {
+        
     }
 
     /// <summary>
@@ -73,7 +78,6 @@ public class Tab : MonoBehaviour
     {
         if (IsSelected)
         {
-            subPanel.Refresh();
             subPanel.gameObject.SetActive(true);  // 선택되었을 때만 열기
         }
     }
