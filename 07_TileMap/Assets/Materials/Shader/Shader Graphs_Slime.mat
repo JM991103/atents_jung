@@ -54,11 +54,26 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Dessolve: 40
+    - _DessolveFade: 0.5
+    - _Dessolve_Fade: 1
+    - _Dissolve_Fade: 0.3
     - _Fade: 0.5
+    - _OutLineTickness: 0.005
+    - _OutLine_Thickness: 0.005
+    - _OutLine_Tickness: 0.005
+    - _PhaseSplit: 1
+    - _PhaseThickness: 0.1
+    - _Phase_Split: 1
+    - _Phase_Thickness: 0.1
     - _Scale: 40
     - _Tickness: 0.005
     m_Colors:
     - _DessolveColor: {r: 4, g: 1.631373, b: 0, a: 0}
+    - _Dessolve_Color: {r: 4, g: 1.631373, b: 0, a: 0}
+    - _Dissolve_Color: {r: 4, g: 1.631373, b: 0, a: 0}
     - _OutLineColor: {r: 3.320755, g: 0, b: 0, a: 0}
+    - _OutLine_Color: {r: 22.376247, g: 1.2373201, b: 0, a: 0}
     - _PhaseColor: {r: 0, g: 2.27451, b: 4, a: 0}
+    - _Phase_Color: {r: 0, g: 2.27451, b: 4, a: 0}
   m_BuildTextureStacks: []

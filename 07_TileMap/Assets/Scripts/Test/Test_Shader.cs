@@ -11,7 +11,7 @@ public class Test_Shader : TestBase
     public GameObject AllSlime;
 
     public float phaseDuration = 2.0f;
-    public float dessolveDuration = 2.0f;
+    public float dissolveDuration = 2.0f;
     public float allDuration = 1.5f;
 
     protected override void Test1(InputAction.CallbackContext _)
@@ -61,9 +61,9 @@ public class Test_Shader : TestBase
         material.SetFloat("_Fade", 1.0f);
 
         float timeElipsed = 0.0f;
-        float dessolveDurationNormalize = 1 / dessolveDuration;
+        float dessolveDurationNormalize = 1 / dissolveDuration;
 
-        while (timeElipsed < dessolveDuration)
+        while (timeElipsed < dissolveDuration)
         {
             timeElipsed += Time.deltaTime;
             material.SetFloat("_Fade", 1 - timeElipsed * dessolveDurationNormalize);
@@ -91,5 +91,4 @@ public class Test_Shader : TestBase
             yield return null;
         }
     }
-
 }
