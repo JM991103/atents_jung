@@ -41,6 +41,13 @@ public class Player : MonoBehaviour
     /// </summary>
     bool isMove = false;
 
+    /// <summary>
+    /// 공격 영역의 중심(축)
+    /// </summary>
+    Transform attackAreaCenter;
+
+    List<Slime> attackTarget;
+
     private void Awake()
     {
         // 컴포넌트 찾고
@@ -49,6 +56,20 @@ public class Player : MonoBehaviour
 
         // 객체 생성
         inputActions = new PlayerInputAction();
+
+        attackTarget = new List<Slime>(2);
+        attackAreaCenter = transform.GetChild(0);
+        AttackArea attackArea = attackAreaCenter.GetComponentInChildren<AttackArea>();
+        attackArea.onTarget += (slime) =>
+        {
+            attackTarget.Add(slime);
+            slime.ShowOutLine(true);
+        };
+        attackArea.onUnTarget += (slime) =>
+        {
+            attackTarget.Remove(slime);
+            slime.ShowOutLine(false);
+        };
     }
 
     private void OnEnable()
@@ -84,8 +105,35 @@ public class Player : MonoBehaviour
     {
         // 이동 입력이 들어왔을 때
         inputDir = context.ReadValue<Vector2>();    // 입력 이동 방향 저장하고
+        oldInputDir = inputDir;                     // 이후 복원을 위해 입력 이동 방향 저장
         anim.SetFloat("InputX", inputDir.x);        // 애니메이터 파라메터 변경
         anim.SetFloat("InputY", inputDir.y);
+
+        if (inputDir.y > 0)
+        {
+            // 위로 갈때
+            attackAreaCenter.rotation = Quaternion.Euler(0, 0, 180);
+        }
+        else if (inputDir.y < 0)
+        {
+            // 아래로 갈때
+            attackAreaCenter.rotation = Quaternion.Euler(0, 0, 0);
+        }
+        else if (inputDir.x > 0)
+        {
+            // 오른쪽으로 갈때
+            attackAreaCenter.rotation = Quaternion.Euler(0, 0, 90);
+        }
+        else if (inputDir.x < 0)
+        {
+            // 왼쪽으로 갈때
+            attackAreaCenter.rotation = Quaternion.Euler(0, 0, 270);
+        }
+        else
+        {
+            // 있을 수 없음.
+            attackAreaCenter.rotation = Quaternion.Euler(0, 0, 0);
+        }
 
         isMove = true;                              // 이동 한다고 표시하고
         anim.SetBool("IsMove", isMove);             // 이동 애니메이션 재생
