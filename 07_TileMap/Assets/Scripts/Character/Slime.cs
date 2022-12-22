@@ -24,20 +24,14 @@ public class Slime : MonoBehaviour
 
     private void OnEnable()
     {
+        ShowOutLine(false);
         StartCoroutine(StartPhase());
+        mainMaterial.SetFloat("_Dissolve_Fade", 1.0f);
     }
 
     private void OnDisable()
     {
         onDisable?.Invoke();
-    }
-
-    private void Start()
-    {
-        ShowOutLine(false);
-        //mainMaterial.SetFloat("_Phase_Thickness", 0.0f);
-        mainMaterial.SetFloat("_Phase_Split", 1.0f);
-        mainMaterial.SetFloat("_Dissolve_Fade", 1.0f);
     }
 
     IEnumerator StartPhase()

@@ -57,7 +57,7 @@ Material:
     - _Dessolve: 40
     - _DessolveFade: 0.5
     - _Dessolve_Fade: 1
-    - _Dissolve_Fade: 0.3
+    - _Dissolve_Fade: 1
     - _Fade: 0.5
     - _OutLineTickness: 0.005
     - _OutLine_Thickness: 0.005
