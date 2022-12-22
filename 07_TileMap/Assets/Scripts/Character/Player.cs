@@ -46,6 +46,9 @@ public class Player : MonoBehaviour
     /// </summary>
     Transform attackAreaCenter;
 
+    /// <summary>
+    /// 플레이어가 공격하면 죽을 슬라임들
+    /// </summary>
     List<Slime> attackTarget;
 
     private void Awake()
@@ -57,18 +60,21 @@ public class Player : MonoBehaviour
         // 객체 생성
         inputActions = new PlayerInputAction();
 
+        // 공격대상 저장용 리스트 생성
         attackTarget = new List<Slime>(2);
-        attackAreaCenter = transform.GetChild(0);
-        AttackArea attackArea = attackAreaCenter.GetComponentInChildren<AttackArea>();
+        attackAreaCenter = transform.GetChild(0);   // 공격지점의 중심점 찾기
+        AttackArea attackArea = attackAreaCenter.GetComponentInChildren<AttackArea>();  // 공격지점 찾기
         attackArea.onTarget += (slime) =>
         {
-            attackTarget.Add(slime);
-            slime.ShowOutLine(true);
+            // slime이 공격지점안에 들어왔을 때의 처리
+            attackTarget.Add(slime);    // 리스트에 추가
+            slime.ShowOutLine(true);    // 아웃라인 표시
         };
-        attackArea.onUnTarget += (slime) =>
+        attackArea.onTargetRelease += (slime) =>
         {
-            attackTarget.Remove(slime);
-            slime.ShowOutLine(false);
+            // slime이 공격지점 밖으로 나갔을 때의 처리
+            attackTarget.Remove(slime); // 리스트에서 제거
+            slime.ShowOutLine(false);   // 아웃라인 끄기
         };
     }
 
@@ -90,11 +96,6 @@ public class Player : MonoBehaviour
         inputActions.Player.Disable();
     }
 
-    private void Update()
-    {
-        
-    }
-
     private void FixedUpdate()
     {
         // 이동 처리
@@ -109,34 +110,35 @@ public class Player : MonoBehaviour
         anim.SetFloat("InputX", inputDir.x);        // 애니메이터 파라메터 변경
         anim.SetFloat("InputY", inputDir.y);
 
+        isMove = true;                              // 이동 한다고 표시하고
+        anim.SetBool("IsMove", isMove);             // 이동 애니메이션 재생
+
+        // 입력 방향에 따라 공격지점 위치 변경(중심축 회전으로 처리)
         if (inputDir.y > 0)
         {
-            // 위로 갈때
+            // 위로 갈 때(위, 아래가 우선 순위가 높음)
             attackAreaCenter.rotation = Quaternion.Euler(0, 0, 180);
         }
         else if (inputDir.y < 0)
         {
-            // 아래로 갈때
+            // 아래로 갈 때
             attackAreaCenter.rotation = Quaternion.Euler(0, 0, 0);
         }
         else if (inputDir.x > 0)
         {
-            // 오른쪽으로 갈때
+            // 오른쪽으로 갈 때
             attackAreaCenter.rotation = Quaternion.Euler(0, 0, 90);
         }
         else if (inputDir.x < 0)
         {
-            // 왼쪽으로 갈때
+            // 왼쪽으로 갈 때
             attackAreaCenter.rotation = Quaternion.Euler(0, 0, 270);
         }
         else
         {
-            // 있을 수 없음.
+            // 있을 수 없음. (혹시나 싶어서 작성한 코드)
             attackAreaCenter.rotation = Quaternion.Euler(0, 0, 0);
         }
-
-        isMove = true;                              // 이동 한다고 표시하고
-        anim.SetBool("IsMove", isMove);             // 이동 애니메이션 재생
     }
 
     private void OnStop(InputAction.CallbackContext context)
