@@ -20,15 +20,15 @@ public class Node  : IComparable<Node>
 
     public enum GridType
     {
-        plain = 0,  // 바닥
-        wall,       // 벽
-        monster,    // 몬스터
+        Plain = 0,  // 바닥
+        Wall,       // 벽
+        Monster,    // 몬스터
     }
 
     /// <summary>
     /// 이 노드의 종류
     /// </summary>
-    public GridType gridType = GridType.plain;
+    public GridType gridType = GridType.Plain;
 
     /// <summary>
     /// A*알고리즘의 G값(시작점에서 이 노드까지 오는데 걸린 실제 거리)
@@ -56,7 +56,7 @@ public class Node  : IComparable<Node>
     /// <param name="x">위치 x좌표</param>
     /// <param name="y">위치 y좌표</param>
     /// <param name="gridType">노드의 종류. 기본적으로 평지</param>
-    public Node(int x, int y, GridType gridType = GridType.plain)
+    public Node(int x, int y, GridType gridType = GridType.Plain)
     {
         this.x = x;
         this.y = y;
@@ -127,6 +127,6 @@ public class Node  : IComparable<Node>
 
     public static bool operator !=(Node op1, Vector2Int op2)
     {
-        return (op1.x != op2.x) || (op1.y == op2.y);
+        return (op1.x != op2.x) || (op1.y != op2.y);
     }
 }
