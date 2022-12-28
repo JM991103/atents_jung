@@ -26,6 +26,8 @@ public class GridMap
     /// </summary>
     Vector2Int origin;
 
+    Tilemap background;
+
     /// <summary>
     /// 그리드맵을 만들기 위한 생성자
     /// </summary>
@@ -35,6 +37,10 @@ public class GridMap
     {
         // 축 기준 : 기본적으로 왼쪽 아래가 원점
         // 축 방향 : 오른쪽으로 갈 수록 x+, 위로 갈 수록 y+
+
+        // 타일맵을 사용안하고 그리드맵을 만들었을 때 world의 (0, 0)에 만들었다고 가정함
+        // 그리드 (0,0) == world(0.5, 0.5)
+        // 그리드의 한칸의 간격은 1이다.
 
         this.width = width;         // 가로 세로 길이 기록
         this.height = height;
@@ -90,7 +96,8 @@ public class GridMap
                     node.gridType = Node.GridType.Wall; // 벽으로 표시한다.
                 }
             }
-        }       
+        }
+        this.background = background;
     }
 
     /// <summary>
@@ -148,6 +155,65 @@ public class GridMap
     public bool IsValidPosition(Vector2Int pos)
     {
         return IsValidPosion(pos.x, pos.y);
+    }
+
+    /// <summary>
+    /// 해당 위치가 벽인지 아닌지 확인하는 함수
+    /// </summary>
+    /// <param name="x">확인할 위치의 x</param>
+    /// <param name="y">확인할 위치의 y</param>
+    /// <returns>벽이면 true, 아니면 false</returns>
+    public bool isWall(int x, int y)
+    {
+        Node node = GetNode(x, y);
+        return node.gridType == Node.GridType.Wall;
+    }
+
+    /// <summary>
+    /// 해당 위치가 벽인지 아닌지 확인하는 함수
+    /// </summary>
+    /// <param name="pos">확인할 위치의 좌표</param>
+    /// <returns>벽이면 true, 아니면 false</returns>
+    public bool IsWall(Vector2Int pos)
+    {
+        return isWall(pos.x, pos.y);
+    }
+
+    /// <summary>
+    /// 월드 좌표를 그리드 좌표로 변경해주는 함수
+    /// </summary>
+    /// <param name="pos">월드 좌표</param>
+    /// <returns>변환된 그리드 좌표</returns>
+    public Vector2Int WorldToGrid(Vector3 pos)
+    {
+        if (background != null)
+        {
+            return (Vector2Int)background.WorldToCell(pos);
+        }
+        else
+        {           
+
+            // 월드 (3.8, 3.1) = Grid(3, 3)  <- 소수점 날리기
+            // ceil 올림 floor 내림 round 반올림            
+            return new Vector2Int(Mathf.FloorToInt(pos.x), (int)pos.y);
+        }
+    }
+
+    /// <summary>
+    /// 그리드 좌표를 월드 좌표로 변경해주는 함수
+    /// </summary>
+    /// <param name="gridPos">그리드 좌표</param>
+    /// <returns>변경된 월드 좌표</returns>
+    public Vector2 GridToWorld(Vector2Int gridPos)
+    {
+        if (background != null)
+        {
+            return background.CellToWorld((Vector3Int)gridPos) + new Vector3(0.5f, 0.5f);
+        }
+        else
+        {
+            return new Vector2(gridPos.x + 0.5f, gridPos.y + 0.5f);
+        }
     }
 
     /// <summary>
