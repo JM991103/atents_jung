@@ -163,7 +163,7 @@ public class GridMap
     /// <param name="x">확인할 위치의 x</param>
     /// <param name="y">확인할 위치의 y</param>
     /// <returns>벽이면 true, 아니면 false</returns>
-    public bool isWall(int x, int y)
+    public bool IsWall(int x, int y)
     {
         Node node = GetNode(x, y);
         return node.gridType == Node.GridType.Wall;
@@ -176,7 +176,7 @@ public class GridMap
     /// <returns>벽이면 true, 아니면 false</returns>
     public bool IsWall(Vector2Int pos)
     {
-        return isWall(pos.x, pos.y);
+        return IsWall(pos.x, pos.y);
     }
 
     /// <summary>
@@ -192,7 +192,6 @@ public class GridMap
         }
         else
         {           
-
             // 월드 (3.8, 3.1) = Grid(3, 3)  <- 소수점 날리기
             // ceil 올림 floor 내림 round 반올림            
             return new Vector2Int(Mathf.FloorToInt(pos.x), (int)pos.y);
