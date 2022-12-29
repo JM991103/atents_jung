@@ -26,7 +26,15 @@ public class GridMap
     /// </summary>
     Vector2Int origin;
 
+    /// <summary>
+    /// 배경용 타일맵
+    /// </summary>
     Tilemap background;
+
+    /// <summary>
+    /// 이 맵에서 이동 가능한 지점의 배열(이동 가능한 모든 위치)
+    /// </summary>
+    Vector2Int[] movablePositions;
 
     /// <summary>
     /// 그리드맵을 만들기 위한 생성자
@@ -46,15 +54,17 @@ public class GridMap
         this.height = height;
 
         nodes = new Node[width * height];   // 노드 배열 생성
-
+        List<Vector2Int> movable = new List<Vector2Int>(width * height);
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
                 int index = GridToIndex(x, y);
                 nodes[index] = new Node(x, y);  // 노드 전부 생성해서 배열에 넣기
+                movable.Add(new Vector2Int(x, y));
             }
         }
+        movablePositions = movable.ToArray();
     }
 
     /// <summary>
@@ -83,6 +93,7 @@ public class GridMap
         }
 
         // 갈수 없는 지역 표시(obstacle에 타일이 있는 부분은 wall로 표시)
+        List<Vector2Int> movable = new List<Vector2Int>(width * height);
         //for (int y = origin.y; y < height + origin.y; y++)
         for (int y = background.cellBounds.yMin; y < background.cellBounds.yMax; y++)       
         {
@@ -95,8 +106,15 @@ public class GridMap
                     Node node = GetNode(x, y);
                     node.gridType = Node.GridType.Wall; // 벽으로 표시한다.
                 }
+                else
+                {
+                    movable.Add(new Vector2Int(x, y));  // 이동 가능한 위치 기록
+                }
             }
         }
+        movablePositions = movable.ToArray();           // 이동 가능한 위치기록을 배열로 변경
+
+        // 배경만 기록
         this.background = background;
     }
 
@@ -226,5 +244,15 @@ public class GridMap
         // (x,y) = x + y * 너비;                // 원점이 왼쪽위에 있을 때
         // (x,y) = x + ((높이 - 1) - y) * 너비  // 원점이 왼쪽 아래에 있을 때
         return (x - origin.x) + ((height - 1) - y + origin.y) * width;  // 왼쪽 아래가 (0,0)이고 x+는 오른쪽, y+는 위쪽이기 때문에 이렇게 변환
+    }
+
+    /// <summary>
+    /// 맵에서 이동 가능한 랜덤한 지점을 하나 골라 리턴하는 함수
+    /// </summary>
+    /// <returns>이동 가능한 랜덤한 위치</returns>
+    public Vector2Int GetRandomMovablePosition()
+    {
+        int index = Random.Range(0, movablePositions.Length);   // 미리 계산해 놓은 movablePositions 중에서 하나 고르기
+        return movablePositions[index];
     }
 }
