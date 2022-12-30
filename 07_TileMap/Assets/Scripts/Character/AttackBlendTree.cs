@@ -13,8 +13,7 @@ public class AttackBlendTree : StateMachineBehaviour
     {
         // 플레이어 미리 찾아 놓기
         player = FindObjectOfType<Player>();
-        //Debug.Log($"Awake : {player}");
-
+        //Debug.Log($"Awake : {player}");        
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state

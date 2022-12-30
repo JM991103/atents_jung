@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe3bb58144014b24e9495055ab192445, type: 3}
+  m_Script: {fileID: 11500000, guid: 54dd546ce8be2c74abf717766bb3248a, type: 3}
   m_Name: Road Tile
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: 0}
@@ -35,8 +35,8 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   sprites:
-  - {fileID: -808009504, guid: 9d5f66bfd2a0e6e498a4f7e20b97fdcb, type: 3}
-  - {fileID: 901601571, guid: 9d5f66bfd2a0e6e498a4f7e20b97fdcb, type: 3}
-  - {fileID: -808009504, guid: 9d5f66bfd2a0e6e498a4f7e20b97fdcb, type: 3}
-  - {fileID: -412795442, guid: 9d5f66bfd2a0e6e498a4f7e20b97fdcb, type: 3}
-  - {fileID: 1212591939, guid: 9d5f66bfd2a0e6e498a4f7e20b97fdcb, type: 3}
+  - {fileID: -1615322078, guid: 28e4cbd5227a72340bb7753734e84f16, type: 3}
+  - {fileID: -374972277, guid: 28e4cbd5227a72340bb7753734e84f16, type: 3}
+  - {fileID: -1615322078, guid: 28e4cbd5227a72340bb7753734e84f16, type: 3}
+  - {fileID: 1850952970, guid: 28e4cbd5227a72340bb7753734e84f16, type: 3}
+  - {fileID: -612767521, guid: 28e4cbd5227a72340bb7753734e84f16, type: 3}

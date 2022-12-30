@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
@@ -9,10 +10,11 @@ public class Test_TilemapAStar : TestBase
 {
     public Tilemap background;
     public Tilemap obstacle;
+    public Tilemap test;
 
     public Transform start;
     public Transform goal;
-    public PathLineDraw pathLineDraw;
+    public PathLineDraw pathLine;
 
     GridMap map;
     List<Vector2Int> path;
@@ -21,20 +23,20 @@ public class Test_TilemapAStar : TestBase
     {
         base.OnEnable();
         inputActions.Test.LeftClick.performed += Test_LeftClick;
-        inputActions.Test.RightClick.performed += Test_RightClick;
+        inputActions.Test.RighttClick.performed += Test_RightClick;
     }
 
     protected override void OnDisable()
     {
         inputActions.Test.LeftClick.performed -= Test_LeftClick;
-        inputActions.Test.RightClick.performed -= Test_RightClick;
+        inputActions.Test.RighttClick.performed -= Test_RightClick;
         base.OnDisable();
     }
 
-    private void Start()
+    void Start()
     {
         path = new List<Vector2Int>();
-        map = new GridMap(background, obstacle);                       
+        map = new GridMap(background, obstacle);
     }
 
     protected override void Test1(InputAction.CallbackContext _)
@@ -48,10 +50,22 @@ public class Test_TilemapAStar : TestBase
         pathStr += " 끝";
         Debug.Log(pathStr);
 
-        pathLineDraw.DrawPath(map, path);
+        pathLine.DrawPath(map, path);
     }
 
-    
+    private void Test_LeftClick(InputAction.CallbackContext _)
+    {
+        // 시작지점 옮기기
+        Vector2 screenPos = Mouse.current.position.ReadValue();
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+        Vector2Int gridPos = map.WorldToGrid(worldPos);
+        if (!map.IsWall(gridPos))
+        {
+            Vector2 finalPos = map.GridToWorld(gridPos);
+            start.position = finalPos;
+        }
+    }
+
 
     private void Test_RightClick(InputAction.CallbackContext _)
     {
@@ -63,19 +77,6 @@ public class Test_TilemapAStar : TestBase
         {
             Vector2 finalPos = map.GridToWorld(gridPos);
             goal.position = finalPos;
-        }
-    }
-
-    private void Test_LeftClick(InputAction.CallbackContext _)
-    {        
-        // 시작지점 옮기기
-        Vector2 screenPos = Mouse.current.position.ReadValue();
-        Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-        Vector2Int gridPos = map.WorldToGrid(worldPos);
-        if (!map.IsWall(gridPos))
-        {
-            Vector2 finalPos = map.GridToWorld(gridPos);
-            start.position = finalPos;
         }
     }
 

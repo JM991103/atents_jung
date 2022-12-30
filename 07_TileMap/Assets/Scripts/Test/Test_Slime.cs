@@ -7,11 +7,11 @@ public class Test_Slime : TestBase
 {
     public GameObject slimePrefab;
     Slime slime;
-    bool onoff = false;
+    bool onOff = false;
 
     protected override void Test1(InputAction.CallbackContext _)
     {
-        GameObject obj =  Instantiate(slimePrefab);
+        GameObject obj = Instantiate(slimePrefab);
         slime = obj.GetComponent<Slime>();
     }
 
@@ -23,7 +23,7 @@ public class Test_Slime : TestBase
 
     protected override void Test3(InputAction.CallbackContext _)
     {
-        onoff = !onoff;
-        slime?.ShowOutLine(onoff);
+        onOff = !onOff;
+        slime?.ShowOutline(onOff);
     }
 }

@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Fire
   m_EditorClassIdentifier: 
   m_AnimatedSprites:
-  - {fileID: 1542605850, guid: 2d7832d1d92f7ab4090f82d307996dff, type: 3}
-  - {fileID: 1665504153, guid: 2d7832d1d92f7ab4090f82d307996dff, type: 3}
-  - {fileID: -675259481, guid: 2d7832d1d92f7ab4090f82d307996dff, type: 3}
-  - {fileID: 2141404167, guid: 2d7832d1d92f7ab4090f82d307996dff, type: 3}
-  m_MinSpeed: 7
-  m_MaxSpeed: 11
+  - {fileID: 125672573, guid: 561a90893e3b40443ad4887b7876767c, type: 3}
+  - {fileID: 5074925, guid: 561a90893e3b40443ad4887b7876767c, type: 3}
+  - {fileID: -980081678, guid: 561a90893e3b40443ad4887b7876767c, type: 3}
+  - {fileID: 1395160598, guid: 561a90893e3b40443ad4887b7876767c, type: 3}
+  m_MinSpeed: 8
+  m_MaxSpeed: 12
   m_AnimationStartTime: 0
   m_AnimationStartFrame: 0
   m_TileColliderType: 0

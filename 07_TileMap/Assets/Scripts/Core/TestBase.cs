@@ -6,11 +6,11 @@ using UnityEngine.InputSystem;
 
 public class TestBase : MonoBehaviour
 {
-    protected PlayerInputAction inputActions;
+    protected PlayerInputActions inputActions;
 
     protected virtual void Awake()
     {
-        inputActions = new PlayerInputAction();
+        inputActions = new PlayerInputActions();
     }
 
     protected virtual void OnEnable()

@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 
 /// <summary>
-/// 슬라임 생성 전용 클래스. 팩토리 패턴과 싱글톤 패턴 적용
+/// 슬라임 생성 전용 클래스. 팩토리 패턴과 싱글폰 패턴 적용
 /// </summary>
 public class SlimeFactory : Singleton<SlimeFactory>
 {
     /// <summary>
-    /// 생성할 슬라임 프리팹
+    /// 생성할 슬라임의 프리팹
     /// </summary>
     public GameObject slimePrefab;
-
+        
     /// <summary>
     /// 처음에 생성할 슬라임의 갯수. 한번에 나올 수 있는 슬라임의 최대 수보다 크게 하는 것이 좋다.
     /// </summary>
@@ -45,10 +44,10 @@ public class SlimeFactory : Singleton<SlimeFactory>
             Slime slime = obj.GetComponent<Slime>();                    // Slime 컴포넌트 찾아서
             slime.onDisable += () =>
             {
-                readyQueue.Enqueue(slime);      // 슬라임 게임 오브젝트가 disable 될 때 레디큐로 되돌리기
+                readyQueue.Enqueue(slime);          // 슬라임 게임 오브젝트가 disable 될 때 레디큐로 되돌리기
             };
-            pool[i] = slime;                    // 풀에 슬라임 저장해 놓기
-            obj.SetActive(false);               // 슬라임 게임 오브젝트 비활성화
+            pool[i] = slime;                        // 풀에 슬라임 저장해 놓기
+            obj.SetActive(false);                   // 슬라임 게임 오브젝트 비활성화
         }        
     }
 
@@ -69,13 +68,13 @@ public class SlimeFactory : Singleton<SlimeFactory>
         else
         {
             // 지금 사용할 수 있는 슬라임이 없는 상태 => 풀의 크기를 2배로 늘리고 슬라임도 추가
-            int newSize = poolSize * 2;             // 새크기를 원래 크기의 2배로 확정
-            Slime[] newpool = new Slime[newSize];   // 새풀도 원래 풀의 2배로 설정
-            for (int i = 0; i < poolSize; i++)
+            int newSize = poolSize * 2;             // 새크기를 원래 크기의 2배로 설정
+            Slime[] newPool = new Slime[newSize];   // 새풀도 원래 풀의 2배로 설정
+            for(int i=0;i<poolSize;i++)
             {
-                newpool[i] = pool[i];               // 새풀에 기존 풀에 있는 슬라임들 전부 복사
+                newPool[i] = pool[i];               // 새풀에 기존 풀에 있는 슬라임들 전부 복사
             }            
-            for (int i = poolSize; i < newSize; i++)// 새풀의 빈곳에 새 슬라임 만들어서 추가(Initialize와 거의 동일)
+            for (int i=poolSize; i<newSize;i++)     // 새풀의 빈곳에 새 슬라임 만들어서 추가(Initialize와 거의 동일)
             {
                 GameObject obj = Instantiate(slimePrefab, this.transform);
                 obj.name = $"Slime_{i}";
@@ -84,12 +83,11 @@ public class SlimeFactory : Singleton<SlimeFactory>
                 {
                     readyQueue.Enqueue(slime);
                 };
-                newpool[i] = slime;                 // 새 풀의 뒤쪽에 추가한다는 것만 다름
+                newPool[i] = slime;                 // 새 풀의 뒤쪽에 추가한 다는 것만 다름
                 obj.SetActive(false);
-
             }
-            pool = newpool;                         // 새풀을 풀로 설정
-            poolSize = newSize;                     // 새크기로 풀크기를 설정
+            pool = newPool;                         // 새풀을 풀로 설정
+            poolSize = newSize;                     // 새크기로 풀크기로 설정
 
             return GetSlime();                      // 새 것 하나 꺼내서 리턴하기
         }

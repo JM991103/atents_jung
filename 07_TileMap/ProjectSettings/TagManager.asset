@@ -43,20 +43,20 @@ TagManager:
     uniqueID: 0
     locked: 0
   - name: Background
-    uniqueID: 1472125213
+    uniqueID: 1864901747
     locked: 0
   - name: Obstacle
-    uniqueID: 2253334889
+    uniqueID: 2058203665
     locked: 0
   - name: Object
-    uniqueID: 1574169811
+    uniqueID: 2126224683
     locked: 0
   - name: Effect
-    uniqueID: 2681145147
+    uniqueID: 2490802939
     locked: 0
   - name: Enemy
-    uniqueID: 3795223623
+    uniqueID: 3955435819
     locked: 0
   - name: Player
-    uniqueID: 2857799879
+    uniqueID: 3730370395
     locked: 0

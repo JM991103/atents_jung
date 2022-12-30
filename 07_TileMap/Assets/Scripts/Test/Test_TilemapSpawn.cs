@@ -4,5 +4,4 @@ using UnityEngine;
 
 public class Test_TilemapSpawn : TestBase
 {
-    
 }

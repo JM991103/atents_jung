@@ -70,7 +70,7 @@ public class Test_AStar : TestBase
         Debug.Log(path);
         // 예상 결과
         // Path : (0,0) -> (1,1) -> (1,2) -> (1,3) -> (2,3) -> (3,3)
-
+        
     }
 
     protected override void Test4(InputAction.CallbackContext _)

@@ -5,22 +5,22 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     /// <summary>
-    /// 몬스터 생성하는 시간 간격
+    /// 몬스터를 생성하는 시간 간격
     /// </summary>
-    public float Delay = 1.0f;
+    public float delay = 1.0f; 
 
     /// <summary>
     /// 최대로 유지 가능한 몬스터의 수
     /// </summary>
-    public int capacity = 2;
+    public int capacity = 2; 
 
     /// <summary>
-    /// 스폰 영역의 크기(transform의 position에서 부터의 크기)
+    /// 스폰 영역의 크기. (transform의 position에서 부터의 크기)
     /// </summary>
     public Vector2 size;
 
     /// <summary>
-    /// 이전 몬스터 생성에서 부터 경과한 시간
+    /// 이전 몬스터 생성에서부터 경과한 시간
     /// </summary>
     float elapsed = 0.0f;
 
@@ -30,14 +30,14 @@ public class Spawner : MonoBehaviour
     int count = 0;
 
     /// <summary>
-    ///스포너가 배치되어 있는 맵
+    /// 스포너가 배치되어 있는 맵
     /// </summary>
-    GridMap gridMap;
+    //GridMap gridMap;
 
     /// <summary>
-    ///  스포너가 배치되어 있는 맵을 확인하기 위한 프로퍼티
+    /// 스포너가 배치되어 있는 맵을 확인하기 위한 프로퍼티
     /// </summary>
-    public GridMap GridMap => gridMap;
+    //public GridMap GridMap => gridMap;
 
     SceneMonsterManager manager;
 
@@ -52,7 +52,7 @@ public class Spawner : MonoBehaviour
         if (count < capacity)
         {
             elapsed += Time.deltaTime;
-            if (elapsed > Delay)
+            if (elapsed > delay)
             {
                 Spawn();
                 elapsed = 0.0f;
@@ -85,10 +85,10 @@ public class Spawner : MonoBehaviour
         return slime;
     }
 
-
     void DecressCount()
     {
         count--;
     }
+
     
 }
