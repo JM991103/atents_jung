@@ -93,14 +93,15 @@ public class Slime : MonoBehaviour
         pathLine = GetComponentInChildren<PathLineDraw>();
 
         path = new List<Vector2Int>();
-
-        onDie += () => isActivate = false;              // 죽으면 비활성화
-        onPhaseEnd += () => isActivate = true;          // 페이즈가 끝나면 활성화
     }
 
     private void OnEnable()
     {
-        pathLine.gameObject.SetActive(isShowPath);  // isShowPath에 따라 경로 활성화/비활성화 설정
+        onDie = () => isActivate = false;               // 죽으면 비활성화
+        onDie += () => transform.SetParent(SlimeFactory.Inst.gameObject.transform);  // 슬라임을 다시 팩토리의 자식으로
+        onPhaseEnd = () => isActivate = true;          // 페이즈가 끝나면 활성화
+
+        pathLine.gameObject.SetActive(isShowPath);      // isShowPath에 따라 경로 활성화/비활성화 설정
 
         // 쉐이더 프로퍼티 값들 초기화
         ShowOutline(false);                             // 아웃라인 끄기
@@ -109,8 +110,7 @@ public class Slime : MonoBehaviour
     }
 
     private void OnDisable()
-    {
-        pathLine.gameObject.SetActive(false);
+    {        
         onDisable?.Invoke();            // 비활성화 되었다고 알림(레디 큐에 다시 돌려주라는 신호를 보내는 것이 주 용도)
     }
 
@@ -172,7 +172,7 @@ public class Slime : MonoBehaviour
     /// 이 슬라임을 죽일 때 실행할 함수
     /// </summary>
     public void Die()
-    {
+    {       
         // 움직이던 경로 삭제
         path.Clear();               // 재활용 되었을 때 이전 경로를 찾아가던 문제를 수정하기 위해 추가
         pathLine.ClearPath();       // 재활용 된 직후에 이전 경로가 보이던 것을 수정하기 위해 추가
