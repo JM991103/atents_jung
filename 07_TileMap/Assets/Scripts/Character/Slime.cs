@@ -98,7 +98,7 @@ public class Slime : MonoBehaviour
     private void OnEnable()
     {
         onDie = () => isActivate = false;               // 죽으면 비활성화
-        onDie += () => transform.SetParent(SlimeFactory.Inst.gameObject.transform);  // 슬라임을 다시 팩토리의 자식으로
+        
         onPhaseEnd = () => isActivate = true;          // 페이즈가 끝나면 활성화
 
         pathLine.gameObject.SetActive(isShowPath);      // isShowPath에 따라 경로 활성화/비활성화 설정
@@ -229,6 +229,7 @@ public class Slime : MonoBehaviour
                 
             yield return null;                      // 다음 프레임까지 대기
         }
+        transform.SetParent(SlimeFactory.Inst.gameObject.transform);  // 슬라임을 다시 팩토리의 자식으로
 
         this.gameObject.SetActive(false);           // 게임 오브젝트 비활성화(오브젝트 풀로 되돌리기)
     }
