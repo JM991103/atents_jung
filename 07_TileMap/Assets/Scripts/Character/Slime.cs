@@ -15,7 +15,7 @@ public class Slime : MonoBehaviour
     Vector2Int Position => map.WorldToGrid(transform.position);
 
     // 길찾기 관련 변수들 ----------------------------------------------------------------------------------------------
-    public Test_TilemapAStarSlime test; // 이 후에 반드시 삭제할 코드.
+    
 
     /// <summary>
     /// 슬라임의 이동 속도
@@ -114,17 +114,22 @@ public class Slime : MonoBehaviour
 
     private void Start()
     {
-        map = test.Map;                             // 맵 받아오기(수정되어야 할 코드)
         onGoalArrive += () =>
-        {            
-            Vector2Int pos = Position;              // 현재 내 위치를 기록
-            while(pos == Position)                  // pos가 내 위치이면 계속 반복 => 내 위치와 다른 위치가 나올 때까지 반복
+        {
+            //Vector2Int pos = Position;              // 현재 내 위치를 기록
+            //while( pos == Position )                // pos가 내 위치이면 계속 반복 => 내 위치와 다른 위치가 나올 때까지 반복
+            //{
+            //    pos = map.GetRandomMovablePosition();   // 맵에서 이동 가능한 위치를 랜덤으로 가져오기
+            //}
+            Vector2Int pos;
+            do
             {
-                pos = map.GetRandomMovablePosition();   // 맵에서 이동가능한 위치를 랜덤으로 가져오기
-            }
+                pos = map.GetRandomMovablePosition();
+            } while (pos == Position);
+
             SetDestination(pos);                    // 랜덤으로 가져온 위치로 이동하기
         };
-        pathLine.transform.SetParent(pathLine.transform.parent.parent);         // 부모를 슬라임의 부모로 설정
+        pathLine.transform.SetParent(pathLine.transform.parent.parent);    // 부모를 슬라임의 부모로 설정
         pathLine.gameObject.SetActive(isShowPath);  // isShowPath에 따라 경로 활성화/비활성화 설정
     }
 
@@ -132,15 +137,15 @@ public class Slime : MonoBehaviour
     {
         if (isActivate)     // 활성화 상태일 때만 움직이기
         {
-            if (path.Count > 0)                     // path에 위치가 기록되어있으면 진행
+            if (path.Count > 0)                              // path에 위치가 기록되어있으면 진행
             {
-                Vector3 dest = map.GridToWorld(path[0]);        // path의 첫번째 위치로 항상 이동
-                Vector3 dir = dest - transform.position;        // 방향 계산
+                Vector3 dest = map.GridToWorld(path[0]);    // path의 첫번째 위치로 항상 이동            
+                Vector3 dir = dest - transform.position;    // 방향 계산
                 transform.Translate(Time.deltaTime * moveSpeed * dir.normalized);   // 계산한 방향으로 1초에 moveSpeed만큼 이동
 
-                if (dir.sqrMagnitude < 0.001f)       // 목적지(path의 첫번째 위치) 도착했는지 확인
+                if (dir.sqrMagnitude < 0.001f)              // 목적지(path의 첫번째 위치)에 도착했는지 확인
                 {
-                    path.RemoveAt(0);               // 목적지에 도착했으면 그 노드를 제거
+                    path.RemoveAt(0);                       // 목적지에 도착했으면 그 노드를 제거
                 }
             }
             else
@@ -148,6 +153,17 @@ public class Slime : MonoBehaviour
                 onGoalArrive?.Invoke();
             }
         }
+    }
+
+    /// <summary>
+    /// 슬라임 초기화용 함수. 슬라임이 맵에 나타날 때 실행되어야 함.
+    /// </summary>
+    /// <param name="gridMap">슬라임이 존재하는 맵</param>
+    /// <param name="pos">슬라임의 위치</param>
+    public void Initialize(GridMap gridMap, Vector3 pos)
+    {
+        map = gridMap;
+        transform.position = pos;
     }
 
     /// <summary>

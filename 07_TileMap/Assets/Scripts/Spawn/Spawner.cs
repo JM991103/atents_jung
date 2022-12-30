@@ -29,6 +29,24 @@ public class Spawner : MonoBehaviour
     /// </summary>
     int count = 0;
 
+    /// <summary>
+    ///스포너가 배치되어 있는 맵
+    /// </summary>
+    GridMap gridMap;
+
+    /// <summary>
+    ///  스포너가 배치되어 있는 맵을 확인하기 위한 프로퍼티
+    /// </summary>
+    public GridMap GridMap => gridMap;
+
+    SceneMonsterManager manager;
+
+    private void Start()
+    {
+        manager = GetComponentInParent<SceneMonsterManager>();
+        //gridMap = manager.GridMap;
+    }
+
     private void Update()
     {
         if (count < capacity)
@@ -53,15 +71,16 @@ public class Spawner : MonoBehaviour
         if (count < capacity)
         {
             slime = SlimeFactory.Inst.GetSlime();
-
             if (slime != null)
             {
                 count++;
-                slime.onDie -= DecressCount;    // DecressCount가 누적되지 않게 하기 위한 조치
+                slime.onDie -= DecressCount;    // DecressCount가 누적되지 않게하기 위한 조치
                 slime.onDie += DecressCount;
+
+                Vector3 spawnPos = manager.GetRandomSpawnPosition(transform.position, size);
+                //Debug.Log($"SpawnPos : ({spawnPos.x}, {spawnPos.y})");
+                slime.Initialize(manager.GridMap, spawnPos);
             }
-            Vector3 pos = transform.position + new Vector3(Random.Range(0, size.x), Random.Range(0, size.y), 0);
-            slime.transform.position = pos;
         }
         return slime;
     }
