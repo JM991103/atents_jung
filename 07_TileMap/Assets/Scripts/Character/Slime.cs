@@ -100,6 +100,8 @@ public class Slime : MonoBehaviour
 
     private void OnEnable()
     {
+        pathLine.gameObject.SetActive(isShowPath);  // isShowPath에 따라 경로 활성화/비활성화 설정
+
         // 쉐이더 프로퍼티 값들 초기화
         ShowOutline(false);                             // 아웃라인 끄기
         mainMaterial.SetFloat("_Dissolve_Fade", 1.0f);  // 디졸브 진행 안된 상태로 만들기
@@ -108,6 +110,7 @@ public class Slime : MonoBehaviour
 
     private void OnDisable()
     {
+        pathLine.gameObject.SetActive(false);
         onDisable?.Invoke();            // 비활성화 되었다고 알림(레디 큐에 다시 돌려주라는 신호를 보내는 것이 주 용도)
     }
 
@@ -129,7 +132,7 @@ public class Slime : MonoBehaviour
             SetDestination(pos);                    // 랜덤으로 가져온 위치로 이동하기
         };
         pathLine.transform.SetParent(pathLine.transform.parent.parent);    // 부모를 슬라임의 부모로 설정
-        pathLine.gameObject.SetActive(isShowPath);  // isShowPath에 따라 경로 활성화/비활성화 설정
+        
     }
 
     private void Update()
@@ -170,6 +173,10 @@ public class Slime : MonoBehaviour
     /// </summary>
     public void Die()
     {
+        // 움직이던 경로 삭제
+        path.Clear();               // 재활용 되었을 때 이전 경로를 찾아가던 문제를 수정하기 위해 추가
+        pathLine.ClearPath();       // 재활용 된 직후에 이전 경로가 보이던 것을 수정하기 위해 추가
+
         // 디졸브 실행
         StartCoroutine(StartDissolve());
 
