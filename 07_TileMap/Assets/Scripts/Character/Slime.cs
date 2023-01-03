@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class Slime : MonoBehaviour
 {
@@ -49,6 +50,8 @@ public class Slime : MonoBehaviour
                 }
                 currentNode = value;                            // 새로 노드 설정
                 currentNode.gridType = Node.GridType.Monster;   // 노드 타입을 Monster로 변경
+
+                spriteRenderer.sortingOrder = -currentNode.y;   // order in layer 변경. 아래쪽에 있는 것이 위에 그려지도록 변경
             }
         }
     }
@@ -62,7 +65,17 @@ public class Slime : MonoBehaviour
     /// 이 슬라임의 경로를 그리기 위한 변수
     /// </summary>
     PathLineDraw pathLine;
-    
+
+    /// <summary>
+    /// 다른 슬라임에 의해 경로가 막혀서 기다린 시간
+    /// </summary>
+    float pathWaitTime = 0.0f;
+
+    /// <summary>
+    /// 경로가 막혔을 때 최대로 기다리는 시간
+    /// </summary>
+    const float MaxWaitTime = 1.0f;
+
 
     // 쉐이더 관련 변수들 --------------------------------------------------------------------------
     /// <summary>
@@ -79,12 +92,17 @@ public class Slime : MonoBehaviour
     /// 아웃라인의 두께
     /// </summary>
     const float Outline_Thickness = 0.005f;
-        
+
     /// <summary>
     /// 쉐이더의 프로퍼티에 접근을 하기 위한 머티리얼
     /// </summary>
     Material mainMaterial;
-        
+
+    /// <summary>
+    /// order in layer를 변경하기 위한 스프라이트 랜더러
+    /// </summary>
+    SpriteRenderer spriteRenderer;
+
     // 델리게이트들 --------------------------------------------------------------------------------
     /// <summary>
     /// 페이즈가 끝났을 때 실행될 델리게이트
@@ -109,8 +127,8 @@ public class Slime : MonoBehaviour
     // 함수들 --------------------------------------------------------------------------------------
     private void Awake()
     {
-        Renderer renderer = GetComponent<Renderer>();
-        mainMaterial = renderer.material;       // 머티리얼 미리 찾아 놓기
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        mainMaterial = spriteRenderer.material;       // 머티리얼 미리 찾아 놓기
 
         pathLine = GetComponentInChildren<PathLineDraw>();
 
@@ -120,7 +138,7 @@ public class Slime : MonoBehaviour
     private void OnEnable()
     {
         onDie = () => isActivate = false;               // 죽으면 비활성화
-        
+
         onPhaseEnd = () => isActivate = true;          // 페이즈가 끝나면 활성화
 
         pathLine.gameObject.SetActive(isShowPath);      // isShowPath에 따라 경로 활성화/비활성화 설정
@@ -132,7 +150,7 @@ public class Slime : MonoBehaviour
     }
 
     private void OnDisable()
-    {        
+    {
         onDisable?.Invoke();            // 비활성화 되었다고 알림(레디 큐에 다시 돌려주라는 신호를 보내는 것이 주 용도)
     }
 
@@ -154,34 +172,12 @@ public class Slime : MonoBehaviour
             SetDestination(pos);                    // 랜덤으로 가져온 위치로 이동하기
         };
         pathLine.transform.SetParent(pathLine.transform.parent.parent);    // 부모를 슬라임의 부모로 설정
-        
+
     }
 
     private void Update()
     {
         MoveUpdate();
-    }
-
-    private void MoveUpdate()
-    {
-        if (isActivate)     // 활성화 상태일 때만 움직이기
-        {
-            if (path.Count > 0)                              // path에 위치가 기록되어있으면 진행
-            {
-                Vector3 dest = map.GridToWorld(path[0]);    // path의 첫번째 위치로 항상 이동            
-                Vector3 dir = dest - transform.position;    // 방향 계산
-                transform.Translate(Time.deltaTime * moveSpeed * dir.normalized);   // 계산한 방향으로 1초에 moveSpeed만큼 이동
-
-                if (dir.sqrMagnitude < 0.001f)              // 목적지(path의 첫번째 위치)에 도착했는지 확인
-                {
-                    path.RemoveAt(0);                       // 목적지에 도착했으면 그 노드를 제거
-                }
-            }
-            else
-            {
-                onGoalArrive?.Invoke();
-            }
-        }
     }
 
     /// <summary>
@@ -194,6 +190,54 @@ public class Slime : MonoBehaviour
         map = gridMap;
         transform.position = pos;
         CurrentNode = map.GetNode(pos);     // 이 슬라임이 위치한 노드 가지고 있기
+    }
+
+    /// <summary>
+    /// 슬라임 이동처리하는 함수 (매 업데이트마다 실행)
+    /// </summary>
+    private void MoveUpdate()
+    {
+        if (isActivate)     // 활성화 상태일 때만 움직이기
+        {
+            // 정해진 경로가 있고 && 다음 경로가 있고 && 아직 기다려도 되는 시간이 남아있을 때
+            if (path != null && path.Count > 0 && pathWaitTime < MaxWaitTime)
+            {
+                Vector2Int destGrid = path[0];                
+
+                if (!map.IsMonster(destGrid) || CurrentNode == map.GetNode(destGrid))
+                {
+                    // path[0]에 몬스터가 없거나 (다음에 이동할 칸에 다른 몬스터가 없는 경우)
+                    // path[0]에 내가 있다. (내가 다음 도착지점 칸에는 있는데 아직 한 가운데까지는 못간 경우)
+                    // => 이동처리
+                    Vector3 dest = map.GridToWorld(destGrid);       // 목적지 위치로 항상 이동            
+                    Vector3 dir = dest - transform.position;        // 목적지로 향하는 방향 계산
+
+                    transform.Translate(Time.deltaTime * moveSpeed * dir.normalized);  // 목적지 방향으로 속도에 맞춰서 이동
+                    CurrentNode = map.GetNode(transform.position);                     // 현재 노드 변경 (그리드 타입 변경)
+
+                    if (dir.sqrMagnitude < 0.001f)                  // 목적지(path의 첫번째 위치)에 도착했는지 확인
+                    {
+                        transform.position = dest;                  // 목적지의 정확한 위치에 설정
+                        path.RemoveAt(0);                           // 목적지에 도착했으면 그 노드를 제거
+                    }
+                    pathWaitTime = 0.0f;                            // 기다렸던 시간 초기화
+                }
+                else
+                {
+                    // destGrid에 몬스터가 있고, destGrid에 내가 없다.
+                    //Vector2Int back = new Vector2Int(currentNode.x, currentNode.y);
+                    //path.Insert(0, back);
+
+                    // 기다리기
+                    pathWaitTime += Time.deltaTime;
+                }
+            }
+            else
+            {
+                pathWaitTime = 0.0f;
+                onGoalArrive?.Invoke();
+            }
+        }
     }
 
     /// <summary>

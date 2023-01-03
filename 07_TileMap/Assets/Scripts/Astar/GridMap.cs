@@ -143,9 +143,14 @@ public class GridMap
         return GetNode(gridPos.x, gridPos.y);
     }
 
+    /// <summary>
+    /// 월드 좌표를 기준으로 노드를 찾는 함수
+    /// </summary>
+    /// <param name="worldPos">찾을 노드가 있을 월드 좌표</param>
+    /// <returns>찾은 노드(없으면 null)</returns>
     public Node GetNode(Vector3 worldPos)
     {
-
+        return GetNode(WorldToGrid(worldPos));
     }
 
     /// <summary>
@@ -190,6 +195,28 @@ public class GridMap
     {
         Node node = GetNode(x, y);
         return node != null && node.gridType == Node.GridType.Wall;
+    }
+
+    /// <summary>
+    /// 해당 위치가 벽인지 아닌지 확인하는 함수
+    /// </summary>
+    /// <param name="pos">확인할 위치의 좌표</param>
+    /// <returns>몬스터면 true, 아니면 false</returns>
+    public bool IsMonster(Vector2Int pos)
+    {
+        return IsMonster(pos.x, pos.y);
+    }
+
+    /// <summary>
+    /// 해당 위치가 벽인지 아닌지 확인하는 함수
+    /// </summary>
+    /// <param name="x">확인할 위치의 X</param>
+    /// <param name="y">확인할 위치의 Y</param>
+    /// <returns>몬스터면 true, 아니면 false</returns>
+    public bool IsMonster(int x, int y)
+    {
+        Node node = GetNode(x, y);
+        return node != null && node.gridType == Node.GridType.Monster;
     }
 
     /// <summary>
