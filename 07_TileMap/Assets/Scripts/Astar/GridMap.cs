@@ -126,7 +126,7 @@ public class GridMap
     /// <returns>찾은 노드(없으면 null)</returns>
     public Node GetNode(int x, int y)
     {
-        if(IsValidPosion(x, y))
+        if(IsValidPosition(x, y))
         {
             return nodes[GridToIndex(x, y)];
         }
@@ -136,11 +136,16 @@ public class GridMap
     /// <summary>
     /// 그리드 맵에서 특정 그리드 좌표에 존재하는 노드 찾는 함수
     /// </summary>
-    /// <param name="pos">타일맵 기준으로 한 좌표</param>
+    /// <param name="gridPos">타일맵 기준으로 한 좌표</param>
     /// <returns>찾은 노드(없으면 null)</returns>
-    public Node GetNode(Vector2Int pos)
+    public Node GetNode(Vector2Int gridPos)
     {
-        return GetNode(pos.x, pos.y);
+        return GetNode(gridPos.x, gridPos.y);
+    }
+
+    public Node GetNode(Vector3 worldPos)
+    {
+
     }
 
     /// <summary>
@@ -160,7 +165,7 @@ public class GridMap
     /// <param name="x">확인할 위치의 x</param>
     /// <param name="y">확인할 위치의 y</param>
     /// <returns>맵안이면 true. 아니면 false</returns>
-    public bool IsValidPosion(int x, int y)
+    public bool IsValidPosition(int x, int y)
     {
         return x >= origin.x && y >= origin.y && x < (width + origin.x) && y < (height + origin.y);
     }
@@ -172,7 +177,7 @@ public class GridMap
     /// <returns>맵안이면 true. 아니면 false</returns>
     public bool IsValidPosition(Vector2Int pos)
     {
-        return IsValidPosion(pos.x, pos.y);
+        return IsValidPosition(pos.x, pos.y);
     }
 
     /// <summary>

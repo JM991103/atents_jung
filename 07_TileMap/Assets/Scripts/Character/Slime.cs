@@ -32,6 +32,28 @@ public class Slime : MonoBehaviour
     GridMap map;
 
     /// <summary>
+    /// 이 슬라임이 현재 위치하고 있는 노드
+    /// </summary>
+    Node currentNode;
+
+    Node CurrentNode
+    {
+        get => currentNode;
+        set
+        {
+            if (value != currentNode)   // 노드 위치가 바뀔 때
+            {
+                if (currentNode != null)    // 이전에 위치하던 노드가 있으면 
+                {
+                    currentNode.gridType = Node.GridType.Plain; // 노드 타입을 Monster -> Plain으로 변경
+                }
+                currentNode = value;                            // 새로 노드 설정
+                currentNode.gridType = Node.GridType.Monster;   // 노드 타입을 Monster로 변경
+            }
+        }
+    }
+
+    /// <summary>
     /// 슬라임이 이동해야 할 경로
     /// </summary>
     List<Vector2Int> path;
@@ -137,6 +159,11 @@ public class Slime : MonoBehaviour
 
     private void Update()
     {
+        MoveUpdate();
+    }
+
+    private void MoveUpdate()
+    {
         if (isActivate)     // 활성화 상태일 때만 움직이기
         {
             if (path.Count > 0)                              // path에 위치가 기록되어있으면 진행
@@ -166,6 +193,7 @@ public class Slime : MonoBehaviour
     {
         map = gridMap;
         transform.position = pos;
+        CurrentNode = map.GetNode(pos);     // 이 슬라임이 위치한 노드 가지고 있기
     }
 
     /// <summary>
