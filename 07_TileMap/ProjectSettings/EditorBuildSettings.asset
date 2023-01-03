@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Test_RuleTile.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/Test_LoadSceneASync.unity
+    guid: 4dcf5f123d4cab64ea1745477580712b
+  - enabled: 1
+    path: Assets/Scenes/Test_ASyncSample1.unity
+    guid: d3d83469acb0c0844812f5d0edcc4da4
   m_configObjects: {}

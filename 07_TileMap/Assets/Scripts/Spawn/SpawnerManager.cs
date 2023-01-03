@@ -4,7 +4,7 @@ using System.Drawing;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class SceneMonsterManager : MonoBehaviour
+public class SpawnerManager : MonoBehaviour
 {
     GridMap gridMap;
     Tilemap background;
