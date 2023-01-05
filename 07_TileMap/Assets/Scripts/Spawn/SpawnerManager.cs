@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.Networking;
 
 public class SpawnerManager : MonoBehaviour
 {
@@ -40,6 +40,36 @@ public class SpawnerManager : MonoBehaviour
         }
 
         spawnedList = new List<Slime>();
+
+        //StartCoroutine(GetSpawnerData());
+    }
+
+    IEnumerator GetSpawnerData()
+    {
+        string url = "http://go26652.dothome.co.kr/HTTP_Data/SpawnerData.txt";
+        //{"delay":1.5,"capacity":10}
+
+        UnityWebRequest www = UnityWebRequest.Get(url);
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError("Web request Error!");
+        }
+        else
+        {
+            string json = www.downloadHandler.text;
+            SpawnerData data = JsonUtility.FromJson<SpawnerData>(json);
+            //Debug.Log($"delay : {data.delay}, capacity : {data.capacity}"); ;
+
+            foreach (var spawner in spawners)
+            {
+                spawner.delay = data.delay;
+                spawner.capacity = data.capacity;
+            }
+        }
+
+        yield return null;
     }
 
     /// <summary>
