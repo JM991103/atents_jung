@@ -130,6 +130,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6943829591859337156, guid: 2b59adb149ac7e94ab4b88eb7b0b6d0a, type: 3}
+      propertyPath: poolSize
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 6943829591859337157, guid: 2b59adb149ac7e94ab4b88eb7b0b6d0a, type: 3}
       propertyPath: m_Name
       value: SlimeFactory
@@ -180,6 +184,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b59adb149ac7e94ab4b88eb7b0b6d0a, type: 3}
+--- !u!114 &382040881 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7176025567080620848, guid: 64f58dc9a7efac4489459c9a79e01f11, type: 3}
+  m_PrefabInstance: {fileID: 1776491661}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b17f4c7779f69b248a2dfa47b6845c44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &830149500
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,7 +412,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1439326679}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.906919, y: 2.106657, z: -0.7283156}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -492,6 +507,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 0
   y: 0
+  player: {fileID: 382040881}
 --- !u!4 &2116433589
 Transform:
   m_ObjectHideFlags: 0
