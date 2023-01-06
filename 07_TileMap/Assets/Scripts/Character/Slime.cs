@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class Slime : MonoBehaviour
 {
@@ -138,10 +137,8 @@ public class Slime : MonoBehaviour
     private void OnEnable()
     {
         onDie = () => isActivate = false;               // 죽으면 비활성화
-
         onPhaseEnd = () => isActivate = true;          // 페이즈가 끝나면 활성화
-
-        pathLine.transform.SetParent(pathLine.transform.parent.parent); // 부모를 슬라임의 부모로 설정
+                
         pathLine.gameObject.SetActive(isShowPath);      // isShowPath에 따라 경로 활성화/비활성화 설정
 
         // 쉐이더 프로퍼티 값들 초기화
@@ -154,11 +151,6 @@ public class Slime : MonoBehaviour
     {
         //Debug.Log($"Spawner disable - {gameObject.name}");
         onDisable?.Invoke();            // 비활성화 되었다고 알림(레디 큐에 다시 돌려주라는 신호를 보내는 것이 주 용도)
-    }
-
-    private void OnDestroy()
-    {
-        //Debug.Log($"Spawn destory - {gameObject.name}");
     }
 
     private void Start()
@@ -251,20 +243,25 @@ public class Slime : MonoBehaviour
     /// </summary>
     public void Die()
     {
-        ClearData();
+        if (isActivate)
+        {
+            // 슬라임 제거하기 위한 처리들 
+            ClearData();
 
-        // 디졸브 실행
-        StartCoroutine(StartDissolve());
+            // 디졸브 실행
+            StartCoroutine(StartDissolve());
 
-        // 죽었다고 신호보내기
-        onDie?.Invoke();            
+            // 죽었다고 신호보내기
+            onDie?.Invoke();
+        }
     }
 
+    /// <summary>
+    /// 슬라임이 없어져야 하는 상황일 때 해야하는 처리를 수행하는 함수
+    /// </summary>
     public void ClearData()
     {
         transform.SetParent(SlimeFactory.Inst.gameObject.transform);    // 슬라임을 다시 팩토리 자식으로
-
-        pathLine.transform.SetParent(this.transform);   // 다시 라인을 자식으로 만들기
 
         // 움직이던 경로 삭제
         path.Clear();               // 재활용 되었을 때 이전 경로를 찾아가던 문제를 수정하기 위해 추가
@@ -315,8 +312,7 @@ public class Slime : MonoBehaviour
             mainMaterial.SetFloat("_Dissolve_Fade", 1 - timeElipsed * dessolveDurationNormalize); // 측정 시간을 정규화시켜 (1-정규화 된 값)을 fade 값으로 설정
                 
             yield return null;                      // 다음 프레임까지 대기
-        }
-        //transform.SetParent(SlimeFactory.Inst.gameObject.transform);  // 슬라임을 다시 팩토리의 자식으로
+        }        
 
         this.gameObject.SetActive(false);           // 게임 오브젝트 비활성화(오브젝트 풀로 되돌리기)
     }

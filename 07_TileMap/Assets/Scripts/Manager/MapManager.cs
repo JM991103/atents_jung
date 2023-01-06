@@ -102,17 +102,7 @@ public class MapManager : MonoBehaviour
         int index = GetIndex(x, y);                         // 인덱스 계산
         if (sceneLoadStates[index] == SceneLoadState.UnLoad)// 해당 맵이 Unload 상태일 때만 로딩 시도
         {
-            Scene scene = SceneManager.GetSceneByName(sceneName[index]);
-            GameObject[] sceneObjs = scene.GetRootGameObjects();
-            if (sceneObjs.Length > 0)
-            {
-                Slime[] slimes = sceneObjs[0].GetComponentsInChildren<Slime>();
-                foreach (var slime in slimes)
-                {
-                    slime.ClearData();
-                    slime.gameObject.SetActive(false);
-                }
-            }
+            
 
             AsyncOperation async = SceneManager.LoadSceneAsync(sceneName[index], LoadSceneMode.Additive);   // 비동기 로딩 시작
             async.completed += (_) => sceneLoadStates[index] = SceneLoadState.Loaded;                       // 로딩이 완료되면 Loaded로 상태 변경
@@ -130,6 +120,19 @@ public class MapManager : MonoBehaviour
         int index = GetIndex(x, y);                         // 인덱스 계산
         if (sceneLoadStates[index] == SceneLoadState.Loaded)// 해당 맵이 Load 상태일 때만 로딩해제 시도
         {
+            // 맵 언로드 전에 맵에 있는 슬라임들 처리
+            Scene scene = SceneManager.GetSceneByName(sceneName[index]);    // 언로드할 씬 가져오기
+            GameObject[] sceneObjs = scene.GetRootGameObjects();            // 씬에 있는 오브젝트 가져오기
+            if (sceneObjs.Length > 0)
+            {
+                Slime[] slimes = sceneObjs[0].GetComponentsInChildren<Slime>(); // 씬 구조를 알고 있기 때문에 첫번째 오브젝트에서 모든 슬라임 가져오기
+                foreach (var slime in slimes)
+                {
+                    slime.ClearData();                  // 데이터 정리
+                    slime.gameObject.SetActive(false);  // 슬라임 비활성화 시키기
+                }
+            }
+
             AsyncOperation async = SceneManager.UnloadSceneAsync(sceneName[index]);     // 비동기 로딩해제 시작
             async.completed += (_) => sceneLoadStates[index] = SceneLoadState.UnLoad;   // 로딩이 완료되면 Unload로 상태 병경
             sceneLoadStates[index] = SceneLoadState.PendingUnload;                      // 로딩해제 시작 표시
@@ -139,7 +142,7 @@ public class MapManager : MonoBehaviour
     /// <summary>
     /// 입력 받은 월드좌표가 어떤 그리드 좌표인지 알려주는 함수
     /// </summary>
-    /// <param name="worldPos">확인활 월드 좌표</param>
+    /// <param name="worldPos">확인할 월드 좌표</param>
     /// <returns>변환된 그리드 좌표</returns>
     public Vector2Int WorldToGrid(Vector3 worldPos)
     {
