@@ -81,7 +81,7 @@ public class SlimeFactory : Singleton<SlimeFactory>
     }
 
     /// <summary>
-    /// 슬라임을 Instantiate하고 기본적으로 필요한 처리를 수행하는 함수
+    /// 슬라임을 Instantiate하고 기본로 필요한 처리를 수행하는 함수
     /// </summary>
     /// <param name="start">생성한 슬라임이 들어가기 시작할 풀의 인덱스</param>
     /// <param name="end">생성한 슬라임이 마지막으로 들어가는 풀의 인덱스 한 칸 앞</param>
@@ -97,7 +97,7 @@ public class SlimeFactory : Singleton<SlimeFactory>
             {
                 readyQueue.Enqueue(slime);                              // 슬라임 게임 오브젝트가 disable 될 때 레디큐로 되돌리기
             };
-            PathLineDraw pathLine = obj.GetComponentInChildren<PathLineDraw>(); // 슬라임의 자식인 PathLineDraw 찾기
+            PathLineDraw pathLine = slime.PathLine;                     // 슬라임의 자식인 PathLineDraw 찾기
             pathLine.gameObject.name = $"PathLine_{i}";                 // 이름 재설정
             pathLine.transform.SetParent(linesParent);                  // 부모를 LinesParent로 변경
             pathLine.gameObject.SetActive(false);                       // pathLine 비활성화
