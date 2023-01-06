@@ -135,15 +135,16 @@ public class MapManager : MonoBehaviour
 
     void RefreshScenes(int x, int y)
     {
-         
-        if (x > totalOrigin.x && x < mapWidthLength * 3 && y > totalOrigin.y && y < mapHeightLength * 3)
+        int startX = Mathf.Max(0, x - 1);
+        int endX = Mathf.Min(WidthCount, x + 2);
+        int startY = Mathf.Max(0, y - 1);
+        int endY = Mathf.Min(WidthCount, y + 2);
+
+        for (int _y = startY; _y < endY; _y++)
         {
-            for (int i = 0; i < HeightCount; i++)
+            for (int _x = startX; _x < endX; _x++)
             {
-                for (int j = 0; j < WidthCount; j++)
-                {
-                   Vector3Int pos = new(x + i, y + j);
-                }
+                RequestAsyncSceneLoad(_x, _y);
             }
         }
     }
