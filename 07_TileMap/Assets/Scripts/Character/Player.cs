@@ -6,35 +6,67 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    // 수명 관리 변수들 ------------------------------------------------------
+
+    /// <summary>
+    /// 플레이어의 최대 수명
+    /// </summary>
+    public float maxLifeTime = 10.0f;
+
+    /// <summary>
+    /// 플레이어의 현재 수명
+    /// </summary>
+    float lifeTime;
+
+    /// <summary>
+    /// 전체 플레이 시간
+    /// </summary>
+    float totalPlayTime;
+
+    /// <summary>
+    /// 플레이어의 생존 여부 표시용
+    /// </summary>
+    bool isDead = false;
+
+    /// <summary>
+    /// 플레이어의 수명을 확인하거나 설정할 때의 여러 처리를 하는 프로퍼티
+    /// </summary>
+    public float LifeTime
+    {
+        get => lifeTime;
+        set
+        {
+            lifeTime = value;                   // 우선 값 변경
+            if (lifeTime < 0.0f && !isDead)     // 아직 안죽었는데 수명이 0 이하면
+            {                
+                Die();                          // 사망 처리
+                onLifeTimeChange?.Invoke(lifeTime, maxLifeTime);    // 수명이 변경되었다고 알림(죽은 직후에 한번만 실행)
+            }
+            else
+            {
+                lifeTime = Mathf.Clamp(value, 0.0f, maxLifeTime);   // 아니면 수명을 (0 ~ 최대값)으로 설정
+                onLifeTimeChange?.Invoke(lifeTime, maxLifeTime);    // 수명이 변경되었다고 알림
+            }
+        }
+    }
+
+    /// <summary>
+    /// 플레이어의 수명이 변경되었을 때 실행될 델리게이트. 현재 수명과 최대 수명을 넘겨줌
+    /// 비네트, 슬라이더, 남은 시간 표시용으로 사용
+    /// </summary>
+    public Action<float, float> onLifeTimeChange;     
+
+    /// <summary>
+    /// 플레이어가 죽었을 때 실행될 델리게이트. 전체 플레이시간을 넘겨줌
+    /// </summary>
+    public Action<float> onDie;
+
+    // 이동 관리 변수들 ------------------------------------------------------
+
     /// <summary>
     /// 플레이어 이동 속도
     /// </summary>
     public float speed = 3.0f;
-
-    /// <summary>
-    /// 플레이어의 공격 쿨타임
-    /// </summary>
-    public float attackCoolTime = 1.0f;
-
-    /// <summary>
-    /// 플레이어의 현재 남아있는 쿨타임
-    /// </summary>
-    float currentAttackCoolTime = 0.0f;
-
-    /// <summary>
-    /// 애니메이터 컴포넌트
-    /// </summary>
-    Animator anim;
-
-    /// <summary>
-    /// 리지드바디 컴포넌트
-    /// </summary>
-    Rigidbody2D rigid;
-
-    /// <summary>
-    /// 인풋 시스템용 인풋 액션맵 클래스 객체
-    /// </summary>
-    PlayerInputActions inputActions;
 
     /// <summary>
     /// 현재 입력된 이동 방향
@@ -93,9 +125,40 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
-    /// 맵 변경시 실행될 델리게이트 (ㅠㅏ라메터는 변경된 맵의 그리드 좌표)
+    /// 맵 변경시 실행될 델리게이트 (파라메터는 변경된 맵의 그리드 좌표)
     /// </summary>
     public Action<Vector2Int> onMapMoved;
+
+    // 공격 관리 변수들 ------------------------------------------------------
+
+    /// <summary>
+    /// 플레이어의 공격 쿨타임
+    /// </summary>
+    public float attackCoolTime = 1.0f;
+
+    /// <summary>
+    /// 플레이어의 현재 남아있는 쿨타임
+    /// </summary>
+    float currentAttackCoolTime = 0.0f;
+
+    // 기타 관리 변수들 ------------------------------------------------------
+
+    /// <summary>
+    /// 애니메이터 컴포넌트
+    /// </summary>
+    Animator anim;
+
+    /// <summary>
+    /// 리지드바디 컴포넌트
+    /// </summary>
+    Rigidbody2D rigid;
+
+    /// <summary>
+    /// 인풋 시스템용 인풋 액션맵 클래스 객체
+    /// </summary>
+    PlayerInputActions inputActions;    
+
+    
 
     private void Awake()
     {
@@ -145,18 +208,23 @@ public class Player : MonoBehaviour
     private void Start()
     {
         mapManager = GameManager.Inst.MapManager;   // 맵 매니저 가져오기
+
+        LifeTime = maxLifeTime;
     }
 
     private void Update()
     {
-        // 아무 조건 없이 계속 쿨타임 감소
+        totalPlayTime += Time.deltaTime;
+        LifeTime -= Time.deltaTime;
+
+        // 아무 조건 없이 계속 공격 쿨타임 감소
         currentAttackCoolTime -= Time.deltaTime;    
 
         if(isAttackValid)
         {
             while(attackTarget.Count > 0)   // 공격 대상이 있으면 다 없어질 때까지 처리
             {
-                attackTarget[0].Die();      // Die가 실행되면 컬라이더가 비활성화 되면서 attackTarget에서 자동으로 제거됨
+                LifeTime += attackTarget[0].Die();      // Die가 실행되면 컬라이더가 비활성화 되면서 attackTarget에서 자동으로 제거됨
             }
         }
     }
@@ -167,7 +235,8 @@ public class Player : MonoBehaviour
         rigid.MovePosition(rigid.position + Time.deltaTime * speed * inputDir);
 
         // 이동 후에 어떤맵에 있는지 표시
-        CurrentMap = mapManager.WorldToGrid(transform.position);
+        if(mapManager != null)
+            CurrentMap = mapManager.WorldToGrid(transform.position);
         
     }
 
@@ -253,4 +322,15 @@ public class Player : MonoBehaviour
     {
         isAttackValid = false;
     }
+
+    /// <summary>
+    /// 타임오버로 사망시 실행될 함수
+    /// </summary>
+    void Die()
+    {
+        lifeTime = 0.0f;                 // 비네트, 슬라이더, 남은 시간을 깔끔하게 표시하기 위해 0으로 설정
+        isDead = true;                   // 여러번 호출되지 않도록하기 위해 설정
+        onDie?.Invoke(totalPlayTime);    // 죽었다고 알리기
+    }
+
 }
