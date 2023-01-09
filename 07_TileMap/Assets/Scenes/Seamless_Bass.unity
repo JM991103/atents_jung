@@ -273,6 +273,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SlimeFactory
       objectReference: {fileID: 0}
+    - target: {fileID: 6943829591859337157, guid: 2b59adb149ac7e94ab4b88eb7b0b6d0a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6943829591859337163, guid: 2b59adb149ac7e94ab4b88eb7b0b6d0a, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -921,7 +925,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7176025567080620848, guid: 64f58dc9a7efac4489459c9a79e01f11, type: 3}
       propertyPath: maxLifeTime
-      value: 10
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7176025567080620851, guid: 64f58dc9a7efac4489459c9a79e01f11, type: 3}
       propertyPath: m_Name
@@ -1422,6 +1426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 489a5a3cd0793d94d9b2d5543f111047, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  alphaChangeSpeed: 2
 --- !u!225 &2092059452
 CanvasGroup:
   m_ObjectHideFlags: 0
