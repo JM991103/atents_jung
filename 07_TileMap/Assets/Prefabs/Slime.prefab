@@ -220,11 +220,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 35632249104040952, guid: f13554409ae48b84993a0a1f9299a653, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 35632249104040953, guid: f13554409ae48b84993a0a1f9299a653, type: 3}
       propertyPath: m_Positions.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 35632249104040953, guid: f13554409ae48b84993a0a1f9299a653, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.b
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f13554409ae48b84993a0a1f9299a653, type: 3}

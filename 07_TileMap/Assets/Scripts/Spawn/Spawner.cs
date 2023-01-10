@@ -133,7 +133,7 @@ public class Spawner : MonoBehaviour
         {
             int index = UnityEngine.Random.Range(0, spawns.Count);
             Node target = spawns[index];                        // spawns 중에서 랜덤으로 하나 선택
-            Vector2Int gridPos = new Vector2Int(spawns[index].x, spawns[index].y);
+            Vector2Int gridPos = new Vector2Int(target.x, target.y);
             spawnPos = manager.GridMap.GridToWorld(gridPos);    // 선택한 그리드 좌표를 월드좌표로 변경해서 리턴
             result = true;
         }
