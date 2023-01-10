@@ -23,6 +23,6 @@ public class LifeTimeGague : MonoBehaviour
 
     private void OnLifeTimeChange(float time, float maxTime)
     {
-        slider.value = time / maxTime;
+        slider.value = time / maxTime;      // 플레이어의 수명이 변경되면 슬라이더 값 변경
     }
 }
