@@ -29,7 +29,6 @@ public class GameOverPanel : MonoBehaviour
     {
         Player player = GameManager.Inst.Player;
         player.onDie += OnPlayerDie;
-        canvasGroup.alpha = 0.0f;
     }
 
     private void OnPlayerDie(float totalPlayTime)
@@ -49,7 +48,7 @@ public class GameOverPanel : MonoBehaviour
 
     private void OnRestartClick()
     {
-        SceneManager.LoadScene("Seamless_Bass");
+        SceneManager.LoadScene("LoadingScene");
     }
 
 }

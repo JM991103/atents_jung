@@ -62,6 +62,20 @@ public class MapManager : MonoBehaviour
                 sceneName[index] = $"{SceneNameBase}_{x}_{y}";      // 각 씬의 이름 설정
                 sceneLoadStates[index] = SceneLoadState.UnLoad;     // 각 씬의 로딩 상태 초기화
             }
+        }       
+    }
+
+    // 무조건 초기화가 다 된 이후에 실행
+    public void MapDataReset()
+    {
+
+        for (int y = 0; y < HeightCount; y++)
+        {
+            for (int x = 0; x < WidthCount; x++)
+            {
+                int index = GetIndex(x, y);
+                sceneLoadStates[index] = SceneLoadState.UnLoad;     // 각 씬의 로딩 상태 초기화
+            }
         }
 
         Player player = GameManager.Inst.Player;
