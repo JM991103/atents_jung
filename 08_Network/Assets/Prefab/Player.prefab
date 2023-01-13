@@ -233,7 +233,8 @@ GameObject:
   - component: {fileID: 1853486121209926501}
   - component: {fileID: 5717543040007555359}
   - component: {fileID: 1365496006076385749}
-  m_Layer: 8
+  - component: {fileID: 9217711862907238629}
+  m_Layer: 0
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -296,6 +297,20 @@ CharacterController:
   m_SkinWidth: 0.02
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0.93, z: 0}
+--- !u!114 &9217711862907238629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1365496006076385759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9c57d8b5090d044dbf55a31b1b8e458, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 3.5
+  rotateSpeed: 350
 --- !u!1 &1440878234052383500
 GameObject:
   m_ObjectHideFlags: 0
