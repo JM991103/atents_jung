@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 이번 프레임에 움직여야 할 이동량
     /// </summary>
-    Vector3 moveDelta;
+    float moveDelta;
 
     /// <summary>
     /// 이번 프레임에 회전해야 할 회전량
@@ -52,7 +52,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        contoller.SimpleMove(moveDelta);
+        contoller.SimpleMove(moveDelta * transform.forward);
         transform.Rotate(0, rotateDelta * Time.deltaTime, 0, Space.World);
     }
 
@@ -63,7 +63,7 @@ public class Player : MonoBehaviour
     private void OnMoveInput(InputAction.CallbackContext context)
     {
         Vector2 moveInput = context.ReadValue<Vector2>();
-        moveDelta = moveInput.y * moveSpeed * transform.forward;    // 이동 입력 저장하기
+        moveDelta = moveInput.y * moveSpeed;    // 이동 입력 저장하기
         rotateDelta = moveInput.x * rotateSpeed;                    // 회전 입력 저장하기
     }
 
