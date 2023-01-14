@@ -76,6 +76,20 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 3313236374205911699}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &-3211892417105751748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4542387715745225548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea71d397bbbe6b54286ad621a1099fd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 3.5
+  rotateSpeed: 350
 --- !u!114 &9217711862907238630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,7 +106,7 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &-3211892417105751748
+--- !u!114 &5962120439797325490
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -101,8 +115,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 4542387715745225548}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea71d397bbbe6b54286ad621a1099fd6, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fc215e26cd3f38468c9df867ba15597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 3.5
-  rotateSpeed: 350
