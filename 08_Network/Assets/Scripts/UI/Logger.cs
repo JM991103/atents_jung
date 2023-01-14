@@ -155,11 +155,11 @@ public class Logger : MonoBehaviour
             for (int i = 0; i < split.Length; i++)                      // 나누어 놓았던 것을 모두 처리하기 위해 for 돌리기
             {
                 result += split[i];                     // 나누어 놓았던 문장(split)을 result에 저장
-                if (i + 1 != split.Length)                // 마지막 split이 아닌 경우
+                if (i + 1 != split.Length)              // 마지막 split이 아닌 경우
                 {
                     if (i % 2 == 0)
                     {
-                        result += $"<#{colorText}>";     // 짝수면 태그 시작부분을 result에 추가하기
+                        result += $"<#{colorText}>";    // 짝수면 태그 시작부분을 result에 추가하기
                     }
                     else
                     {
