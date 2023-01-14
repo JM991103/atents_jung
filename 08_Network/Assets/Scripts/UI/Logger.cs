@@ -6,6 +6,10 @@ using UnityEngine;
 
 public class Logger : MonoBehaviour
 {
+    public Color warningColor;   // 경고용 색상
+        
+    public Color criticalColor;  // 심각한 강조용 색상
+
     /// <summary>
     /// 한번에 출력되는 최대 줄 수
     /// </summary>
@@ -45,6 +49,21 @@ public class Logger : MonoBehaviour
     /// <param name="logstr">추가할 문장</param>
     public void Log(string logstr)
     {
+        // [] 사이에 있는 글자는 critical 색상으로 보여주기
+        // {} 사이에 있는 글자는 warning 색상으로 보여주기
+        //string test = string.Format("{0} 입력됨", logstr);
+        //int index = logstr.IndexOf("[");                    // 문자역 안에 특정 문자열이 있는 위치 찾기
+        //test = $"{logstr}에서 [는 {index}번째에 있다";
+        //string[] split = logstr.Split('[', ']');
+        //test = split[0] + "<#ff0000>" + split[1] + "</color>" + split[2];
+        //test = logstr.Replace("[", "<#ff0000>");
+        //test += test.Replace("]", "</color>");
+        //logstr = test;
+
+        
+        logstr = Emphasize(logstr, '[', ']', criticalColor);   // 괄호 내부를 강조
+        logstr = Emphasize(logstr, '{', '}', warningColor);
+
         logLines.Add(logstr);               // 리스트에 문장 추가하고
         if (logLines.Count > maxLineCount)  // 최대 줄 수를 넘어서면
         {
@@ -60,6 +79,19 @@ public class Logger : MonoBehaviour
         }
 
         log.text = builder.ToString();      // 빌더에 있는 내용을 하나의 문자열로 합치기
+    }
+
+    string Emphasize(string source, char open, char close, Color color)
+    {
+        string temp = source;
+        if (temp.IndexOfAny(new char[] { open, close }) != -1)   // 이 문자열에 괄호([], {}) 포함 되어있는지 확인
+        {
+            // 추가 처리 필요
+            string[] split = temp.Split(open, close);
+            string colorText = ColorUtility.ToHtmlStringRGB(criticalColor);
+            temp = $"{split[0]}<#{colorText}>{split[1]}</color>{split[2]}";
+        }
+        return temp;
     }
 
     /// <summary>
