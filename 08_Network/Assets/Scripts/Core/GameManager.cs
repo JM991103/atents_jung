@@ -46,8 +46,8 @@ public class GameManager : Singleton<GameManager>
         string name = $"{id} - {inputField.text}";
 
         NetPlayerDecoration decoration = netObj.GetComponent<NetPlayerDecoration>();
-        decoration.SetPlayerNameServerRpc($"{id} - {inputField.text}");     // 이름판에 이름 쓰기
+        decoration.SetPlayerNameServerRpc(name);        // 이름판에 이름 쓰기
 
-        netObj.gameObject.name = $"NetPlayer - {name}";
+        netObj.gameObject.name = $"NetPlayer - {name}"; // NetPlayer 게임 오브젝트 이름 변경
     }
 }
