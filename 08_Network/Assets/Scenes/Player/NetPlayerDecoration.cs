@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -49,6 +50,7 @@ public class NetPlayerDecoration : NetworkBehaviour
         //IsOwner;    // 이 NetworkBehaviour를 컨트롤 하고 있다.
         //IsServer;   // 이 NetworkBehaviour 오브젝트는 서버가 가지고 있다.
         //IsHost;     // 이 NetworkBehaviour 오브젝트는 서버이면서 클라이언트인 것이 가지고 있다.
+        
         // 렌더러에 있는 첫번째 머티리얼의 색상을 랜덤으로 변경하기
         if (IsServer)   // 서버일 때만 실행
         {
@@ -58,6 +60,7 @@ public class NetPlayerDecoration : NetworkBehaviour
 
         Renderer renderer = GetComponentInChildren<Renderer>(); // 랜더러 가져와서 
         renderer.material.color = color.Value;                  // color 값으로 머티리얼 컬러 설정
+
     }
 
     /// <summary>

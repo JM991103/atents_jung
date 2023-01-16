@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Netcode;
+using Cinemachine;
 
 public class NetPlayer : NetworkBehaviour
 {
@@ -63,6 +64,18 @@ public class NetPlayer : NetworkBehaviour
     {        
         ClientMoveAndRotate();
     }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        if (IsOwner)    // 내 NetPlayer가 스폰이 되엇을 때만
+        {
+            GameManager.Inst.VCamera.Follow = transform.GetChild(0);    // 카메라가 이 NetPlayer를 따라다니게 만들기
+            //GameManager.Inst.Player = this.;
+        }
+    }
+
 
     private void ClientMoveAndRotate()
     {
