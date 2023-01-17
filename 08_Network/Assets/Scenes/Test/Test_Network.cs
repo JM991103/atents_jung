@@ -11,4 +11,13 @@ public class Test_Network : TestBase
         Animator anim = player.GetComponent<Animator>();
         anim.SetTrigger("Test");
     }
+
+    protected override void Test2(InputAction.CallbackContext _)
+    {
+        NetPlayer player = GameManager.Inst.Player;
+        NetPlayerDecoration deco = player.GetComponent<NetPlayerDecoration>();
+        Color color = Random.ColorHSV(0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+        deco.SetPlayerColorServerRpc(color);
+
+    }
 }
