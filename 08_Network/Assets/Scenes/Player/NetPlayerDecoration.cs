@@ -71,7 +71,8 @@ public class NetPlayerDecoration : NetworkBehaviour
             color.Value = Random.ColorHSV(0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
         }
 
-        platerRenderer.material.color = color.Value;
+        platerRenderer.material.color = color.Value;        // 스폰할 때 저장되어 있던 색상으로 설정
+        namePlate.text = playerName.Value.ToString();       // 스폰할 때 저장되어 있던 이름으로 설정
     }
 
     /// <summary>
