@@ -5,15 +5,16 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
-public class VirtualStick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerDownHandler
+public class VirtualPad : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerDownHandler
 {
     RectTransform containerRect;
     RectTransform handleRect;
     
     float stickRange;
 
-    Action<Vector2> onMoveInput;
+    public Action<Vector2> onMoveInput;
 
     private void Awake()
     {
@@ -31,27 +32,33 @@ public class VirtualStick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPoi
             containerRect, eventData.position, eventData.pressEventCamera, out Vector2 position);   
 
         position = Vector2.ClampMagnitude(position, stickRange);    // 핸들이 stickRange 안쪽으로만 움직이도록 계산
-        handleRect.anchoredPosition = position;                             // 핸들의 위치 설정
 
-        position /= stickRange;     // 최대값이 1이 되도록 설정
+        //position /= stickRange;     // 최대값이 1이 되도록 설정
 
-        NetPlayer player = GameManager.Inst.Player;
-        if (player != null)
-        {
-            //player.SetInputDir(ref position);
-            player.SetInputDir(position);
-        }
+        InputUpdata(position);
 
-        Debug.Log(position);
+        //Debug.Log(position);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        handleRect.anchoredPosition = Vector3.zero;
+        //Debug.Log("마우스 업");
+
+        InputUpdata(Vector2.zero);
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        
+        //Debug.Log("마우스 다운");
+    }
+
+    /// <summary>
+    /// 입력 업데이트(가상 패드에서 어떻게 입력이 들어왔는지 전달)
+    /// </summary>
+    /// <param name="pos">핸들이 부모에서 얼마나 떨어져 있는지</param>
+    void InputUpdata(Vector2 pos)
+    {
+        handleRect.anchoredPosition = pos;       // 핸들의 위치 설정
+        onMoveInput?.Invoke(pos / stickRange);   // 이동 방향을 알림
     }
 }

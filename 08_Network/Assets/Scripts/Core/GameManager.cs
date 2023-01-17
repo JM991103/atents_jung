@@ -17,7 +17,9 @@ public class GameManager : Singleton<GameManager>
 
     NetPlayer player;
 
-    public NetPlayer Player => player;    
+    public NetPlayer Player => player;
+
+    VirtualPad virtualPad;
 
     protected override void Initialize()
     {
@@ -31,6 +33,7 @@ public class GameManager : Singleton<GameManager>
         logger = FindObjectOfType<Logger>();
 
         virtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
+        virtualPad = FindObjectOfType<VirtualPad>();
     }
 
     private void OnClientConnect(ulong id)
@@ -41,6 +44,7 @@ public class GameManager : Singleton<GameManager>
         if (netObj.IsOwner)                             // 내 NetPlayer가 접속했으면
         {   
             player = netObj.GetComponent<NetPlayer>();  // 게임매니저에 기록해 놓기
+            virtualPad.onMoveInput += Player.SetInputDir;
         }
         TMP_InputField inputField = FindObjectOfType<TMP_InputField>();
         string name = $"{id} - {inputField.text}";
