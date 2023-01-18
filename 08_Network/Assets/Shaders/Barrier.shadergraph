@@ -133,6 +133,9 @@
         },
         {
             "m_Id": "0df2998512a54bb99dfb55fef9cfd142"
+        },
+        {
+            "m_Id": "b15deb2873714431a539acc30423f238"
         }
     ],
     "m_StickyNoteDatas": [],
@@ -580,7 +583,7 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -2443.0,
+            "x": -2007.0001220703125,
             "y": 1174.0,
             "width": 145.0,
             "height": 112.0
@@ -988,7 +991,7 @@
     "m_Type": "UnityEditor.ShaderGraph.TilingAndOffsetNode",
     "m_ObjectId": "2438ca91ddd2418389a9032cec6b2e10",
     "m_Group": {
-        "m_Id": ""
+        "m_Id": "b15deb2873714431a539acc30423f238"
     },
     "m_Name": "Tiling And Offset",
     "m_DrawState": {
@@ -1584,7 +1587,7 @@
     "m_Type": "UnityEditor.ShaderGraph.MultiplyNode",
     "m_ObjectId": "476c9d9521d74b3a8bfada862bfd62d0",
     "m_Group": {
-        "m_Id": ""
+        "m_Id": "b15deb2873714431a539acc30423f238"
     },
     "m_Name": "Multiply",
     "m_DrawState": {
@@ -2136,7 +2139,7 @@
     "m_Type": "UnityEditor.ShaderGraph.TimeNode",
     "m_ObjectId": "8355c7984818468e9051b9dd2a886366",
     "m_Group": {
-        "m_Id": ""
+        "m_Id": "b15deb2873714431a539acc30423f238"
     },
     "m_Name": "Time",
     "m_DrawState": {
@@ -2375,7 +2378,7 @@
     "m_Type": "UnityEditor.ShaderGraph.SampleTexture2DNode",
     "m_ObjectId": "8d4c4b2d0d53415c86cf3b62696e2529",
     "m_Group": {
-        "m_Id": ""
+        "m_Id": "b15deb2873714431a539acc30423f238"
     },
     "m_Name": "Sample Texture 2D",
     "m_DrawState": {
@@ -2650,6 +2653,17 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.GroupData",
+    "m_ObjectId": "b15deb2873714431a539acc30423f238",
+    "m_Title": "움직이는 패턴 만들기",
+    "m_Position": {
+        "x": 10.0,
+        "y": 10.0
+    }
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
     "m_ObjectId": "b2861de3ee7a4c979d3faae7c0a9d2f4",
     "m_Id": 0,
@@ -2914,7 +2928,7 @@
     "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
     "m_ObjectId": "c38980c0360240e8b70b2ad494604b6b",
     "m_Group": {
-        "m_Id": ""
+        "m_Id": "b15deb2873714431a539acc30423f238"
     },
     "m_Name": "Property",
     "m_DrawState": {
@@ -3000,7 +3014,7 @@
     "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
     "m_ObjectId": "cf5174a3d14f4d9f8ed31ef148305320",
     "m_Group": {
-        "m_Id": ""
+        "m_Id": "b15deb2873714431a539acc30423f238"
     },
     "m_Name": "Property",
     "m_DrawState": {

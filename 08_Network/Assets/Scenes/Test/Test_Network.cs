@@ -18,6 +18,10 @@ public class Test_Network : TestBase
         NetPlayerDecoration deco = player.GetComponent<NetPlayerDecoration>();
         Color color = Random.ColorHSV(0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
         deco.SetPlayerColorServerRpc(color);
+    }
 
+    protected override void Test3(InputAction.CallbackContext _)
+    {
+        
     }
 }
