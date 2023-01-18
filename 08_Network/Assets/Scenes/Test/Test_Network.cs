@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class Test_Network : TestBase
 {
+    bool effectSwitch = true;
+
     protected override void Test1(InputAction.CallbackContext _)
     {
         NetPlayer player = GameManager.Inst.Player;
@@ -22,6 +24,8 @@ public class Test_Network : TestBase
 
     protected override void Test3(InputAction.CallbackContext _)
     {
-        
+        NetPlayer player = GameManager.Inst.Player;
+        player.IsEffectOn = effectSwitch;
+        effectSwitch = !effectSwitch;
     }
 }
