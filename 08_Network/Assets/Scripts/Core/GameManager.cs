@@ -6,7 +6,7 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : NetSingleton<GameManager>
 {
     Logger logger;
     public Logger Logger => logger;
@@ -21,12 +21,46 @@ public class GameManager : Singleton<GameManager>
 
     VirtualPad virtualPad;
 
+    /// <summary>
+    /// 이 게임에 접속한 플레이어의 숫자
+    /// </summary>
+    NetworkVariable<int> playersInGame = new NetworkVariable<int>(0);
+
+    public Action<int> onPlayersChange;
+
     protected override void Initialize()
     {
         base.Initialize();
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnect;
+
+        NetworkManager.Singleton.OnClientConnectedCallback += (_) =>
+        {
+            if (IsServer)   // 누가 게임에 들어왔을 때, 서버에서만 playersInGame을 1 증가 시키기
+            {
+                playersInGame.Value++;
+            }            
+        };
+        NetworkManager.Singleton.OnClientDisconnectCallback += (_) =>
+        {
+            if (IsServer)   // 누가 게임에서 나갔을 때, 서버에서만 playersInGame을 1 감소 시키기
+            {
+                playersInGame.Value--;
+            }
+        };
+        playersInGame.OnValueChanged += OnPlayersInGameChange;  // 값이 변경될 때 실행될 함수 등록
     }
-    
+
+    /// <summary>
+    /// PlayersInGame의 값이 변경되었을 때 실행될 함수
+    /// </summary>
+    /// <param name="previousValue"></param>
+    /// <param name="newValue"></param>
+    private void OnPlayersInGameChange(int previousValue, int newValue)
+    {
+        Logger.Log($"players In Game : {newValue}");    // 값이 변경되면 새 값을 로그로 출력
+        onPlayersChange?.Invoke(newValue);
+    }
+
     protected override void ManagerDataReset()
     {
         base.ManagerDataReset();
@@ -45,7 +79,7 @@ public class GameManager : Singleton<GameManager>
         {
             player = netObj.GetComponent<NetPlayer>();  // 게임매니저에 기록해 놓기
             virtualPad.onMoveInput += Player.SetInputDir;
-
+            
             // 내 게임 오브젝트 이름 설정하기
             TMP_InputField inputField = FindObjectOfType<TMP_InputField>();
             string name = $"{id} - {inputField.text}";

@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Netcode;
+using TMPro;
 
 public class NetworkTestController : MonoBehaviour
 {
     public Button startHost;
     public Button starClient;
+
+    public TextMeshProUGUI playersInGame;
 
     private void Awake()
     {
@@ -39,5 +42,15 @@ public class NetworkTestController : MonoBehaviour
                 GameManager.Inst.Logger.Log("클라이언트의 연결이 실패했습니다.");   // 시작에 실패
             }
         });
+
+        child = transform.GetChild(4);
+        playersInGame = child.GetComponent<TextMeshProUGUI>();
+
+        GameManager.Inst.onPlayersChange += PlayersInGameUpdate;    // 접속 인원수가 변경되었을 때 실행될 함수 등록
+    }
+
+    void PlayersInGameUpdate(int newPlayerInGame)
+    {
+        playersInGame.text = $"Players : {newPlayerInGame}";
     }
 }
