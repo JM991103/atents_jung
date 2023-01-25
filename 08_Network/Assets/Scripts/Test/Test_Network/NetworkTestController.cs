@@ -9,6 +9,7 @@ public class NetworkTestController : MonoBehaviour
 {
     public Button startHost;
     public Button starClient;
+    public Button Disconnect;
 
     public TextMeshProUGUI playersInGame;
 
@@ -18,6 +19,8 @@ public class NetworkTestController : MonoBehaviour
         startHost = child.GetComponent<Button>();       // 호스트 시작용 버튼 찾기
         child = transform.GetChild(1);
         starClient = child.GetComponent<Button>();      // 클라이언트 시작용 버튼 찾기
+        child = transform.GetChild(2);
+        Disconnect = child.GetComponent<Button>();      // 디스커넥트 버튼 찾기
 
         startHost.onClick.AddListener(() =>             // 호스트 시작 버튼이 클릭 되었을 때 
         {
@@ -41,6 +44,11 @@ public class NetworkTestController : MonoBehaviour
             {
                 GameManager.Inst.Logger.Log("클라이언트의 연결이 실패했습니다.");   // 시작에 실패
             }
+        });
+
+        Disconnect.onClick.AddListener(() =>            // 디스커넥트 버튼이 클릭되었을 때
+        {
+            NetworkManager.Singleton.Shutdown();        // 자신의 연결을 끊는다.            
         });
 
         child = transform.GetChild(4);
