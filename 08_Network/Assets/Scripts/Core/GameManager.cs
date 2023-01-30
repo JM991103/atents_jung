@@ -13,11 +13,9 @@ public class GameManager : NetSingleton<GameManager>
     public Logger Logger => logger;
 
     CinemachineVirtualCamera virtualCamera;
-
     public CinemachineVirtualCamera VCamera => virtualCamera;
 
     NetPlayer player;
-
     public NetPlayer Player => player;
 
     VirtualPad virtualPad;
@@ -106,10 +104,10 @@ public class GameManager : NetSingleton<GameManager>
         //Logger.Log($"{id} is connected.");
 
         NetworkObject netObj = NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(id);
-        if (netObj.IsOwner)                             // 내 NetPlayer가 접속했으면
+        if (netObj.IsOwner)                                 // 내 NetPlayer가 접속했으면
         {
-            player = netObj.GetComponent<NetPlayer>();  // 게임매니저에 기록해 놓기
-            virtualPad.onMoveInput += Player.SetInputDir;
+            player = netObj.GetComponent<NetPlayer>();      // 게임매니저에 기록해 놓기
+            virtualPad.onMoveInput = Player.SetInputDir;    // 새로 접속한 플레이어를 가상패드에 연결(이전 플레이어를 대체)
             
             // 내 게임 오브젝트 이름 설정하기
             TMP_InputField inputField = FindObjectOfType<TMP_InputField>();

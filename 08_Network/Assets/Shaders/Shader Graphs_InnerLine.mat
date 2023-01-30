@@ -48,12 +48,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _EffectPower: 2
+    - _EffectPower: 1.2
     - _Merallic: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Smoothmess: 1
+    - _Smoothmess: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 0}
-    - _EffectColor: {r: 1.696335, g: 5.340313, b: 0.1568628, a: 0}
+    - _EffectColor: {r: 76.15007, g: 0.29862773, b: 0, a: 0}
   m_BuildTextureStacks: []

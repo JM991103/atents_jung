@@ -141,7 +141,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &31663027
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2374,7 +2374,13 @@ MonoBehaviour:
     NetworkTransport: {fileID: 1173615160}
     PlayerPrefab: {fileID: 4542387715745225548, guid: af2863cef6ce4994792a0b6f95f53697,
       type: 3}
-    NetworkPrefabs: []
+    NetworkPrefabs:
+    - Override: 0
+      Prefab: {fileID: 6141286656913826730, guid: f60c8dcaf17c5dd46bc60c34b3e84a61,
+        type: 3}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
@@ -2680,7 +2686,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &1601347398
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3216,6 +3222,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startHost: {fileID: 0}
   starClient: {fileID: 0}
+  Disconnect: {fileID: 0}
   playersInGame: {fileID: 0}
 --- !u!1 &1778953121
 GameObject:
@@ -3506,7 +3513,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &1860719109
 CapsuleCollider:
   m_ObjectHideFlags: 0
