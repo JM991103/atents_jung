@@ -19,6 +19,7 @@ public class NetPlayer : NetworkBehaviour
     public float rotateSpeed = 350f;
 
     public GameObject ballPrefab;
+    public GameObject bulletPrefab;
     Transform fireTransform;
 
     // NetworkVariable
@@ -164,7 +165,10 @@ public class NetPlayer : NetworkBehaviour
 
     private void OnAttack1(InputAction.CallbackContext _)
     {
-        
+        if (IsOwner)
+        {
+            SpawnBulletServerRpc();
+        }
     }
 
     private void OnAttack2(InputAction.CallbackContext _)
@@ -183,7 +187,18 @@ public class NetPlayer : NetworkBehaviour
         ball.transform.rotation = fireTransform.rotation;    // fireTransform의 회전 적용
 
         NetworkObject netObj = ball.GetComponent<NetworkObject>();
-        netObj.Spawn(true);                                 // 다른 클라이언트들에게 만들어지게 하기
+        netObj.Spawn(true);                                  // 다른 클라이언트들에게 만들어지게 하기
+    }
+
+    [ServerRpc]
+    void SpawnBulletServerRpc()
+    {
+        GameObject ball = Instantiate(bulletPrefab);           // 서버에서 만들기
+        ball.transform.position = fireTransform.position;    // fireTransform의 위치 적용
+        ball.transform.rotation = fireTransform.rotation;    // fireTransform의 회전 적용
+
+        NetworkObject netObj = ball.GetComponent<NetworkObject>();
+        netObj.Spawn(true);                                  // 다른 클라이언트들에게 만들어지게 하기
     }
 
     public void SetInputDir(Vector2 dir)

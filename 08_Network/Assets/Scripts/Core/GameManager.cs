@@ -37,6 +37,12 @@ public class GameManager : NetSingleton<GameManager>
 
     public Action<int> onPlayersChange;
 
+    public string ConnectName
+    {
+        get => connectName.Value.ToString();
+        set => connectName.Value = value;
+    }
+
     protected override void Initialize()
     {
         base.Initialize();
