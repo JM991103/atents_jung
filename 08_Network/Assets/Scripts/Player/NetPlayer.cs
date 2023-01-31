@@ -22,6 +22,12 @@ public class NetPlayer : NetworkBehaviour
     public GameObject bulletPrefab;
     Transform fireTransform;
 
+    public float attack01_Interval = 3.0f;   // 총알 공격 전체 쿨타임
+    public float attack02_Interval = 0.5f;   // 공 공격 전체 쿨타임
+    float attack01_Cooltime = 0.0f;
+    float attack02_Cooltime = 0.0f;
+    public Action<float> onAttack01_coolTimeChange;
+    public Action<float> onAttack02_coolTimeChange;
     // NetworkVariable
     // Netcode for GameObjects에서 네트워크를 통해 데이터를 공유하기 위해 사용하는 데이터 타입.
     // NetworkVariable로 공유 가능한 데이터 타입은 numanaged 타입 가능(대략적으로 값타입만 가능)
@@ -118,7 +124,13 @@ public class NetPlayer : NetworkBehaviour
     }
 
     private void Update()
-    {        
+    {
+        attack01_Cooltime -= Time.deltaTime;
+        attack02_Cooltime -= Time.deltaTime;
+
+        onAttack01_coolTimeChange?.Invoke(attack01_Cooltime / attack01_Interval);
+        onAttack02_coolTimeChange?.Invoke(attack02_Cooltime / attack02_Interval);
+
         ClientMoveAndRotate();
     }
 
@@ -282,16 +294,20 @@ public class NetPlayer : NetworkBehaviour
 
     public void Attack01()
     {
-        if (IsOwner)
+        if(attack01_Cooltime < 0.0f && IsOwner)
         {
+            //Debug.Log("Attack01");
             SpawnBulletServerRpc();
+            attack01_Cooltime = attack01_Interval;
         }
     }
     public void Attack02()
     {
-        if (IsOwner)
+        if (attack02_Cooltime < 0.0f && IsOwner)
         {
+            //Debug.Log("Attack02");
             SpawnBallServerRpc();
+            attack02_Cooltime = attack02_Interval;
         }
     }
 }

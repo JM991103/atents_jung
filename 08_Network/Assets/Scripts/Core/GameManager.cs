@@ -124,6 +124,8 @@ public class GameManager : NetSingleton<GameManager>
             virtualPad.onMoveInput = Player.SetInputDir;    // 새로 접속한 플레이어를 가상패드에 연결(이전 플레이어를 대체)
             virtualButtons[(int)VirtualButton.AttackType.Bullet].onClick = player.Attack01;
             virtualButtons[(int)VirtualButton.AttackType.Ball].onClick = player.Attack02;
+            player.onAttack01_coolTimeChange += virtualButtons[(int)VirtualButton.AttackType.Bullet].RefreshCoolTime;
+            player.onAttack02_coolTimeChange += virtualButtons[(int)VirtualButton.AttackType.Ball].RefreshCoolTime;
 
             // 내 게임 오브젝트 이름 설정하기
             TMP_InputField inputField = FindObjectOfType<TMP_InputField>();
