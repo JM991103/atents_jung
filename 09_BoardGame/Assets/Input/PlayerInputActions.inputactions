@@ -3,18 +3,18 @@
     "maps": [
         {
             "name": "Player",
-            "id": "aff5ad71-0c4d-48e2-890a-576c4724af60",
+            "id": "14bbe418-8fdc-4559-af12-6cc7d913bf20",
             "actions": [],
             "bindings": []
         },
         {
             "name": "Test",
-            "id": "405a27a4-6a3d-40c5-8bcf-354243b2b6ce",
+            "id": "f5efa1eb-16f9-437a-b469-c4eaea831314",
             "actions": [
                 {
                     "name": "Test1",
                     "type": "Button",
-                    "id": "d6bb7bfb-bb34-44e3-bedb-084143c19abb",
+                    "id": "8236aa6c-9988-403f-bafb-17b0b34f0d7a",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -23,7 +23,7 @@
                 {
                     "name": "Test2",
                     "type": "Button",
-                    "id": "0ed4ba27-0b66-4127-903c-9d3ef79dbfd8",
+                    "id": "0b09acf6-d3f3-47ae-80c9-6cb4e8f7b4ef",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -32,7 +32,7 @@
                 {
                     "name": "Test3",
                     "type": "Button",
-                    "id": "31e07598-2955-4379-a764-abd0757b7b7d",
+                    "id": "af1ba915-3231-4055-becb-1375789d6f01",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -41,7 +41,7 @@
                 {
                     "name": "Test4",
                     "type": "Button",
-                    "id": "fe42fdce-72b0-48dd-a0f5-e31f6f7c0d8a",
+                    "id": "36e2ddec-dc53-41a9-b081-4bb9642f73cf",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -50,7 +50,7 @@
                 {
                     "name": "Test5",
                     "type": "Button",
-                    "id": "11b744d0-4160-4ba4-bb07-ae081eee3f2f",
+                    "id": "3db15ace-a9c4-466f-8932-6b8847bc095d",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -60,55 +60,55 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "3329bd6f-3513-4c04-8970-edd5473d0341",
+                    "id": "adbe2d6c-1f8d-4872-9ea1-fdb39cdfe9c6",
                     "path": "<Keyboard>/1",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
+                    "groups": "KMT",
                     "action": "Test1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "76585ce2-b2d5-4b4f-90c9-3df833dea23a",
+                    "id": "7ff0d6d5-6436-4ca2-bbf5-ec146012cde8",
                     "path": "<Keyboard>/2",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
+                    "groups": "KMT",
                     "action": "Test2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "3083e1ec-f784-4130-81cc-a9c8e7e9522d",
+                    "id": "d4339b0f-6f0f-439e-92fb-27b3d5b0dadb",
                     "path": "<Keyboard>/3",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
+                    "groups": "KMT",
                     "action": "Test3",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "2f46d8d5-87a4-4390-a5fc-99d85da637c0",
+                    "id": "2408bc1d-788f-4be8-82c2-b617f8f620cf",
                     "path": "<Keyboard>/4",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
+                    "groups": "KMT",
                     "action": "Test4",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "4671163b-bc17-4816-984c-4491319df4e2",
+                    "id": "a81abc97-7c4c-4c3a-bb53-d482820d83b5",
                     "path": "<Keyboard>/5",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
+                    "groups": "KMT",
                     "action": "Test5",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -118,8 +118,8 @@
     ],
     "controlSchemes": [
         {
-            "name": "Keyboard&Mouse",
-            "bindingGroup": "Keyboard&Mouse",
+            "name": "KMT",
+            "bindingGroup": "KMT",
             "devices": [
                 {
                     "devicePath": "<Keyboard>",
