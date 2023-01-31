@@ -124,15 +124,20 @@ public class NetPlayer : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        base.OnNetworkSpawn();
-
         if (IsOwner)    // 내 NetPlayer가 스폰이 되엇을 때만
         {
             GameManager.Inst.VCamera.Follow = transform.GetChild(0);    // 카메라가 이 NetPlayer를 따라다니게 만들기
-            //GameManager.Inst.Player = this.;
+            transform.position = GameManager.Inst.GetRandomSpawnPosition();
+            transform.rotation = Quaternion.Euler(0, UnityEngine.Random.Range(0, 360.0f), 0);
         }
     }
 
+    public void OnDie()
+    {
+        // 위치 리셋
+        transform.position = GameManager.Inst.GetRandomSpawnPosition();
+        transform.rotation = Quaternion.Euler(0, UnityEngine.Random.Range(0, 360.0f), 0);
+    }
 
     private void ClientMoveAndRotate()
     {

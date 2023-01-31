@@ -28,4 +28,9 @@ public class Test_Network : TestBase
         player.IsEffectOn = effectSwitch;
         effectSwitch = !effectSwitch;
     }
+    protected override void Test4(InputAction.CallbackContext _)
+    {
+        NetPlayer player = GameManager.Inst.Player;
+        player.OnDie();
+    }
 }

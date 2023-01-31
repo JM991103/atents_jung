@@ -150,4 +150,17 @@ public class GameManager : NetSingleton<GameManager>
     {
         connectName.Value = name;
     }
+
+    public Vector3 GetRandomSpawnPosition()
+    {
+        // x : -11 ~ 20
+        // y : -1 ~ 28
+        Vector3 result = new Vector3(UnityEngine.Random.Range(-11.0f, 20.0f), 0, UnityEngine.Random.Range(-1.0f, 28.0f));
+        Vector3 origin = result + Vector3.up * 100;
+        if(Physics.Raycast(origin, Vector3.down, out RaycastHit hit, 150.0f, LayerMask.GetMask("Environment")))
+        {
+            result = hit.point;
+        }
+        return result;
+    }
 }
