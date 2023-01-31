@@ -133,7 +133,7 @@ public class GameManager : NetSingleton<GameManager>
             NetPlayerDecoration decoration = netObj.GetComponent<NetPlayerDecoration>();
             decoration.SetPlayerNameServerRpc(name);        // 이름판에 이름 쓰기
 
-            // 나 외에 다른 플레이어 게임 오브젝트 이름 변경
+            // 나 외에 다른 플레이어 게임 오브젝트 이ㅏ혼자름 변경
             foreach (var netObjs in NetworkManager.Singleton.SpawnManager.SpawnedObjectsList)
             {
                 if (netObj != netObjs)  // 미리 접속해 있던 다른 플레이어들이면
