@@ -6,8 +6,9 @@ using UnityEngine;
 public class NetBullet : NetworkBehaviour
 {
     public float speed = 10.0f;
-    int reflectCount = 2;
+
     Rigidbody rigid;
+    int reflectCount = 2;
 
     private void Awake()
     {
@@ -22,12 +23,12 @@ public class NetBullet : NetworkBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!NetworkObject.IsSpawned)   // 이미 디스폰 된다고 되어있는 상황이면 
+        if (!NetworkObject.IsSpawned)
         {
-            return;                     // 이후의 코드는 실행안함.
+            return;
         }
-        
-        GameManager.Inst.Logger.Log($"총알 : {collision.gameObject.name} 명중");
+
+        GameManager.Inst.Logger.Log($"총알 : {collision.gameObject.name}");
 
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -38,12 +39,12 @@ public class NetBullet : NetworkBehaviour
         }
         else if (reflectCount > 0)
         {
-            // 튕길 횟수가 남아 있으면튕기기
-            transform.forward = Vector3.Reflect(transform.forward, collision.GetContact(0).normal); // 반사 방향 구하기
-            rigid.angularVelocity = Vector3.zero;       // 회전 운동량 제거
-            rigid.velocity = transform.forward * 10.0f; // 앞쪽 방향으로 나가게 만들기
+            // 튕길 횟수가 남아있으면 튕기기
+            transform.forward = Vector3.Reflect(transform.forward, collision.GetContact(0).normal);     // 반사 방향 구하기
+            rigid.angularVelocity = Vector3.zero;           // 회전 운동량 제거
+            rigid.velocity = transform.forward * speed;     // 앞쪽 방향으로 나가게 만들기
 
-            reflectCount--;                             // 튕길 횟수 감소시키기
+            reflectCount--;
         }
         else
         {
@@ -53,7 +54,8 @@ public class NetBullet : NetworkBehaviour
 
     IEnumerator SelfDespawn()
     {
-        yield return new WaitForSeconds(5.0f);
-        NetworkObject.Despawn();
+        yield return new WaitForSeconds(5.0f);      // 5초 뒤에
+
+        NetworkObject.Despawn();                    // 자동으로 디스폰
     }
 }
