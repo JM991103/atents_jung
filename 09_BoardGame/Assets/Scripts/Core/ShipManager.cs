@@ -41,6 +41,11 @@ public class ShipManager : Singleton<ShipManager>
     /// </summary>
     int shipDirectionCount;
 
+    /// <summary>
+    /// 배의 이름들
+    /// </summary>
+    readonly public string[] shipNames = {"항공모함", "전함", "잠수함", "구축함", "경비정"}; 
+
     // 프로퍼티 ---------------------------------
 
     /// <summary>
@@ -62,6 +67,7 @@ public class ShipManager : Singleton<ShipManager>
     /// 배가 배치 모드일 때 사용하는 머티리얼을 읽기 위한 프로퍼티. 읽기 전용.
     /// </summary>
     public Material DeployModeShipMaterial => shipMaterials[1];
+
 
     // 함수 ---------------------------------
 
