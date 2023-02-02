@@ -84,9 +84,9 @@ public class ShipManager : Singleton<ShipManager>
     /// <summary>
     /// 실제로 함선 생성하는 함수
     /// </summary>
-    /// <param name="type">생성할 배의 종류</param>
-    /// <param name="ownerTransform">생성한 배를 가지는 플레이어의 트랜스폼</param>
-    /// <returns>생성 완료된 배</returns>
+    /// <param name="type">생성할 함선의 종류</param>
+    /// <param name="ownerTransform">생성한 함선을 가지는 플레이어의 트랜스폼</param>
+    /// <returns>생성 완료된 함선</returns>
     public Ship MakeShip(ShipType type, Transform ownerTransform)
     {
         GameObject shipObj = Instantiate(shipPrefab, ownerTransform);   // 함선 생성

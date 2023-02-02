@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class Test_ShipDeployment : TestBase
 {
     Board board;
+    Ship ship;
 
     private void Start()
     {
@@ -26,6 +27,17 @@ public class Test_ShipDeployment : TestBase
 
     private void OnClick(InputAction.CallbackContext _)
     {
-        
+        Vector2 screen = Mouse.current.position.ReadValue();
+        Vector3 world = Camera.main.ScreenToWorldPoint(screen);
+        Vector2Int grid = board.WorldToGrid(world);
+        ////Debug.Log($"클릭 : {grid.x}, {grid.y}");
+        //Vector3 Gtow = board.GridToWorld(grid);
+        ////Debug.Log($"클릭 : {Gtow.x}, {Gtow.y}");
+
+        //ship = ShipManager.Inst.MakeShip(ShipType.Carrier, this.transform);
+        //ship.gameObject.SetActive(true);
+        //ship.transform.position = Gtow;        
+        //Debug.Log( board.IsValidPosition(world));
+        Debug.Log(Board.IsValidPosition(grid));
     }
 }

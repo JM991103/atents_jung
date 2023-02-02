@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.AI;
 
 public class Board : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class Board : MonoBehaviour
     /// 보드의 배 배치 정보. 2차원 대신 1차원으로 저장
     /// </summary>
     ShipType[] shipType;
+
+    // static 함수들 --------------------------------------------------------
+
 
     /// <summary>
     /// 배열의 인덱스 값을 그리드 좌표로 변환해주는 static 함수
@@ -29,7 +33,7 @@ public class Board : MonoBehaviour
     /// </summary>
     /// <param name="grid">계산할 그리드 좌표</param>
     /// <returns>변환된 인덱스 값</returns>
-    static public int GridToIndex(Vector2Int grid)
+    public static int GridToIndex(Vector2Int grid)
     {
         return grid.x + grid.y * BoardSize;
     }
@@ -40,10 +44,18 @@ public class Board : MonoBehaviour
     /// <param name="x"></param>
     /// <param name="y"></param>
     /// <returns>변환된 인덱스 값</returns>
-    static public int GridToIndex(int x, int y)
+    public static int GridToIndex(int x, int y)
     {
         return x + y * BoardSize;
     }
+
+    public static bool IsValidPosition(Vector2Int gridPos)
+    {
+        return gridPos.x > -1 && gridPos.x < BoardSize && gridPos.y > -1 && gridPos.y < BoardSize;
+    }
+
+
+    // 일반 함수들 --------------------------------------------------------
 
     /// <summary>
     /// 그리드 좌표를 월드 좌표로 변환해주는 함수
@@ -77,7 +89,7 @@ public class Board : MonoBehaviour
 
         Vector3 diff = worldPos - transform.position;
 
-        return new Vector2Int((int)diff.x, (int)-diff.z);
+        return new Vector2Int(Mathf.FloorToInt(diff.x), Mathf.FloorToInt(-diff.z));
     }
 
     /// <summary>
@@ -91,18 +103,32 @@ public class Board : MonoBehaviour
     }
 
     /// <summary>
+    /// 월드 좌표가 보드 안쪽인지 확인하는 함수
+    /// </summary>
+    /// <param name="worldPos">체크할 월드 좌표</param>
+    /// <returns>보드 안쪽이면 true, 아니면 false</returns>
+    public bool IsValidPosition(Vector3 worldPos)
+    {
+        Vector3 diff = worldPos - transform.position;
+        return diff.x >= 0.0f && diff.x <= BoardSize && diff.z < 0.0f && diff.z > -BoardSize;
+    }
+
+    /// <summary>
     /// 함선 배치 함수
     /// </summary>
-    /// <returns></returns>
-    public bool ShipDeplyment()
-    {
+    /// <param name="ship">배치할 함선</param>
+    /// <param name="pos">배치할 월드 좌표</param>
+    /// <returns>성공하면 true, 아니면 false</returns>
+    public bool ShipDeplyment(Ship ship, Vector3 pos)
+    {        
         return false;
     }
 
     /// <summary>
     /// 함선 배치 취소 함수
     /// </summary>
-    public void UndoShipDeplyment()
+    /// <param name="ship">배치를 취소할 배</param>
+    public void UndoShipDeplyment(Ship ship)
     {
 
     }
