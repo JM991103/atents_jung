@@ -14,3 +14,11 @@ public enum ShipType : byte
     Submarine,  // 잠수함이 배치되어 있다. (사이즈 3)
     PatrolBoat  // 경비정이 배치되어 있다. (사이즈 2)
 }
+
+public enum ShipDirection : byte
+{
+    North = 0,
+    East,
+    South,
+    West
+}
