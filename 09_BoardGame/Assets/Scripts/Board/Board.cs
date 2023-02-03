@@ -250,7 +250,7 @@ public class Board : MonoBehaviour
             gridPositions[i] = pos + dir * i;
         }
 
-        // 확인할 위치들을 하칸씩 확인
+        // 확인할 위치들을 한칸씩 확인
         bool result = true;
         foreach (var temp in gridPositions)
         {

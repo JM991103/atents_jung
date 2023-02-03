@@ -50,7 +50,7 @@ public class GridPainter : MonoBehaviour
         }
 
         // 숫자를 세로로 쓰기
-        for (int i = 0; i < gridLineCount; i++)
+        for (int i = 1; i < gridLineCount; i++)
         {
             GameObject letter = Instantiate(letterPrefab, transform);
             letter.transform.position = new Vector3(-0.5f, 0, 0.5f - i);    // 글자 위치 설정
