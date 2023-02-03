@@ -82,6 +82,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "TestMouseMove",
+                    "type": "Value",
+                    "id": "50dc1912-ed2e-44ad-8aa8-90419c0778f2",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -170,6 +179,17 @@
                     "processors": "",
                     "groups": "KMT",
                     "action": "TestWheel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "44c668b4-6975-4fa4-b000-67a42970a439",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KMT",
+                    "action": "TestMouseMove",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
