@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,48 +7,82 @@ using UnityEngine.InputSystem;
 public class Test_ShipDeployment : TestBase
 {
     Board board;
-    Ship ship;
+
+    ShipType targetShip = ShipType.PatrolBoat;
+    Ship[] testShips = null;
 
     private void Start()
     {
         board = FindObjectOfType<Board>();
+        testShips = new Ship[ShipManager.Inst.ShipTypeCount];
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
-        inputActions.Test.TestClick.performed += OnClick;
+        inputActions.Test.TestClick.performed += OnTestClick;
+        inputActions.Test.Test_RClick.performed += OnTestRClick;
     }
 
     protected override void OnDisable()
     {
-        inputActions.Test.TestClick.performed -= OnClick;
+        inputActions.Test.Test_RClick.performed -= OnTestRClick;
+        inputActions.Test.TestClick.performed -= OnTestClick;
         base.OnDisable();
     }
 
-    private void OnClick(InputAction.CallbackContext _)
+    private void OnTestClick(InputAction.CallbackContext _)
     {
+        int index = (int)(targetShip - 1);
+
         Vector2 screen = Mouse.current.position.ReadValue();
         Vector3 world = Camera.main.ScreenToWorldPoint(screen);
-        //Vector2Int grid = board.WorldToGrid(world);
-        ////Debug.Log($"클릭 : {grid.x}, {grid.y}");
-        //Vector3 Gtow = board.GridToWorld(grid);
-        ////Debug.Log($"클릭 : {Gtow.x}, {Gtow.y}");
 
-        ship = ShipManager.Inst.MakeShip(ShipType.Carrier, this.transform);
-        bool result = board.ShipDeplyment(ship, world);
-        Debug.Log(result);
-        if (result)
+        if (testShips[index] != null)
         {
-            ship.gameObject.SetActive(true);
+            Vector2Int grid = board.WorldToGrid(world);
+            testShips[index].transform.position = board.GridToWorld(grid);
         }
         else
         {
-            Destroy(ship.gameObject);
-        }
-        //ship.transform.position = Gtow;        
+            testShips[index] = ShipManager.Inst.MakeShip(targetShip, this.transform);
+            board.ShipDeplyment(testShips[index], world);
 
+        }
         //Debug.Log( board.IsValidPosition(world));
         //Debug.Log(Board.IsValidPosition(grid));
+    }
+
+    private void OnTestRClick(InputAction.CallbackContext _)
+    {
+        int index = (int)(targetShip - 1);
+        if (testShips[index] != null)
+        {
+            board.UndoShipDeplyment(testShips[index]);
+            Destroy(testShips[index].gameObject);
+            testShips[index] = null;
+        }
+
+    }
+
+    protected override void Test1(InputAction.CallbackContext _)
+    {
+        targetShip = ShipType.Carrier;
+    }
+    protected override void Test2(InputAction.CallbackContext _)
+    {
+        targetShip = ShipType.Battleship;
+    }
+    protected override void Test3(InputAction.CallbackContext _)
+    {
+        targetShip = ShipType.Destoryer;
+    }
+    protected override void Test4(InputAction.CallbackContext _)
+    {
+        targetShip = ShipType.Submarine;
+    }
+    protected override void Test5(InputAction.CallbackContext _)
+    {
+        targetShip = ShipType.PatrolBoat;
     }
 }

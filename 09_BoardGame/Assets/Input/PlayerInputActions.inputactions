@@ -64,6 +64,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Test_RClick",
+                    "type": "Button",
+                    "id": "3b21c164-2b01-4fa9-ac55-93045adb38ce",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "TestWheel",
+                    "type": "Value",
+                    "id": "a669cd53-a542-45d3-8d23-02dcd40c916f",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -128,8 +146,30 @@
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KMT",
                     "action": "TestClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cb702135-d95c-48b8-9c23-5237f9c5ebfe",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KMT",
+                    "action": "Test_RClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2756ce53-5734-4e19-b12c-da3ca8a4bd42",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KMT",
+                    "action": "TestWheel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
