@@ -29,15 +29,25 @@ public class Test_ShipDeployment : TestBase
     {
         Vector2 screen = Mouse.current.position.ReadValue();
         Vector3 world = Camera.main.ScreenToWorldPoint(screen);
-        Vector2Int grid = board.WorldToGrid(world);
+        //Vector2Int grid = board.WorldToGrid(world);
         ////Debug.Log($"클릭 : {grid.x}, {grid.y}");
         //Vector3 Gtow = board.GridToWorld(grid);
         ////Debug.Log($"클릭 : {Gtow.x}, {Gtow.y}");
 
-        //ship = ShipManager.Inst.MakeShip(ShipType.Carrier, this.transform);
-        //ship.gameObject.SetActive(true);
+        ship = ShipManager.Inst.MakeShip(ShipType.Carrier, this.transform);
+        bool result = board.ShipDeplyment(ship, world);
+        Debug.Log(result);
+        if (result)
+        {
+            ship.gameObject.SetActive(true);
+        }
+        else
+        {
+            Destroy(ship.gameObject);
+        }
         //ship.transform.position = Gtow;        
+
         //Debug.Log( board.IsValidPosition(world));
-        Debug.Log(Board.IsValidPosition(grid));
+        //Debug.Log(Board.IsValidPosition(grid));
     }
 }
