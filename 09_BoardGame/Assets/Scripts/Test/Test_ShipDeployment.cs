@@ -45,7 +45,7 @@ public class Test_ShipDeployment : TestBase
         testShips = new Ship[ShipManager.Inst.ShipTypeCount];
         testShips[(int)ShipType.Carrier - 1] = ShipManager.Inst.MakeShip(ShipType.Carrier, this.transform);
         testShips[(int)ShipType.Battleship - 1] = ShipManager.Inst.MakeShip(ShipType.Battleship, this.transform);
-        testShips[(int)ShipType.Destoryer - 1] = ShipManager.Inst.MakeShip(ShipType.Destoryer, this.transform);
+        testShips[(int)ShipType.Destroyer - 1] = ShipManager.Inst.MakeShip(ShipType.Destroyer, this.transform);
         testShips[(int)ShipType.Submarine - 1] = ShipManager.Inst.MakeShip(ShipType.Submarine, this.transform);
         testShips[(int)ShipType.PatrolBoat - 1] = ShipManager.Inst.MakeShip(ShipType.PatrolBoat, this.transform);
     }
@@ -132,7 +132,7 @@ public class Test_ShipDeployment : TestBase
     protected override void Test3(InputAction.CallbackContext _)
     {
         Debug.Log("구축함 선택");
-        TargetShip = testShips[(int)ShipType.Destoryer-1];
+        TargetShip = testShips[(int)ShipType.Destroyer-1];
     }
     protected override void Test4(InputAction.CallbackContext _)
     {

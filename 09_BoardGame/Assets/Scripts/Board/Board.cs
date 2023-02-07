@@ -1,8 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Rendering.LookDev;
 using UnityEngine;
-using UnityEngine.Experimental.AI;
 using UnityEngine.InputSystem;
 
 public class Board : MonoBehaviour
@@ -17,10 +16,26 @@ public class Board : MonoBehaviour
     /// </summary>
     ShipType[] shipInfo = null;
 
+    /// <summary>
+    /// 공격 당한 위치 정보.
+    /// </summary>
+    bool[] bombInfo;
+
+    /// <summary>
+    /// 개발용 배 배치 정보를 보여줄지 여부. true면 보여주고. false면 보여주지 않는다.
+    /// </summary>
     public bool isShowShipDeploymentInfo = true;
+
+    /// <summary>
+    /// 개발용 배 배치 정보 생성용 클래스.
+    /// </summary>
     ShipDeploymentInfoMaker shipDeploymentInfo = null;
 
     public const int NOT_VALID = -1;
+
+    // 델리게이트 --------------------------------------------------------
+
+    public Dictionary<ShipType, Action> onShipAttacked;
 
     // 유니티 이벤트 함수들 --------------------------------------------------------
 
@@ -141,6 +156,18 @@ public class Board : MonoBehaviour
         return WorldToGrid(worldPos);   // 월드 좌표를 다시 그리드 좌표로 변경해서 돌려주기
     }
 
+    /// <summary>
+    /// 특정 월드 좌표에 어떤 종류의 배가 배치되어있는지 알려주는 함수
+    /// </summary>
+    /// <param name="worldPos">확인할 월드좌표</param>
+    /// <returns>해당 위치에 있는 배의 종류</returns>
+    public ShipType GetShipType(Vector3 worldPos)
+    {
+        Vector2Int gridPos = WorldToGrid(worldPos);
+        int index = GridToIndex(gridPos);
+        return shipInfo[index];
+    }
+
     // 확인용 함수들 --------------------------------------------------------
 
     /// <summary>
@@ -222,15 +249,21 @@ public class Board : MonoBehaviour
     /// <param name="ship">배치를 취소할 배</param>
     public void UndoShipDeplyment(Ship ship)
     {
+        // 개발용 오브젝트 추가 부분
         if (shipDeploymentInfo != null)     // 개발용 오브젝트를 만드는 클래스가 있으면
         {
             shipDeploymentInfo.UnMarkShipDeploymentInfo(ship.Type);
         }
 
-        foreach (var temp in ship.Positions)
+        // board에 표시해 놓았던 것 해제
+        if (ship.Positions != null)
         {
-            shipInfo[GridToIndex(temp)] = ShipType.None;
+            foreach (var temp in ship.Positions)
+            {
+                shipInfo[GridToIndex(temp)] = ShipType.None;
+            }
         }
+        // 함선 배치 해제
         ship.UnDeploy();
     }
 

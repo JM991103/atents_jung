@@ -25,7 +25,7 @@ public class ShipDeploymentInfoMaker : MonoBehaviour
         infoObjects = new Dictionary<ShipType, List<GameObject>>(ShipManager.Inst.ShipTypeCount);
         infoObjects[ShipType.Carrier] = new List<GameObject>();
         infoObjects[ShipType.Battleship] = new List<GameObject>();
-        infoObjects[ShipType.Destoryer] = new List<GameObject>();
+        infoObjects[ShipType.Destroyer] = new List<GameObject>();
         infoObjects[ShipType.Submarine] = new List<GameObject>();
         infoObjects[ShipType.PatrolBoat] = new List<GameObject>();
     }

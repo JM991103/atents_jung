@@ -148,7 +148,7 @@ public class Ship : MonoBehaviour
             case ShipType.Battleship:   // 전함은 4칸
                 size = 4;
                 break;
-            case ShipType.Destoryer:    // 구축함은 3칸
+            case ShipType.Destroyer:    // 구축함은 3칸
                 size = 3;
                 break;
             case ShipType.Submarine:    // 잠수함은 3칸
