@@ -380,6 +380,7 @@ public class Board : MonoBehaviour
                     result = true;                              // 공격으로 배에 명중됐다고 표시
                     onShipAttacked[shipInfo[index]]?.Invoke();  // 공격 당한 배의 델리게이트 실행
                 }
+                
 
                 bombMark.SetBombMark(GridToWorld(gridPos.x, gridPos.y), result);    // 붐마크 표시
             }
