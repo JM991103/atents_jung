@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class PlayerBase : MonoBehaviour
@@ -94,7 +95,7 @@ public class PlayerBase : MonoBehaviour
     protected virtual void Awake()
     {
         board = GetComponentInChildren<Board>();
-        attackCandiateIndices = new List<int>();
+        attackHighCandiateIndices = new List<int>();
     }
 
     protected virtual void Start()
@@ -111,7 +112,18 @@ public class PlayerBase : MonoBehaviour
         }
         remainShipCount = shipTypeCount;
 
-        lastAttackSuccessPos = NOT_SUCCESS_YET;
+        lastAttackSuccessPos = NOT_SUCCESS_YET;     // 이전 공격에서 성공하지 않았다.(시작이라 당연히 없음)
+
+        PlayerBase[] players = FindObjectsOfType<PlayerBase>();
+        if (players[0] != this)
+        {
+            opponent = players[0];  // PlayerBase가 나와 다르면 players[0]은 적이다.
+        }
+        else
+        {
+            opponent = players[1];  // PlayerBase가 나와 다르지 않다면 남은 것(players[1])이 적이다.
+        }
+        //Debug.Log($"{this.gameObject.name}의 상대방은 {opponent.gameObject.name}이다.");
     }
 
     // 턴 관리용 함수 --------------------------------------------------
@@ -129,8 +141,18 @@ public class PlayerBase : MonoBehaviour
 
     public void Attack(Vector2Int attackGridPos)
     {
-        if (!isActionDone)
+        //if (!isActionDone)
         {
+            bool result = opponent.Board.OnAttacked(attackGridPos);
+            if (result)
+            {
+                AttackSuccessProcess(attackGridPos);
+            }
+            else
+            {
+                lastAttackSuccessPos = NOT_SUCCESS_YET; // 공격이 실패하면 무조건 lastAttackSuccessPos 비우기
+                onAttackFail?.Invoke(this); // 공격 실패 알림(로그 출력용)
+            }
 
             isActionDone = true;
         }
@@ -140,6 +162,71 @@ public class PlayerBase : MonoBehaviour
     {
         Attack(opponent.board.WorldToGrid(worldPos));
     } 
+
+    /// <summary>
+    /// 공격이 성공했을 때 공격 성공 지점 주변을 후보지역에 추가하는 함수
+    /// </summary>
+    /// <param name="attackGridPos">공격한 지점</param>
+    private void AttackSuccessProcess(Vector2Int attackGridPos)
+    {
+        // 이전에 공격이 성공한 적이 있는지 확인
+        if (lastAttackSuccessPos != NOT_SUCCESS_YET)
+        {
+            // 직전 공격이 성공했었다.
+            AddHighCandidataByTwoPosition(attackGridPos, lastAttackSuccessPos); // 직선으로 후보지역 추가
+        }
+        else
+        {
+            // 직전 공격이 성공한 적이 없다.
+            AddNeighborToHighCandidata(attackGridPos);  // 공격한 지점의 주변을 후보지역으로 추가
+
+        }
+    }
+
+    private void AddHighCandidataByTwoPosition(Vector2Int now, Vector2Int last)
+    {
+        Debug.Log($"연속 공격 성공 : {now}");
+    }
+
+    /// <summary>
+    /// 공격한 지점의 이웃을 후보지역으로 추가하기
+    /// </summary>
+    /// <param name="gridPos">공격한 지점</param>
+    private void AddNeighborToHighCandidata(Vector2Int gridPos)
+    {
+        Debug.Log($"공격 성공 : {gridPos}");
+
+        // gridPos의 주변 4방향 중 valid하고 이전에 공격을 하지 않았던 지역만 후보지역에 추가
+        Vector2Int[] neighbors = { new(-1, 0), new(1, 0), new(0, -1), new(0, 1) };
+        foreach (Vector2Int neighbor in neighbors)
+        {
+            Vector2Int pos = gridPos + neighbor;
+            if (Board.IsValidPosition(pos) && opponent.Board.IsAttackable(pos))
+            {
+                int index = Board.GridToIndex(pos);
+                AddHighCandidate(index);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 후보지역 리스트에 인덱스를 추가하는 함수
+    /// </summary>
+    /// <param name="index">추가할 인덱스</param>
+    private void AddHighCandidate(int index)
+    {
+        // attackCandiateIndices에 인덱스 추가
+        if (!attackHighCandiateIndices.Exists((x) => x == index))   // 중복이 있으면 안됨
+        {            
+            attackHighCandiateIndices.Insert(0, index);     // 추가할 때는 항상 맨 앞에 추가.
+        }
+
+
+        // highCandidatePrefab를 이용해서 후보지역 표시하기
+        GameObject obj = Instantiate(highCandidatePrefab, transform);
+        obj.transform.position = opponent.board.IndexToWorld(index);
+        highCandidateMark[index] = obj;
+    }
 
 
     // 함선 배치 함수들 ------------------------------------------

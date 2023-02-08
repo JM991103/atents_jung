@@ -923,7 +923,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0cb7c9dbf38db6448651879abdf6c48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highCandidatePrefab: {fileID: 0}
+  highCandidatePrefab: {fileID: 348796962409928298, guid: 75c518fe87b16c94281234839d5b7cdf,
+    type: 3}
 --- !u!1 &1346901632
 GameObject:
   m_ObjectHideFlags: 0
@@ -1344,7 +1345,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0cb7c9dbf38db6448651879abdf6c48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highCandidatePrefab: {fileID: 0}
+  highCandidatePrefab: {fileID: 348796962409928298, guid: 75c518fe87b16c94281234839d5b7cdf,
+    type: 3}
 --- !u!4 &1872817582
 Transform:
   m_ObjectHideFlags: 0
@@ -1654,6 +1656,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5876430777379746306, guid: ce9143bb4d11c254b94c1cc14e6bc5a3,
+        type: 3}
+      propertyPath: isShowShipDeploymentInfo
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5876430777379746307, guid: ce9143bb4d11c254b94c1cc14e6bc5a3,
         type: 3}

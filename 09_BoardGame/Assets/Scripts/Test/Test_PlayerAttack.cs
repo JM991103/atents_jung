@@ -34,16 +34,17 @@ public class Test_PlayerAttack : TestBase
 
         reset.onClick.AddListener(OnResetClick);
         randomDeployment.onClick.AddListener(() => {
-            player1.AutoShipDeployment(true);
-            player2.AutoShipDeployment(true);
+            player1.AutoShipDeployment(false);
+            player2.AutoShipDeployment(false);
         });
         resetRandom.onClick.AddListener(() =>
         {
             OnResetClick();
-            player1.AutoShipDeployment(true);
-            player2.AutoShipDeployment(true);
+            player1.AutoShipDeployment(false);
+            player2.AutoShipDeployment(false);
         });
-
+        player1.AutoShipDeployment(false);
+        player2.AutoShipDeployment(false);
     }
 
     protected override void OnEnable()
@@ -79,7 +80,8 @@ public class Test_PlayerAttack : TestBase
         Vector2 screenPos = Mouse.current.position.ReadValue();
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
         Vector2Int gridPos = board2.WorldToGrid(worldPos);
-        board2.OnAttacked(gridPos);
+        //board2.OnAttacked(gridPos);
+        player1.Attack(gridPos);
     }
 
     private void OnTestRClick(InputAction.CallbackContext _)
