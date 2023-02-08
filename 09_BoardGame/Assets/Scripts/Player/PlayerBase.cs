@@ -161,7 +161,7 @@ public class PlayerBase : MonoBehaviour
     public void Attack(Vector3 worldPos)
     {
         Attack(opponent.board.WorldToGrid(worldPos));
-    } 
+    }
 
     /// <summary>
     /// 공격이 성공했을 때 공격 성공 지점 주변을 후보지역에 추가하는 함수
@@ -179,7 +179,6 @@ public class PlayerBase : MonoBehaviour
         {
             // 직전 공격이 성공한 적이 없다.
             AddNeighborToHighCandidata(attackGridPos);  // 공격한 지점의 주변을 후보지역으로 추가
-
         }
     }
 
@@ -220,7 +219,6 @@ public class PlayerBase : MonoBehaviour
         {            
             attackHighCandiateIndices.Insert(0, index);     // 추가할 때는 항상 맨 앞에 추가.
         }
-
 
         // highCandidatePrefab를 이용해서 후보지역 표시하기
         GameObject obj = Instantiate(highCandidatePrefab, transform);
