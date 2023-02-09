@@ -102,4 +102,9 @@ public class Test_PlayerAttack : TestBase
     private void OnTestMove(InputAction.CallbackContext context)
     {
     }
+
+    protected override void Test1(InputAction.CallbackContext _)
+    {
+        player1.AutoAttack();
+    }
 }
