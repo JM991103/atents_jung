@@ -154,6 +154,8 @@ public class PlayerBase : MonoBehaviour
                 onAttackFail?.Invoke(this); // 공격 실패 알림(로그 출력용)
             }
 
+            RemoveHighCandidate(Board.GridToIndex(attackGridPos));  // 성공이든 실패든 공격 지점이 후보지로 되어있으면 제거
+
             isActionDone = true;
         }
     }
@@ -172,19 +174,109 @@ public class PlayerBase : MonoBehaviour
         // 이전에 공격이 성공한 적이 있는지 확인
         if (lastAttackSuccessPos != NOT_SUCCESS_YET)
         {
-            // 직전 공격이 성공했었다.
+            // 한턴 앞의 공격이 성공했었다.
             AddHighCandidataByTwoPosition(attackGridPos, lastAttackSuccessPos); // 직선으로 후보지역 추가
         }
         else
         {
-            // 직전 공격이 성공한 적이 없다.
+            // 한턴 앞의 공격이 성공하지 못했다.
             AddNeighborToHighCandidata(attackGridPos);  // 공격한 지점의 주변을 후보지역으로 추가
         }
+        lastAttackSuccessPos = attackGridPos;
     }
+
+    // 자동 공격
+
+
+
+    // 후보지역 처리 함수 -------------------------------------------
 
     private void AddHighCandidataByTwoPosition(Vector2Int now, Vector2Int last)
     {
         Debug.Log($"연속 공격 성공 : {now}");
+        if (InSuccessLine(last, now, true))
+        {
+            // 가로방향으로 붙어있다.
+            // 연속으로 공격이 성공했는데 붙어있다  => 같은 함선으로 예상
+
+            // 가로선 밖의 후보지역은 제거 -> 가로선을 벗어난 후보지 찾고 전부 리무브시키기
+            List<int> dels = new List<int>();
+            foreach (var index in attackHighCandiateIndices)
+            {
+                Vector2Int pos = Board.IndexToGrid(index);
+                if (pos.y != now.y)
+                {
+                    dels.Add(index);    // 가로 선을 벗어난 후보지역 모으기
+                }
+            }
+            foreach (var del in dels)
+            {
+                RemoveHighCandidate(del);   // 가로선을 벗어난 후보지역들을 제거하기
+            }
+
+            // 가로선상의 양끝부분에 후보지역 추가 ->
+            // 가로선상으로 now의 x를 +-를 계속 증가시킴. 공격 실패나 보드 밖이 나오면 취소, 공격을 안한 지역이 나오면 후보지에 추가
+            Vector2Int newPos = now;
+
+            // 공격 지점의 왼쪽에 있는 후보지역 찾기
+            for (int i = now.x - 1; i > -1; i--)    
+            {
+                newPos.x = i;
+
+                if (!Board.IsValidPosition(newPos)) // 보드를 벗어나면 끝
+                {
+                    break;
+                }
+
+                // 공격 실패한 지점이면 후보지역을 추가하지 않고 break;
+                if (opponent.board.IsAttackFailPosition(newPos))
+                {
+                    break;
+                }
+                
+                // 공격이 가능한 지점이면 후보지역에 추가하고 break;
+                if (opponent.Board.IsAttackable(newPos))
+                {
+                    AddHighCandidate(Board.GridToIndex(newPos));
+                    break;
+                }
+            }
+
+            // 공격 지점의 오른쪽에 있는 후보지역 찾기
+            for (int i = now.x + 1; i < Board.BoardSize; i++)    
+            {
+                newPos.x = i;
+
+                if (!Board.IsValidPosition(newPos)) // 보드를 벗어나면 끝
+                {
+                    break;
+                }
+
+                // 공격 실패한 지점이면 후보지역을 추가하지 않고 break;
+                if (opponent.board.IsAttackFailPosition(newPos))
+                {
+                    break;
+                }
+                
+                // 공격이 가능한 지점이면 후보지역에 추가하고 break;
+                if (opponent.Board.IsAttackable(newPos))
+                {
+                    AddHighCandidate(Board.GridToIndex(newPos));
+                    break;
+                }
+            }
+        }
+        else if (InSuccessLine(last, now,false))
+        {
+            // 세로 방향으로 붙어있다.
+            // 연속으로 공격이 성공했는데 붙어있다  => 같은 함선으로 예상
+        }
+        else
+        {
+            // 서로 떨어져 있는데 공격이 성공했다. => 다른 함선
+            AddNeighborToHighCandidata(now);  // 공격한 지점의 주변을 후보지역으로 추가
+        }
+
     }
 
     /// <summary>
@@ -216,16 +308,97 @@ public class PlayerBase : MonoBehaviour
     {
         // attackCandiateIndices에 인덱스 추가
         if (!attackHighCandiateIndices.Exists((x) => x == index))   // 중복이 있으면 안됨
-        {            
+        {
             attackHighCandiateIndices.Insert(0, index);     // 추가할 때는 항상 맨 앞에 추가.
-        }
 
-        // highCandidatePrefab를 이용해서 후보지역 표시하기
-        GameObject obj = Instantiate(highCandidatePrefab, transform);
-        obj.transform.position = opponent.board.IndexToWorld(index);
-        highCandidateMark[index] = obj;
+            // highCandidatePrefab를 이용해서 후보지역 표시하기
+            GameObject obj = Instantiate(highCandidatePrefab, transform);
+            obj.transform.position = opponent.board.IndexToWorld(index);
+            obj.gameObject.name = $"HighCandidate_{index}";
+            highCandidateMark[index] = obj;
+        }
     }
 
+    /// <summary>
+    /// index에 있는 후보지역 삭제 함수
+    /// </summary>
+    /// <param name="index">삭제할 위치를 나타내는 인덱스</param>
+    private void RemoveHighCandidate(int index)
+    {
+        if (attackHighCandiateIndices.Exists((x) => x == index))    // index가 리스트에 있으면
+        {
+            attackHighCandiateIndices.Remove(index);    // attackHighCandiateIndices 리스트에서 index 제거 
+            Destroy(highCandidateMark[index]);          // 개발용으로 후보지역 오브젝트 만든것 삭제
+            highCandidateMark[index] = null;            // 딕셔너리에서 저장하고 있던 value 정리
+            highCandidateMark.Remove(index);            // 딕셔너리에서 해당 key도 제거
+        }
+    }
+
+    /// <summary>
+    /// start에서 end 한칸 앞까지 모두 공격 성공이었는지 체크하는 함수
+    /// </summary>
+    /// <param name="start">확인 시작지점</param>
+    /// <param name="end">확인 종료지점</param>
+    /// <param name="isHorizontal">true면 가로로 체크, false면 세로로 체크</param>
+    /// <returns>true면 같은 줄이고 그 사이는 모두 공격 성공이었다. false면 다른 줄이거나 중간에 공격 실패가 있다.</returns>
+    private bool InSuccessLine(Vector2Int start, Vector2Int end, bool isHorizontal)
+    {
+        bool result = true;             // 결과값이 들어갈 변수
+        Vector2Int pos = start;         // start에서 end 앞까지 진행될 임시 변수
+        int dir = 1;                    // 움직이는 방향(+인지, -인지)
+        if(isHorizontal)
+        {
+            // 가로 방향
+            if (start.y == end.y)       // 높이가 같은지 확인
+            {
+                if (start.x > end.x)    // 정방향인지 역방향인지 확인
+                {
+                    dir = -1;           // 왼쪽 -> 오른쪽으로 갈 때는 +1, 오른쪽 -> 왼쪽으로 갈 때는 -1;
+                }
+
+                for (int i = start.x; i < end.x; i += dir)  // start에서 end로 진행
+                {
+                    pos.x = i;  // 임시 변수 갱신
+                    if (!opponent.board.IsAttackSuccessPosition(pos))
+                    {
+                        result = false; // 공격이 성공못한 지점이 나오면 실패
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                result = false; // 가로인데 높이가 다르면 무조건 실패
+            }
+        }
+        else
+        {
+            // 세로 방향
+            if (start.x == end.x)       // 높이가 같은지 확인
+            {
+                if (start.y > end.y)    // 정방향인지 역방향인지 확인
+                {
+                    dir = -1;           // 위쪽 -> 아래쪽으로 갈 때는 +1, 아래쪽 -> 위쪽으로 갈 때는 -1;
+                }
+
+                for (int i = start.y; i < end.y; i += dir)  // start에서 end로 진행
+                {
+                    pos.y = i;  // 임시 변수 위치 갱신
+                    if (!opponent.board.IsAttackSuccessPosition(pos))
+                    {
+                        result = false; // 공격이 성공못한 지점이 나오면 실패
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                result = false; // 세로인데 좌우위치가 다르면 무조건 실패
+            }
+        }
+
+        return result;          // 한줄로 계속 공격 성공위치가 나와야 true
+    }
 
     // 함선 배치 함수들 ------------------------------------------
 
