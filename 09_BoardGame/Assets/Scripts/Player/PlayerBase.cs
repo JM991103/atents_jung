@@ -68,6 +68,8 @@ public class PlayerBase : MonoBehaviour
     /// </summary>
     Dictionary<int, GameObject> highCandidateMark = new Dictionary<int, GameObject>();
 
+    readonly Vector2Int[] neighbors = { new(-1, 0), new(1, 0), new(0, -1), new(0, 1) };
+
     // 프로퍼티 --------------------------------------------------
 
     public Board Board => board;
@@ -424,9 +426,8 @@ public class PlayerBase : MonoBehaviour
     {
         Debug.Log($"공격 성공 : {gridPos}");
 
-        // gridPos의 주변 4방향 중 valid하고 이전에 공격을 하지 않았던 지역만 후보지역에 추가
-        Vector2Int[] neighbors = { new(-1, 0), new(1, 0), new(0, -1), new(0, 1) };
-        //Utill.Shuffle(neighbors);
+        // gridPos의 주변 4방향 중 valid하고 이전에 공격을 하지 않았던 지역만 후보지역에 추가        
+        Utill.Shuffle(neighbors);       // 순서 섞기
         foreach (Vector2Int neighbor in neighbors)
         {
             Vector2Int pos = gridPos + neighbor;
@@ -795,6 +796,7 @@ public class PlayerBase : MonoBehaviour
     private void OnShipDestroy(Ship ship)
     {
         opponent.opponentShipDestroyed = true;
+        lastAttackSuccessPos = NOT_SUCCESS_YET;     // 새 호보지역을 생성 할 때 4방향 모두 생성되도록 하기 위해 초기화
 
         remainShipCount--;  // 남은 함선 수 감소
         Debug.Log($"배가 {remainShipCount}척 남았습니다.");
