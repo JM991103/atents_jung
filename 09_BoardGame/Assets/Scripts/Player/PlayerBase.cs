@@ -473,7 +473,10 @@ public class PlayerBase : MonoBehaviour
         }
     }
 
-    private void RemoveAllHighCandidate()
+    /// <summary>
+    /// 모든 후보지역을 삭제하는 함수
+    /// </summary>
+    public void RemoveAllHighCandidate()
     {
         foreach (var index in attackHighCandiateIndices)
         {

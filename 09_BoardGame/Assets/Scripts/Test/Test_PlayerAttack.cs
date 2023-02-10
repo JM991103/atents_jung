@@ -70,7 +70,9 @@ public class Test_PlayerAttack : TestBase
     {
         // 진행 중이던 게임 리셋        
         player1.Board.ResetBoard(player1.Ships);
+        player1.RemoveAllHighCandidate();
         player2.Board.ResetBoard(player2.Ships);
+        player2.RemoveAllHighCandidate();
     }
 
     
