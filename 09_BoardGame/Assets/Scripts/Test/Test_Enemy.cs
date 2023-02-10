@@ -6,7 +6,7 @@ using UnityEngine.Diagnostics;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class Test_PlayerAttack : TestBase
+public class Test_Enemy : TestBase
 {
     public Button reset;
     public Button randomDeployment;
@@ -45,7 +45,6 @@ public class Test_PlayerAttack : TestBase
             player2.AutoShipDeployment(false);
         });
         player1.AutoShipDeployment(false);
-        player2.AutoShipDeployment(false);
     }
 
     protected override void OnEnable()
@@ -80,7 +79,6 @@ public class Test_PlayerAttack : TestBase
         Vector2 screenPos = Mouse.current.position.ReadValue();
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
         Vector2Int gridPos = board2.WorldToGrid(worldPos);
-        //board2.OnAttacked(gridPos);
         player1.Attack(gridPos);
     }
 
@@ -105,11 +103,10 @@ public class Test_PlayerAttack : TestBase
 
     protected override void Test1(InputAction.CallbackContext _)
     {
-        player1.AutoAttack();
+        
     }
     protected override void Test2(InputAction.CallbackContext _)
     {
-        Vector2Int[] neighbors = { new(-1, 0), new(1, 0), new(0, -1), new(0, 1) };
-        Utill.Shuffle(neighbors);
+
     }
 }

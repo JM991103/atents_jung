@@ -6,7 +6,7 @@ using UnityEngine.Diagnostics;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class Test_PlayerAttack : TestBase
+public class Test_Candidate : TestBase
 {
     public Button reset;
     public Button randomDeployment;
@@ -44,8 +44,8 @@ public class Test_PlayerAttack : TestBase
             player1.AutoShipDeployment(false);
             player2.AutoShipDeployment(false);
         });
-        player1.AutoShipDeployment(false);
-        player2.AutoShipDeployment(false);
+
+        Pattern1();
     }
 
     protected override void OnEnable()
@@ -69,19 +69,25 @@ public class Test_PlayerAttack : TestBase
     private void OnResetClick()
     {
         // 진행 중이던 게임 리셋        
-        player1.Board.ResetBoard(player1.Ships);
-        player1.RemoveAllHighCandidate();
-        player2.Board.ResetBoard(player2.Ships);
-        player2.RemoveAllHighCandidate();
+        player1.Clear();        
+        player2.Clear();
+        
     }
 
     private void OnTestClick(InputAction.CallbackContext _)
     {
         Vector2 screenPos = Mouse.current.position.ReadValue();
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-        Vector2Int gridPos = board2.WorldToGrid(worldPos);
-        //board2.OnAttacked(gridPos);
-        player1.Attack(gridPos);
+        Vector2Int gridPos1 = board1.WorldToGrid(worldPos);
+        Vector2Int gridPos2 = board2.WorldToGrid(worldPos);
+        if (Board.IsValidPosition(gridPos1))
+        {
+            player2.Attack(gridPos1);
+        }
+        if (Board.IsValidPosition(gridPos2))
+        {
+            player1.Attack(gridPos2);
+        }
     }
 
     private void OnTestRClick(InputAction.CallbackContext _)
@@ -92,7 +98,6 @@ public class Test_PlayerAttack : TestBase
         ShipType type = board1.GetShipType(worldPos);
         Ship ship = player1.Ships[(int)type - 1];
         board1.UndoShipDeplyment(ship);
-
     }
 
     private void OnTestWheel(InputAction.CallbackContext context)
@@ -105,11 +110,93 @@ public class Test_PlayerAttack : TestBase
 
     protected override void Test1(InputAction.CallbackContext _)
     {
-        player1.AutoAttack();
+        Pattern1();
+
     }
     protected override void Test2(InputAction.CallbackContext _)
     {
-        Vector2Int[] neighbors = { new(-1, 0), new(1, 0), new(0, -1), new(0, 1) };
-        Utill.Shuffle(neighbors);
+        Pattern2();
     }
+
+    protected override void Test3(InputAction.CallbackContext _)
+    {
+        Pattern5();
+    }
+
+    private void Pattern1()
+    {
+        OnResetClick();
+        for (int i = 0; i < ShipManager.Inst.ShipTypeCount; i++)
+        {
+            Ship ship = player1.Ships[i];
+            board1.ShipDeplyment(ship, new Vector2Int(0 + i * 2, 0));
+
+            ship = player2.Ships[i];
+            board2.ShipDeplyment(ship, new Vector2Int(0 + i * 2, 0));
+        }
+    }
+
+    private void Pattern2()
+    {
+        OnResetClick();
+        for (int i = 0; i < ShipManager.Inst.ShipTypeCount; i++)
+        {
+            Ship ship = player1.Ships[i];
+            ship.Direction = ShipDirection.West;
+            board1.ShipDeplyment(ship, new Vector2Int(0, i * 2));
+
+            ship = player2.Ships[i];
+            ship.Direction = ShipDirection.West;
+            board2.ShipDeplyment(ship, new Vector2Int(0, i * 2));
+        }
+    }
+
+    private void Pattern5()
+    {
+        OnResetClick();
+
+        Ship ship = null;
+        ship = player1.Ships[0];
+        ship.Direction = ShipDirection.North;
+        board1.ShipDeplyment(ship, new Vector2Int(1, 1));
+
+        ship = player1.Ships[1];
+        ship.Direction = ShipDirection.West;
+        board1.ShipDeplyment(ship, new Vector2Int(5, 1));
+
+        ship = player1.Ships[2];
+        ship.Direction = ShipDirection.North;
+        board1.ShipDeplyment(ship, new Vector2Int(4, 1));
+
+        ship = player1.Ships[3];
+        ship.Direction = ShipDirection.North;
+        board1.ShipDeplyment(ship, new Vector2Int(4, 4));
+
+        ship = player1.Ships[4];
+        ship.Direction = ShipDirection.North;
+        board1.ShipDeplyment(ship, new Vector2Int(1, 7));
+
+
+        ship = player2.Ships[0];
+        ship.Direction = ShipDirection.North;
+        board2.ShipDeplyment(ship, new Vector2Int(1, 1));
+
+        ship = player2.Ships[1];
+        ship.Direction = ShipDirection.West;
+        board2.ShipDeplyment(ship, new Vector2Int(5, 1));
+
+        ship = player2.Ships[2];
+        ship.Direction = ShipDirection.North;
+        board2.ShipDeplyment(ship, new Vector2Int(4, 1));
+
+        ship = player2.Ships[3];
+        ship.Direction = ShipDirection.North;
+        board2.ShipDeplyment(ship, new Vector2Int(4, 4));
+
+        ship = player2.Ships[4];
+        ship.Direction = ShipDirection.North;
+        board2.ShipDeplyment(ship, new Vector2Int(1, 7));
+    }
+
+
 }

@@ -112,7 +112,7 @@ public class PlayerBase : MonoBehaviour
         for (int i = 0; i < shipTypeCount; i++)
         {
             ShipType shipType = (ShipType)(i + 1);
-            ships[i] = ShipManager.Inst.MakeShip((ShipType)(i + 1), transform); // 타입에 맞춰 함선 생성
+            ships[i] = ShipManager.Inst.MakeShip(shipType, transform);          // 타입에 맞춰 함선 생성
             ships[i].onSinking += OnShipDestroy;                                // 함선 침몰할 때 실행되는 델리게이트에 함수 등록
             board.onShipAttacked[shipType] = ships[i].OnAttacked;               // 보드에서 특정 타입의 배가 공격 당했을 때 실행될 델리게이트에 함수 등록
         }
@@ -121,16 +121,16 @@ public class PlayerBase : MonoBehaviour
         // 공격 관련 변수 초기화
         lastAttackSuccessPos = NOT_SUCCESS_YET;     // 이전 공격에서 성공하지 않았다.(시작이라 당연히 없음)
 
-        // opponent 설정하기
-        PlayerBase[] players = FindObjectsOfType<PlayerBase>();
-        if (players[0] != this)
-        {
-            opponent = players[0];  // PlayerBase가 나와 다르면 players[0]은 적이다.
-        }
-        else
-        {
-            opponent = players[1];  // PlayerBase가 나와 다르지 않다면 남은 것(players[1])이 적이다.
-        }
+        // opponent 설정하기 (UserPlayer와 EnemyPlayer가 설정하는 것으로 변경)
+        //PlayerBase[] players = FindObjectsOfType<PlayerBase>();
+        //if (players[0] != this)
+        //{
+        //    opponent = players[0];  // players[0]이 나와 다르면 players[0]은 적이다.
+        //}
+        //else
+        //{
+        //    opponent = players[1];  // players[0]이 나와 다르지 않다면 남은 것(players[1])이 적이다.
+        //}
         //Debug.Log($"{this.gameObject.name}의 상대방은 {opponent.gameObject.name}이다.");
 
         // 일반 공격용 후보지역(우선 순위가 낮은 지역) 만들기
@@ -201,7 +201,7 @@ public class PlayerBase : MonoBehaviour
     /// <param name="worldPos">공격하는 위치의 월드 좌표</param>
     public void Attack(Vector3 worldPos)
     {
-        Attack(opponent.board.WorldToGrid(worldPos));
+        Attack(opponent.Board.WorldToGrid(worldPos));
     }
 
     /// <summary>
@@ -265,7 +265,7 @@ public class PlayerBase : MonoBehaviour
 
     private void AddHighCandidataByTwoPosition(Vector2Int now, Vector2Int last)
     {
-        Debug.Log($"연속 공격 성공 : {now}");
+        //Debug.Log($"연속 공격 성공 : {now}");
         if (InSuccessLine(last, now, true))
         {
             // 가로방향으로 붙어있다.
@@ -486,6 +486,8 @@ public class PlayerBase : MonoBehaviour
         }
         highCandidateMark.Clear();          // 개발용 후보지역 오브젝트 딕셔너리 클리어
         attackHighCandiateIndices.Clear();  // 모든 후보지역 인덱스 리스트 삭제
+
+        lastAttackSuccessPos = NOT_SUCCESS_YET; // 마지막 공격 성공도 초기화
     }
 
     /// <summary>
@@ -575,7 +577,7 @@ public class PlayerBase : MonoBehaviour
         {
             if (i % Board.BoardSize == 0                     // 0,10,20,30,40,50,60,70,80,90
                 || i % Board.BoardSize == Board.BoardSize - 1 // 9,19,29,39,49,59,69,79,89,99
-                || 0 < i && i < Board.BoardSize - 1          // 1,2,3,4,5,6,7,8,9
+                || (0 < i && i < Board.BoardSize - 1)          // 1,2,3,4,5,6,7,8,9
                 || ((Board.BoardSize * (Board.BoardSize - 1)) < i && i < (Board.BoardSize * Board.BoardSize - 1)))    // 91,92,93,94,95,96,97,98,99
             {
                 lowPriority.Add(i);     // 맵의 가장자리는 낮은 후보지에 추가
@@ -801,7 +803,7 @@ public class PlayerBase : MonoBehaviour
     private void OnShipDestroy(Ship ship)
     {
         opponent.opponentShipDestroyed = true;
-        lastAttackSuccessPos = NOT_SUCCESS_YET;     // 새 호보지역을 생성 할 때 4방향 모두 생성되도록 하기 위해 초기화
+        opponent.lastAttackSuccessPos = NOT_SUCCESS_YET;     // 새 호보지역을 생성 할 때 4방향 모두 생성되도록 하기 위해 초기화
 
         remainShipCount--;  // 남은 함선 수 감소
         Debug.Log($"배가 {remainShipCount}척 남았습니다.");
@@ -814,5 +816,17 @@ public class PlayerBase : MonoBehaviour
     {
         Debug.Log($"{gameObject.name} 패배");
         onDefeat?.Invoke(this);
+    }
+
+    // 초기화 용 --------------------------------------------------------------
+
+    public void Clear()
+    {
+        remainShipCount = ShipManager.Inst.ShipTypeCount;
+        isActionDone = false;
+        opponentShipDestroyed = false;
+
+        Board.ResetBoard(Ships);
+        RemoveAllHighCandidate();
     }
 }

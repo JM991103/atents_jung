@@ -170,18 +170,23 @@ public class Ship : MonoBehaviour
                 break;
             default:
                 break;
-        }
-        hp = size;  // HP는 크기를 그대로 사용
+        }        
         
         shipName = ShipManager.Inst.shipNames[(int)type - 1];   // 함선 이름 설정
+        
+        model = transform.GetChild(0);                          // 함선의 모델링 트랜스폼
+        shipRenderer = model.GetComponentInChildren<Renderer>();    // 함선의 모델링의 랜더러
 
-        // 모든 함선 공통
+        ResetData();
+    }
+
+    void ResetData()
+    {
+        hp = size;  // HP는 크기를 그대로 사용
         direction = ShipDirection.North;                        // 함선 방향 초기화
         isAlive = true;                                         // 생존 여부 초기화
         isDeployed = false;                                     // 배치 여부 초기화
         positions = null;                                       // 함선의 칸별 위치
-        model = transform.GetChild(0);                          // 함선의 모델링 트랜스폼
-        shipRenderer = model.GetComponentInChildren<Renderer>();    // 함선의 모델링의 랜더러
     }
 
     /// <summary>
@@ -216,8 +221,7 @@ public class Ship : MonoBehaviour
     /// </summary>
     public void UnDeploy()
     {
-        positions = null;
-        isDeployed = false;
+        ResetData();
         onDeploy?.Invoke(false);
     }
 

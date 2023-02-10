@@ -43,7 +43,7 @@ public class TurnManager : Singleton<TurnManager>
     /// <summary>
     /// 한 턴이 타임 아웃되는데 걸리는 시간
     /// </summary>
-    const float turnDurationTime = 5.0f;
+    public const float turnDurationTime = 5.0f;
 
     /// <summary>
     /// 초기화용 함수. 씬 로드가 완료된 이후에 실행 (Awake와 Start 사이에서 실행됨)
