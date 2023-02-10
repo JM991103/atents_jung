@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,15 +21,66 @@ public class TurnManager : Singleton<TurnManager>
     float turnRemainTime = 0.0f;
 
     /// <summary>
+    /// 유저 플레이어
+    /// </summary>
+    PlayerBase userPlayer;
+
+    /// <summary>
+    /// 적(CPU) 플레이어
+    /// </summary>
+    PlayerBase enemyPlayer;
+
+    /// <summary>
+    /// 턴이 시작될 때 실행될 델리게이트. 파라메터는 현재 턴 번호
+    /// </summary>
+    Action<int> onTurnStart;
+
+    /// <summary>
+    /// 턴이 종료될 때 실행될 델리게이트
+    /// </summary>
+    Action onTurnEnd;
+
+    /// <summary>
     /// 한 턴이 타임 아웃되는데 걸리는 시간
     /// </summary>
     const float turnDurationTime = 5.0f;
 
+    /// <summary>
+    /// 초기화용 함수. 씬 로드가 완료된 이후에 실행 (Awake와 Start 사이에서 실행됨)
+    /// </summary>
     protected override void Initialize()
     {
         base.Initialize();
-        turnNumber = 0;
+
+        // 필요 변수들 초기화
+        turnNumber = 0;     
         isTurnEnd = true;
+        userPlayer = FindObjectOfType<UserPlayer>();
+        enemyPlayer = FindObjectOfType<EnemyPlayer>();
+
+        // 턴 시작/종료 델리게이트에 플레이어들의 턴 시작/종료 함수들 연결
+        onTurnStart += userPlayer.OnPlayerTurnStart;
+        onTurnEnd += userPlayer.OnPlayerTurnEnd;
+        onTurnStart += enemyPlayer.OnPlayerTurnStart;
+        onTurnEnd += enemyPlayer.OnPlayerTurnEnd;
+
+        // 유저 플레이어의 행동이 완료되면 적 플레이어의 행동 완료 여부 체크해서 적의 행동도 완료 되었으면 턴 종료 실행
+        userPlayer.onActionEnd += () =>
+        {
+            if(enemyPlayer.IsActionDone && !userPlayer.IsDepeat)    // 추가로 유저가 살아있을때만 턴 종료
+            {
+                OnTurnEnd();
+            }
+        };
+
+        // 적 플레이어의 행동이 완료되면 유저 플레이어의 행동 완료 여부 체크해서 유저의 행동도 완료 되었으면 턴 종료 실행
+        enemyPlayer.onActionEnd += () =>
+        {
+            if (userPlayer.IsActionDone && !enemyPlayer.IsDepeat)   // 추가로 적이 살아있을때만 턴 종료
+            {
+                OnTurnEnd();
+            }
+        };
     }
 
     /// <summary>
@@ -40,6 +92,8 @@ public class TurnManager : Singleton<TurnManager>
 
         isTurnEnd = false;
         turnRemainTime = turnDurationTime;
+
+        onTurnStart?.Invoke(turnNumber);
     }
 
     /// <summary>
@@ -47,6 +101,8 @@ public class TurnManager : Singleton<TurnManager>
     /// </summary>
     void OnTurnEnd()
     {
+        onTurnEnd?.Invoke();
+
         isTurnEnd = true;
 
         Debug.Log($"{turnNumber}턴 종료");

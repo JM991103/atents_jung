@@ -85,6 +85,7 @@ public class Test_Turn : TestBase
         Vector2Int gridPos = board2.WorldToGrid(worldPos);
         //board2.OnAttacked(gridPos);
         player1.Attack(gridPos);
+        player2.AutoAttack();
     }
 
     private void OnTestRClick(InputAction.CallbackContext _)
