@@ -8,7 +8,7 @@ public class ShipDeploymentPanel : MonoBehaviour
     /// <summary>
     /// 이 패널 아래에 있는 모든 토글 버튼
     /// </summary>
-    DeploymentToggle[] toggles;
+    DeploymentToggle[] toggles = null;
 
     private void Awake()
     {

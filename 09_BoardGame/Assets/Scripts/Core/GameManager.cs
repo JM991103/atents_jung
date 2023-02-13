@@ -80,7 +80,6 @@ public class GameManager : Singleton<GameManager>
             onStateChange += enemyPlayer.OnStateChange;
         }
     }
-
     
 
 }

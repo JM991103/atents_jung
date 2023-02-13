@@ -391,6 +391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c2c94d5daa5eb74fa8d13e0daeb9b7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shipType: 4
 --- !u!114 &800252741
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -612,6 +613,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c2c94d5daa5eb74fa8d13e0daeb9b7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shipType: 5
 --- !u!114 &942966963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -913,6 +915,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c2c94d5daa5eb74fa8d13e0daeb9b7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shipType: 3
 --- !u!114 &1207861121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1183,6 +1186,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player_User
       objectReference: {fileID: 0}
+    - target: {fileID: 7140622066473381581, guid: f7b18f979344d854ba88a2e8c50a2cb5,
+        type: 3}
+      propertyPath: isShowShipDeploymentInfo
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7b18f979344d854ba88a2e8c50a2cb5, type: 3}
 --- !u!1001 &1526529032
@@ -1247,6 +1255,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2792146620356845461, guid: 89293e60a41afa146af52d0d59ac6e64,
+        type: 3}
+      propertyPath: shipModels.Array.data[3]
+      value: 
+      objectReference: {fileID: 4352882926623973170, guid: 1f0a3a83ba69d884dbfd8d58d52c2f42,
+        type: 3}
+    - target: {fileID: 2792146620356845461, guid: 89293e60a41afa146af52d0d59ac6e64,
+        type: 3}
+      propertyPath: shipModels.Array.data[4]
+      value: 
+      objectReference: {fileID: 7868268863584614915, guid: 29431d34fed9e68408e488845e937210,
+        type: 3}
     - target: {fileID: 2792146620356845462, guid: 89293e60a41afa146af52d0d59ac6e64,
         type: 3}
       propertyPath: m_Name
@@ -1306,6 +1326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c2c94d5daa5eb74fa8d13e0daeb9b7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shipType: 2
 --- !u!114 &1795309378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1440,6 +1461,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c2c94d5daa5eb74fa8d13e0daeb9b7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shipType: 1
 --- !u!114 &2012175338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1531,6 +1553,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2077134262}
+  - component: {fileID: 2077134263}
   m_Layer: 0
   m_Name: ShipDeployment
   m_TagString: Untagged
@@ -1553,6 +1576,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2077134263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2077134261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d693443bce733c34a8d11b7c9ee13519, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2126329225
 PrefabInstance:
   m_ObjectHideFlags: 0
