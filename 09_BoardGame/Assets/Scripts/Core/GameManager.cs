@@ -45,6 +45,22 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public bool IsGameEnd => userPlayer.IsDepeat || enemyPlayer.IsDepeat;
 
+    // 입력 -----
+
+    InputController input;
+    public InputController Input => input;
+
+    // 함수 -----
+
+    /// <summary>
+    /// 씬이 처음 로드 되었을 때만 실행되는 함수
+    /// </summary>
+    protected override void Initialize()
+    {
+        base.Initialize();
+        input = GetComponent<InputController>();
+    }
+
     /// <summary>
     /// 씬이 로드될 때마다 실행되는 데이터 리셋용 함수
     /// </summary>
@@ -64,4 +80,7 @@ public class GameManager : Singleton<GameManager>
             onStateChange += enemyPlayer.OnStateChange;
         }
     }
+
+    
+
 }
