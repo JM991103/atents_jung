@@ -51,21 +51,21 @@ public class UserPlayer : PlayerBase
 
     private void Onclick_ShipDeployment(Vector2 screenPos)
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
     private void Onclick_Battle(Vector2 screenPos)
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
     private void OnMouseMove_ShipDeployment(Vector2 screenPos)
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
     private void OnMouseWheel_ShipDeployment(float wheelDelta)
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 }
