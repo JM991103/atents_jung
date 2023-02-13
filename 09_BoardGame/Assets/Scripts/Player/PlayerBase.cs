@@ -34,7 +34,15 @@ public class PlayerBase : MonoBehaviour
     /// </summary>
     protected PlayerBase opponent;
 
+    /// <summary>
+    /// 상대방의 배가 파괴되면 true로 설정됨
+    /// </summary>
     private bool opponentShipDestroyed = false;
+
+    /// <summary>
+    /// 현재 게임 상태
+    /// </summary>
+    GameState state;
 
     // 공격 관련 변수 --------------------------------------------------
 
@@ -828,5 +836,12 @@ public class PlayerBase : MonoBehaviour
 
         Board.ResetBoard(Ships);
         RemoveAllHighCandidate();
+    }
+
+    // 기타 --------------------------------------------------------------
+    public void OnStateChange(GameState gameState)
+    {
+        state = gameState;
+
     }
 }
