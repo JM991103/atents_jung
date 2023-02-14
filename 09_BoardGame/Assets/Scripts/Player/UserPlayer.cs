@@ -83,10 +83,10 @@ public class UserPlayer : PlayerBase
         GameManager.Inst.Input.onMouseMove += OnMouseMove;
         GameManager.Inst.Input.onMouseWheel += OnMouseWheel;
 
-        if (!IsAllDeployed)     // 배치가 안되어 있으면 자동 배치 (보이게)
-        {
-            AutoShipDeployment(true);
-        }
+        //if (!IsAllDeployed)     // 배치가 안되어 있으면 자동 배치 (보이게)
+        //{
+        //    AutoShipDeployment(true);
+        //}
     }
 
     /// <summary>
