@@ -10,6 +10,8 @@ public class ShipDeploymentPanel : MonoBehaviour
     /// </summary>
     DeploymentToggle[] toggles = null;
 
+    public Action onDeploymentComplete;
+
     private void Awake()
     {
         toggles = GetComponentsInChildren<DeploymentToggle>();
