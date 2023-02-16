@@ -33,7 +33,7 @@ public class TurnManager : Singleton<TurnManager>
     /// <summary>
     /// 턴이 시작될 때 실행될 델리게이트. 파라메터는 현재 턴 번호
     /// </summary>
-    Action<int> onTurnStart;
+    public Action<int> onTurnStart;
 
     /// <summary>
     /// 턴이 종료될 때 실행될 델리게이트

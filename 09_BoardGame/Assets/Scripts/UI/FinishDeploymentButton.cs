@@ -42,7 +42,7 @@ public class FinishDeploymentButton : MonoBehaviour
     {
         Debug.Log("클릭");
         GameManager.Inst.SaveShipDeployment(player);
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
 
     private void OnComplete()

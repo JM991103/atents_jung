@@ -55,6 +55,8 @@ public class Ship : MonoBehaviour
     /// </summary>
     Transform model;
 
+    PlayerBase owner;
+
     // 델리게이트 ---------------------------------
 
     /// <summary>
@@ -76,6 +78,8 @@ public class Ship : MonoBehaviour
     public Action<Ship> onSinking;
 
     // 프로퍼티 ---------------------------------
+
+    public PlayerBase Owner => owner;
 
     /// <summary>
     /// 배 이름 확인용 프로퍼티. 읽기 전용
@@ -173,7 +177,7 @@ public class Ship : MonoBehaviour
         }        
         
         shipName = ShipManager.Inst.shipNames[(int)type - 1];   // 함선 이름 설정
-        
+        owner = GetComponentInParent<PlayerBase>();
         model = transform.GetChild(0);                          // 함선의 모델링 트랜스폼
         shipRenderer = model.GetComponentInChildren<Renderer>();    // 함선의 모델링의 랜더러
 
