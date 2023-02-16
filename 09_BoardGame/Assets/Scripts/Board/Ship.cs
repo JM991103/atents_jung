@@ -158,25 +158,30 @@ public class Ship : MonoBehaviour
         switch (type)
         {
             case ShipType.Carrier:      // 항공모함은 5칸
-                size = 5;                
+                size = 5;
+                shipName = "항공모함";
                 break;
             case ShipType.Battleship:   // 전함은 4칸
                 size = 4;
+                shipName = "전함";
                 break;
             case ShipType.Destroyer:    // 구축함은 3칸
                 size = 3;
+                shipName = "구축함";
                 break;
             case ShipType.Submarine:    // 잠수함은 3칸
                 size = 3;
+                shipName = "잠수함";
                 break;
             case ShipType.PatrolBoat:   // 경비정은 2칸
                 size = 2;
+                shipName = "경비정";
                 break;
             default:
                 break;
         }        
         
-        shipName = ShipManager.Inst.shipNames[(int)type - 1];   // 함선 이름 설정
+        //shipName = ShipManager.Inst.shipNames[(int)type - 1];   // 함선 이름 설정
         owner = GetComponentInParent<PlayerBase>();
         model = transform.GetChild(0);                          // 함선의 모델링 트랜스폼
         shipRenderer = model.GetComponentInChildren<Renderer>();    // 함선의 모델링의 랜더러

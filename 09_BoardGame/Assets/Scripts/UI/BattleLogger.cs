@@ -150,7 +150,7 @@ public class BattleLogger : MonoBehaviour
             playerColor = ColorUtility.ToHtmlStringRGB(enemyColor);
             playerName = ENEMY;
         }
-        Log($"<#{attackerColor}><{attackerName}>의 공격 </color> \t : <#{playerColor}>{playerName}</color>의 <#{shipColor}>{ship.name}</color>에 포탄이 명중했습니다.");
+        Log($"<#{attackerColor}><{attackerName}>의 공격 </color> \t: <#{playerColor}>{playerName}</color>의 <#{shipColor}>{ship.ShipName}</color>에 포탄이 명중했습니다.");
     }
 
     private void Log_Ship_Destroy()
