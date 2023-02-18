@@ -29,7 +29,7 @@ public class ResultPanel : MonoBehaviour
         dropdown = transform.GetChild(0).GetComponent<Button>();        
         dropdown.onClick.AddListener(ToggleTable);
 
-        restart = transform.GetChild(2).GetComponent<Button>();
+        restart = transform.GetChild(1).GetComponentInChildren<Button>();
         restart.onClick.AddListener(Restart);
     }
 
