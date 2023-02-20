@@ -89,6 +89,16 @@ public class UserPlayer : PlayerBase
         //}
     }
 
+    private void OnDisable()
+    {
+        if (GameManager.Inst.Input != null)
+        {
+            GameManager.Inst.Input.onClick -= OnClick;
+            GameManager.Inst.Input.onMouseMove -= OnMouseMove;
+            GameManager.Inst.Input.onMouseWheel -= OnMouseWheel;
+        }
+    }
+
     /// <summary>
     /// 클릭 입력이 들어왔을 때 실행될 함수
     /// </summary>

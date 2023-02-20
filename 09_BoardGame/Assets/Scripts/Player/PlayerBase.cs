@@ -40,6 +40,16 @@ public class PlayerBase : MonoBehaviour
     private bool opponentShipDestroyed = false;
 
     /// <summary>
+    /// 성공한 공격 횟수
+    /// </summary>
+    int successAttackCount = 0;
+
+    /// <summary>
+    /// 실패한 공격 횟수
+    /// </summary>
+    int failAttackCount = 0;
+
+    /// <summary>
     /// 현재 게임 상태
     /// </summary>
     protected GameState state;
@@ -80,10 +90,32 @@ public class PlayerBase : MonoBehaviour
 
     // 프로퍼티 --------------------------------------------------
 
+    /// <summary>
+    /// 이 플레이어가 가지고 있는 보드의 읽기 전용 프로퍼티
+    /// </summary>
     public Board Board => board;
+
+    /// <summary>
+    /// 이 플레이어가 가지고 있는 배들의 배열을 읽을 수 있는 읽기 전용 프로퍼티
+    /// </summary>
     public Ship[] Ships => ships;
+
+    /// <summary>
+    /// 이 플레이어가 패배했는지 알려주는 프로퍼티(true면 이 플레이어가 패배)
+    /// </summary>
     public bool IsDepeat => remainShipCount < 1;
+
     public bool IsActionDone => isActionDone;
+
+    /// <summary>
+    /// 성공한 공격 횟수를 알려주는 프로퍼티
+    /// </summary>
+    public int SuccessAttackCount => successAttackCount;
+
+    /// <summary>
+    /// 실패한 공격 횟수를 알려주는 프로퍼티
+    /// </summary>
+    public int FailAttackCount => failAttackCount;
 
     /// <summary>
     /// 모든 함선이 배치되었는지 확인하는 프로퍼티. 모두 배치되었으면 true, 하나라도 배치가 안된 것이 있으면 false
@@ -170,6 +202,10 @@ public class PlayerBase : MonoBehaviour
         }
         Utill.Shuffle(tempCandidate);   // 섞기
         attackCandiateIndices = new List<int>(tempCandidate);    // 섞은 것을 기반으로 리스트 만들기
+
+        // 공격 횟수 초기화
+        successAttackCount = 0;
+        failAttackCount = 0;
     }
 
     // 턴 관리용 함수 --------------------------------------------------
@@ -196,10 +232,11 @@ public class PlayerBase : MonoBehaviour
             bool result = opponent.Board.OnAttacked(attackGridPos); // 상대방 보드에 공격하기
             if (result)
             {
+                successAttackCount++;
                 // 공격성공
                 if (opponentShipDestroyed)
                 {
-                    // 공격으로 배가 침몰했으면
+                    // 공격으로 배가 침몰했으면                    
                     RemoveAllHighCandidate();       // 모든 후보지역 제거
                     opponentShipDestroyed = false;  // 함선 침몰 표시 초기화
                 }
@@ -207,12 +244,14 @@ public class PlayerBase : MonoBehaviour
                 {
                     // 배가 침몰하지 않았으면 
                     AttackSuccessProcess(attackGridPos);    // 후보지역 추가
+                    
                 }
             }
             else
             {
                 // 공격 실패
                 //lastAttackSuccessPos = NOT_SUCCESS_YET; // 공격이 실패하면 무조건 lastAttackSuccessPos 비우기
+                failAttackCount++;
                 onAttackFail?.Invoke(this);             // 공격 실패 알림(로그 출력용)
             }
 

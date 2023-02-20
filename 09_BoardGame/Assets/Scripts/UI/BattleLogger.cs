@@ -71,15 +71,20 @@ public class BattleLogger : MonoBehaviour
         foreach (var ship in gameManager.UserPlayer.Ships)
         {
             ship.onHit += (targetShip) => { Log_Attack_Success(false, targetShip); };
-            //ship.onSinking = (targetShip) => { Log_Ship_Destroy(false, targetShip); } + ship.onSinking;
+            ship.onSinking = (targetShip) => { Log_Ship_Destroy(false, targetShip); } + ship.onSinking;
         }
         foreach (var ship in gameManager.EnemyPlayer.Ships)
         {
             ship.onHit += (targetShip) => { Log_Attack_Success(true, targetShip); };
-            //ship.onSinking = (targetShip) => { Log_Ship_Destroy(true, targetShip); } + ship.onSinking;
+            ship.onSinking = (targetShip) => { Log_Ship_Destroy(true, targetShip); } + ship.onSinking;
         }
-        
-        
+
+        // 플레이어가 공격을 실패했을 때 상황을 출력하기 위해사 델리게이트에 함수 등록
+        gameManager.UserPlayer.onAttackFail = Log_Attack_Fail;
+        gameManager.EnemyPlayer.onAttackFail = Log_Attack_Fail;
+
+        gameManager.UserPlayer.onDefeat += Log_Defeat;
+        gameManager.EnemyPlayer.onDefeat += Log_Defeat;
 
 
         Clear();
@@ -150,12 +155,69 @@ public class BattleLogger : MonoBehaviour
             playerColor = ColorUtility.ToHtmlStringRGB(enemyColor);
             playerName = ENEMY;
         }
-        Log($"<#{attackerColor}><{attackerName}>의 공격 </color> \t: <#{playerColor}>{playerName}</color>의 <#{shipColor}>{ship.ShipName}</color>에 포탄이 명중했습니다.");
+        Log($"<#{attackerColor}>{attackerName}의 공격 </color> \t: <#{playerColor}>{playerName}</color>의 <#{shipColor}>{ship.ShipName}</color>에 포탄이 명중했습니다.");
     }
 
-    private void Log_Ship_Destroy()
+    /// <summary>
+    /// 공격이 실패했을 때 상황을 출력하는 함수
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    private void Log_Attack_Fail(PlayerBase attacker)
     {
-        
+        //"{당신}의 포탄이 빗나갔습니다."
+        //"{적}의 포탄이 빗나갔습니다."
+        string playerColor; // Victim이 UserPlayer면 userColor, EnemyPlayer면 enemyColor로 출력하기
+        string playerName;
+        if (attacker is UserPlayer) // Victim이 UserPlayer인지 아닌지 확인
+        {
+            playerColor = ColorUtility.ToHtmlStringRGB(userColor);
+            playerName = YOU;
+        }
+        else
+        {
+            playerColor = ColorUtility.ToHtmlStringRGB(enemyColor);
+            playerName = ENEMY;
+        }
+        Log($"<#{playerColor}>{playerName}의 공격</color> \t : <#{playerColor}>{playerName}</color>의 포탄이 빗나갔습니다.");
+    }
+
+    /// <summary>
+    /// 배가 침몰 당하는 상황을 출력하는 함수
+    /// </summary>
+    /// <param name="isPlayerAttack">true면 플레이어 공격, false면 적의 공격</param>
+    /// <param name="ship">침몰한 배</param>
+    private void Log_Ship_Destroy(bool isPlayerAttack, Ship ship)
+    {
+        string attackerColor;   // 공격자 색상
+        string attackerName;    // 공격자 이름
+
+        if (isPlayerAttack)
+        {
+            attackerColor = ColorUtility.ToHtmlStringRGB(userColor);
+            attackerName = YOU;
+        }
+        else
+        {
+            attackerColor = ColorUtility.ToHtmlStringRGB(enemyColor);
+            attackerName = ENEMY;
+        }
+
+        string hexColor = ColorUtility.ToHtmlStringRGB(shipColor);  // shipColor를 16진수 표시양식으로 변경
+        string playerColor;     // 배의 소유자가 userPlayer면 userColor, EnemyPlayer면 enemyColor로 출력하기
+        string playerName;
+        if (ship.Owner is UserPlayer)   // Owner이 UserPlayer 인지 아닌지 확인
+        {
+            playerColor = ColorUtility.ToHtmlStringRGB(userColor);
+            playerName = YOU;
+        }
+        else
+        {
+            playerColor = ColorUtility.ToHtmlStringRGB(enemyColor);
+            playerName = ENEMY;
+        }
+
+        Log($"<#{attackerColor}>{attackerName}의 공격</color> \t : <#{attackerColor}>{playerName}</color>의 <#{hexColor}>{ship.ShipName}</color>이 침몰했습니다.");
     }
 
     /// <summary>
@@ -166,5 +228,23 @@ public class BattleLogger : MonoBehaviour
     {
         string color = ColorUtility.ToHtmlStringRGB(turnColor);
         Log($"<#{color}>{number}</color> 번째 턴이 시작했습니다.");
+    }
+
+    /// <summary>
+    /// 게임이 끝날 때 상황을 출력하는 함수
+    /// </summary>
+    /// <param name="player">패배한 플레이어</param>
+    private void Log_Defeat(PlayerBase player)
+    {
+        if (player is UserPlayer)
+        {
+            // 당신이 졌다.
+            Log($"당신의 <#ff0000>패배</color>입니다.");
+        }
+        else
+        {
+            // 컴퓨터가 졌다.
+            Log($"당신의 <#00ff00>승리</color>입니다.");
+        }
     }
 }

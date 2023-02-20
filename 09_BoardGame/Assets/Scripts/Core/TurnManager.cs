@@ -62,26 +62,37 @@ public class TurnManager : Singleton<TurnManager>
         onTurnEnd = null;
         onTurnStart += userPlayer.OnPlayerTurnStart;
         onTurnEnd += userPlayer.OnPlayerTurnEnd;
-        onTurnStart += enemyPlayer.OnPlayerTurnStart;
-        onTurnEnd += enemyPlayer.OnPlayerTurnEnd;
+
+        if (enemyPlayer == null)
+        {
+            Debug.Log("적이 없다");
+        }
+        else
+        {
+            onTurnStart += enemyPlayer.OnPlayerTurnStart;
+            onTurnEnd += enemyPlayer.OnPlayerTurnEnd;
+            // 적 플레이어의 행동이 완료되면 유저 플레이어의 행동 완료 여부 체크해서 유저의 행동도 완료 되었으면 턴 종료 실행
+            enemyPlayer.onActionEnd += () =>
+            {
+                if (userPlayer.IsActionDone && !enemyPlayer.IsDepeat)   // 추가로 적이 살아있을때만 턴 종료
+                {
+                    OnTurnEnd();
+                }
+            };
+        }
 
         // 유저 플레이어의 행동이 완료되면 적 플레이어의 행동 완료 여부 체크해서 적의 행동도 완료 되었으면 턴 종료 실행
         userPlayer.onActionEnd += () =>
         {
-            if (enemyPlayer.IsActionDone && !userPlayer.IsDepeat)    // 추가로 유저가 살아있을때만 턴 종료
+            if (enemyPlayer != null)
             {
-                OnTurnEnd();
+                if (enemyPlayer.IsActionDone && !userPlayer.IsDepeat)    // 추가로 유저가 살아있을때만 턴 종료
+                {
+                    OnTurnEnd();
+                }
             }
         };
 
-        // 적 플레이어의 행동이 완료되면 유저 플레이어의 행동 완료 여부 체크해서 유저의 행동도 완료 되었으면 턴 종료 실행
-        enemyPlayer.onActionEnd += () =>
-        {
-            if (userPlayer.IsActionDone && !enemyPlayer.IsDepeat)   // 추가로 적이 살아있을때만 턴 종료
-            {
-                OnTurnEnd();
-            }
-        };
     }
 
     /// <summary>
@@ -102,19 +113,26 @@ public class TurnManager : Singleton<TurnManager>
     /// </summary>
     void OnTurnEnd()
     {
-        // !(userPlayer.IsDepeat || enemyPlayer.IsDepeat)
-        if (!enemyPlayer.IsDepeat && !userPlayer.IsDepeat)
+        if (!enemyPlayer)
         {
-            onTurnEnd?.Invoke();
-
-            isTurnEnd = true;
-
-            Debug.Log($"{turnNumber}턴 종료");
-            turnNumber++;
+            Debug.Log("적이 없음");
         }
         else
         {
-            turnRemainTime = float.MaxValue;    // OnTurnEnd가 과하게 호출되는 것 방지
+            //!(userPlayer.IsDepeat || enemyPlayer.IsDepeat)       
+            if (!enemyPlayer.IsDepeat && !userPlayer.IsDepeat)
+            {
+                onTurnEnd?.Invoke();
+
+                isTurnEnd = true;
+
+                Debug.Log($"{turnNumber}턴 종료");
+                turnNumber++;
+            }
+            else
+            {
+                turnRemainTime = float.MaxValue;    // OnTurnEnd가 과하게 호출되는 것 방지
+            }
         }
     }
 

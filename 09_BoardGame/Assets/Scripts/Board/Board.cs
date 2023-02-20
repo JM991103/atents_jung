@@ -149,7 +149,7 @@ public class Board : MonoBehaviour
 
         Vector3 diff = worldPos - transform.position;
 
-        return new Vector2Int(Mathf.FloorToInt(diff.x), Mathf.FloorToInt(-diff.z));
+        return new Vector2Int(Mathf.FloorToInt(diff.x), Mathf.FloorToInt(-diff.z));        
     }
 
     /// <summary>
